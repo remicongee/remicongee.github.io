@@ -356,7 +356,8 @@
       
         
           
-            <h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $S$ and $D$, denoted as $\mathbb{P}(w|S,D)$. Mathematically, the posterior is accessible via </p>
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom.</p>
+<h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $S$ and $D$, denoted as $\mathbb{P}(w|S,D)$. Mathematically, the posterior is accessible via </p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     \mathbb{P}(w|S,D) =& \frac{\mathbb{P}(w,S,D)}{\mathbb{P}(S,D)} \\
@@ -388,9 +389,23 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
                                            =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
 \end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
 <script type="math/tex; mode=display">
-\mathbb{V}ar[{\hat{\mathcal{L}}}] = N^2\left(\frac{1}{M}\mathbb{V}ar[\hat{\mathcal{L}_m}] + \frac{M-1}{M}\mathbb{C}ov[\hat{\mathcal{L}}_m, \hat{\mathcal{L}}_n] \right),</script><p>where the second term does not degrade to zero if the covariance is large enough. Therefore, applying local reparameterization trick is preferred here. The main idea is, in each update iteration, resampling $w$ independently according to $q_\phi$, leading to $i.i.d.$ samples.</p>
+\mathbb{V}ar[{\hat{\mathcal{L}}}] = N^2\left(\frac{1}{M}\mathbb{V}ar[\hat{\mathcal{L}}_m] + \frac{M-1}{M}\mathbb{C}ov[\hat{\mathcal{L}}_m, \hat{\mathcal{L}}_n] \right),</script><p>where the second term does not degrade to zero if the covariance is large enough. Therefore, applying local reparameterization trick is preferred here. The main idea is, in each update iteration, resampling $w$ independently according to $q_\phi$, leading to $i.i.d.$ samples.</p>
 <h2 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h2><p>As long as a good approximation $q_\phi(w)$ is reached, it is possible to prune certain parameters or neurons if their posteriors tend to be negligible. There are several interesting ways as discussed below.</p>
-<h3 id="Prior"><a href="#Prior" class="headerlink" title="Prior"></a>Prior</h3>
+<h3 id="Prior"><a href="#Prior" class="headerlink" title="Prior"></a>Prior</h3><ul>
+<li>LASSO</li>
+<li>log-uniform</li>
+<li>spike-and-slab</li>
+<li>half-cauchy</li>
+</ul>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><ul>
+<li>Gaussian dropout</li>
+<li>As a Bayesian approximation</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
+<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
+<p>[3] Gal, Y., &amp; Ghahramani, Z. (2016, June). Dropout as a Bayesian approximation: Representing model uncertainty in deep learning. In international conference on machine learning (pp. 1050-1059).</p>
+<p>[4] Achterhold, J., Koehler, J. M., Schmeink, A., &amp; Genewein, T. (2018). Variational Network Quantization. In International Conference on Learning Representations.</p>
+
           
         
       
