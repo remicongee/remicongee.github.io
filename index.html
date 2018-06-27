@@ -252,6 +252,162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/27/Principles-and-Possible-Methods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/27/Principles-and-Possible-Methods/" itemprop="url">Principles and Possible Methods</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-27T13:54:31+08:00">
+                2018-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network $M$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $M$ and $D$, denoted as $\mathbb{P}(w|M,D)$. Mathematically, the posterior is accessible via<br>$$<br>\begin{aligned}<br>    \mathbb{P}(w|M,D) =&amp; \frac{\mathbb{P}(w,M,D)}{\mathbb{P}(M,D)} \<br>                      =&amp; \frac{\mathbb{P}(w,M,D)}{\int\mathbb{P}(w,M,D)dw}.<br>\end{aligned}<br>$$<br>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as<br>$$<br>q_\phi(w) \approx \mathbb{P}(w|M,D).<br>$$<br>Adopted as a metric, KL-divergence is often viewed as the function to minimize<br>$$<br>KL(q_\phi(w)||\mathbb{P}(w|M,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|M,D)}{q_\phi(w)}dw.<br>$$<br>Suppose ${x,y}\in D$ specific for a classification task. Then the target KL-divergence can be further deducted:<br>$$<br>\begin{aligned}<br>    KL(q_\phi(w)||\mathbb{P}(w|M,D)) =&amp; -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||\mathbb{P}(w)) + \log\mathbb{P}(y|x) \<br>                                     =&amp; -\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) + \log\mathbb{P}(y|x),<br>\end{aligned}<br>$$<br>where<br>$$<br>\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).<br>$$<br>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$ indicates how well $w$ coordinates its prior distribution, which is commonly viewed as regularization.</p>
+<p>$\texttt{note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
+<p>Given that $\log\mathbb{P}(y|x)$ is fixed, the original target (minimize KL-divergence) is equivalent to maximizing $\mathcal{L}(q_\phi(w),\mathbb{P}(w|D))$, which is referred as evidence lower bound in Bayesian literature.</p>
+<h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>$\texttt{// TODO}$</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -413,14 +569,32 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
             
 
           </nav>
