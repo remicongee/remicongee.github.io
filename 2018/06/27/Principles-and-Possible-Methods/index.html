@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="TargetGiven a deep neural network $M$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is see">
+<meta name="description" content="TargetGiven a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training tar">
 <meta name="keywords" content="Deep Compression,Bayesian Inference">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Principles and Possible Methods">
 <meta property="og:url" content="http://yoursite.com/2018/06/27/Principles-and-Possible-Methods/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="TargetGiven a deep neural network $M$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is see">
+<meta property="og:description" content="TargetGiven a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training tar">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-27T07:50:40.335Z">
+<meta property="og:updated_time" content="2018-06-27T10:18:46.860Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Principles and Possible Methods">
-<meta name="twitter:description" content="TargetGiven a deep neural network $M$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is see">
+<meta name="twitter:description" content="TargetGiven a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training tar">
 
 
 
@@ -353,27 +353,41 @@
       
 
       
-        <h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network $M$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $M$ and $D$, denoted as $\mathbb{P}(w|M,D)$. Mathematically, the posterior is accessible via </p>
+        <h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $S$ and $D$, denoted as $\mathbb{P}(w|S,D)$. Mathematically, the posterior is accessible via </p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathbb{P}(w|M,D) =& \frac{\mathbb{P}(w,M,D)}{\mathbb{P}(M,D)} \\
-                      =& \frac{\mathbb{P}(w,M,D)}{\int\mathbb{P}(w,M,D)dw}.
+    \mathbb{P}(w|S,D) =& \frac{\mathbb{P}(w,S,D)}{\mathbb{P}(S,D)} \\
+                      =& \frac{\mathbb{P}(w,S,D)}{\int\mathbb{P}(w,S,D)dw}.
 \end{aligned}</script><p>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as</p>
 <script type="math/tex; mode=display">
-q_\phi(w) \approx \mathbb{P}(w|M,D).</script><p>Adopted as a metric, KL-divergence is often viewed as the function to minimize</p>
+q_\phi(w) \approx \mathbb{P}(w|S,D).</script><p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(w)||\mathbb{P}(w|M,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|M,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then the target KL-divergence can be further deducted:</p>
+KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q_\phi(w)||\mathbb{P}(w|M,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||\mathbb{P}(w)) + \log\mathbb{P}(y|x) \\
+    KL(q_\phi(w)||\mathbb{P}(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||\mathbb{P}(w)) + \log\mathbb{P}(y|x) \\
                                      =& -\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) + \log\mathbb{P}(y|x),
 \end{aligned}</script><p>where </p>
 <script type="math/tex; mode=display">
-\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$ indicates how well $w$ coordinates its prior distribution, which is commonly viewed as regularization.</p>
+\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
 <p>$\texttt{note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
 <p>Given that $\log\mathbb{P}(y|x)$ is fixed, the original target (minimize KL-divergence) is equivalent to maximizing $\mathcal{L}$, which is referred as evidence lower bound in Bayesian literature.</p>
-<h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>$\texttt{// TODO}$</p>
-
+<h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>Thanks to promising computation capacity of CPU/GPU, gradient-based methods are widely preferred in deep learning problem. In this case, gradient-based methods is also feasible, while facing three main problems: differentiability, bias and variance.</p>
+<h3 id="Differentiability"><a href="#Differentiability" class="headerlink" title="Differentiability"></a>Differentiability</h3><p>The partial gradient $\frac{\partial\mathcal{L}}{\partial q_\phi}$ is intractable unless $w$ is differentiable with regard to $\phi$. (Here, it is assumed that $\mathcal{L}$ is differentiable with regard to $w$.) The most common way to enssure this property is assigning</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    w =& \mu + \sqrt{\phi}\cdot\varepsilon \\
+    \varepsilon \sim& \mathcal{N}(0,1).
+\end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, datase is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),\mathbb{P}(w|x_m,y_m)) \\
+                                           =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
+\end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
+<script type="math/tex; mode=display">
+\mathbb{V}ar[{\hat{\mathcal{L}}}] = N^2\left(\frac{1}{M}\mathbb{V}ar[\hat{\mathcal{L}_m}] + \frac{M-1}{M}\mathbb{C}ov[\hat{\mathcal{L}}_m, \hat{\mathcal{L}}_n] \right),</script><p>where the second term does not degrade to zero if the covariance is large enough. Therefore, applying local reparameterization trick is preferred here. The main idea is, in each update iteration, resampling $w$ independently according to $q_\phi$, leading to $i.i.d.$ samples.</p>
+<h2 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h2><p>As long as a good approximation $q_\phi(w)$ is reached, it is possible to prune certain parameters or neurons if their posteriors tend to be negligible. There are several interesting ways as discussed below.</p>
+<h3 id="Prior"><a href="#Prior" class="headerlink" title="Prior"></a>Prior</h3>
       
     </div>
     
@@ -555,7 +569,7 @@ KL(q_\phi(w)||\mathbb{P}(w|M,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|M,D)}{q_
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Target"><span class="nav-number">1.</span> <span class="nav-text">Target</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradient-based-Methods"><span class="nav-number">2.</span> <span class="nav-text">Gradient-based Methods</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Target"><span class="nav-number">1.</span> <span class="nav-text">Target</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradient-based-Methods"><span class="nav-number">2.</span> <span class="nav-text">Gradient-based Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Differentiability"><span class="nav-number">2.1.</span> <span class="nav-text">Differentiability</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bias"><span class="nav-number">2.2.</span> <span class="nav-text">Bias</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variance"><span class="nav-number">2.3.</span> <span class="nav-text">Variance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compression"><span class="nav-number">3.</span> <span class="nav-text">Compression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prior"><span class="nav-number">3.1.</span> <span class="nav-text">Prior</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -709,24 +723,7 @@ KL(q_\phi(w)||\mathbb{P}(w|M,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|M,D)}{q_
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
@@ -779,6 +776,43 @@ KL(q_\phi(w)||\mathbb{P}(w|M,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|M,D)}{q_
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
