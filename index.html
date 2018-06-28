@@ -252,6 +252,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/28/Bayesian-Compression-for-Deep-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/28/Bayesian-Compression-for-Deep-Learning/" itemprop="url">Bayesian Compression for Deep Learning</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T20:46:23+08:00">
+                2018-06-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the papar “Bayesian Compression for Deep Learning” published on NIPS 2017. The main two novel points are</p>
+<ul>
+<li>hierarchical priors</li>
+<li>encode weights via optimal fixed point precision</li>
+</ul>
+<h2 id="Hierarchical-Priors"><a href="#Hierarchical-Priors" class="headerlink" title="Hierarchical Priors"></a>Hierarchical Priors</h2><p>As mentioned in “Principles and Possible Methods”, the evidence lower bound is commonly like</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
+<script type="math/tex; mode=display">
+z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximative joint posterior $q_\phi(w,z)$.</p>
+<p>$\texttt{note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$.</p>
+<p>// TO BE CONTINUE</p>
+<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>// TODO</p>
+<h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>// TODO</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/27/Principles-and-Possible-Methods/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -614,7 +780,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -636,7 +802,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
