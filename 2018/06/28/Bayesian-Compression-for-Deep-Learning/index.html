@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to the papar “Bayesian Compression for Deep Learning” published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precisi">
+<meta name="description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
 <meta name="keywords" content="Deep Compression,Bayesian Inference,Minimum Description Length,Hierarchical Priors">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Bayesian Compression for Deep Learning">
 <meta property="og:url" content="http://yoursite.com/2018/06/28/Bayesian-Compression-for-Deep-Learning/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to the papar “Bayesian Compression for Deep Learning” published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precisi">
+<meta property="og:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-28T16:47:19.479Z">
+<meta property="og:updated_time" content="2018-06-29T17:33:36.091Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bayesian Compression for Deep Learning">
-<meta name="twitter:description" content="OverviewThis text refers to the papar “Bayesian Compression for Deep Learning” published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precisi">
+<meta name="twitter:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
 
 
 
@@ -353,7 +353,7 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the papar “Bayesian Compression for Deep Learning” published on NIPS 2017. The main two novel points are</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the papar <a href="https://arxiv.org/abs/1705.08665" target="_blank" rel="noopener"><strong>Bayesian Compression for Deep Learning</strong></a> published on NIPS 2017. The main two novel points are</p>
 <ul>
 <li>hierarchical priors</li>
 <li>encode weights via optimal fixed point precision</li>
@@ -362,10 +362,67 @@
 <script type="math/tex; mode=display">
 \mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
 <script type="math/tex; mode=display">
-z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximative joint posterior $q_\phi(w,z)$.</p>
-<p>$\texttt{note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$.</p>
-<p>// TO BE CONTINUE</p>
-<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>// TODO</p>
+z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
+<blockquote>
+<p>$\texttt{Note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$, which is not included in this text.</p>
+</blockquote>
+<p>In this case, $z$ also becomes a paramater to infer. Then reform the evidence lower bound as</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||\mathbb{P}(z,w)) \\
+                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{\mathbb{P}(z,w)}{q_\phi(z,w)}d(z,w) \\
+                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
+\end{aligned}</script><p>In fact, the integration term in the second step could be further deducted as</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \int q_\phi(z,w)\log\frac{\mathbb{P}(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{\mathbb{P}(w|z)\mathbb{P}(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
+          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{\mathbb{P}(w|z)}{q_\phi(w|z)} + \log\frac{\mathbb{P}(z)}{q_\phi(z)}\right)dwdz \\
+          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{\mathbb{P}(w|z)}{q_\phi(w|z)}dwdz \\
+           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dzdw \\
+          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||\mathbb{P}(z))] \\
+          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
+\end{aligned}</script><p>It includes two KL-divergence terms. The former one concerns posterior of $w$ knowing $z$, while the latter one concerns prior of $z$. Furthermore, the former one is actually the prior of $w$ in the common case. In conclusion, after infering the prior of $z$, it seems possible to infer the “prior” of $w$, which is why this method is named after “<em>hierarchical</em>“.</p>
+<p>In order to introduce sparsity to the model, several kinds of priors (of $z$) could be preferred.</p>
+<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $\mathbb{P}(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized. </p>
+<blockquote>
+<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $\mathbb{P}(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
+</blockquote>
+<p>In the approximate posterior, $(z,w)$ follows a mixed Gaussian distribution as</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    z \sim &\, \mathcal{N}(\mu_z,\mu_z^2\alpha) \\
+    w|z \sim &\, \mathcal{N}(z\mu,z^2\sigma^2),
+\end{aligned}</script><p>where it is implicitly supposed $w=z\varepsilon$ with $\varepsilon\sim\mathcal{N}(\mu,\sigma^2)$ and $z\sim\mu_z\mathcal{N}(1,\alpha)$ with $\alpha$ interpreted as <em>dropout rate</em>. Eventually, the posterior is</p>
+<script type="math/tex; mode=display">
+q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2).</script><p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
+<ul>
+<li>$KL(q_\phi(w|z)||\mathbb{P}(w|z))$ is independent of $z$. In fact,</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    KL(q_\phi(w|z)||\mathbb{P}(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
+                                     =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\cdot \left(\frac{|w-z\mu |^2}{2z^2\sigma^2}-\frac{|w |^2}{2z^2} + \log\sigma \right)dw \\
+                                     =& -\frac{1}{2z^2\sigma^2}\left(\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - 2z\mu\mathbb{E}[\mathcal{N}(z\mu,z^2\sigma^2)] + z^2\mu^2 \right) \\
+                                      &+ \frac{1}{2z^2}\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - \log\sigma \\
+                                     =& \frac{1}{2}\left(\log\frac{1}{\sigma^2} - \frac{z^2\sigma^2-2z^2\mu^2+z^2\mu^2}{z^2\sigma^2} + \frac{z^2\sigma^2}{z^2} \right) \\
+                                     =& \frac{1}{2}\left(\log\frac{1}{\sigma^2} - 1 + \frac{\mu^2}{\sigma^2} + \sigma^2  \right)
+\end{aligned}</script><blockquote>
+<p>$\texttt{Note}:$ This independence is still valid even though $w|z$ follows <em>a prior</em> a non-centered law.</p>
+</blockquote>
+<ul>
+<li>$-KL(q_\phi(z)||\mathbb{P}(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
+</ul>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    -KL(q_\phi(z)||\mathbb{P}(z)) =& \int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dz \\
+                                  =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
+                                  \approx& k_1\sigma(k_2+k_3\log\alpha) - 0.5m(-\log\alpha) + C', 
+\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||\mathbb{P}(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
+<blockquote>
+<p>$\texttt{Note}:$ Since $\mathbb{P}(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
+<script type="math/tex; mode=display">
+\mathbb{P}(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
+</blockquote>
 <h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>// TODO</p>
 
       

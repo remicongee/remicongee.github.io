@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-27T13:28:33.034Z">
+<meta property="og:updated_time" content="2018-06-29T10:34:57.235Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Principles and Possible Methods">
 <meta name="twitter:description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
@@ -371,7 +371,9 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
 \end{aligned}</script><p>where </p>
 <script type="math/tex; mode=display">
 \mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
-<p>$\texttt{note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
+<blockquote>
+<p>$\texttt{Note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
+</blockquote>
 <p>Given that $\log\mathbb{P}(y|x)$ is fixed, the original target (minimize KL-divergence) is equivalent to maximizing $\mathcal{L}$, which is referred as evidence lower bound in Bayesian literature.</p>
 <h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>Thanks to promising computation capacity of CPU/GPU, gradient-based methods are widely preferred in deep learning problem. In this case, gradient-based methods is also feasible, while facing three main problems: differentiability, bias and variance.</p>
 <h3 id="Differentiability"><a href="#Differentiability" class="headerlink" title="Differentiability"></a>Differentiability</h3><p>The partial gradient $\frac{\partial\mathcal{L}}{\partial q_\phi}$ is intractable unless $w$ is differentiable with regard to $\phi$. (Here, it is assumed that $\mathcal{L}$ is differentiable with regard to $w$.) The most common way to enssure this property is assigning</p>
