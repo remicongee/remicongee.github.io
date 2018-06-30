@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-06-29T17:33:36.091Z">
+<meta property="og:updated_time" content="2018-06-30T10:38:34.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bayesian Compression for Deep Learning">
 <meta name="twitter:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
@@ -383,7 +383,7 @@ z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the low
           =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
 \end{aligned}</script><p>It includes two KL-divergence terms. The former one concerns posterior of $w$ knowing $z$, while the latter one concerns prior of $z$. Furthermore, the former one is actually the prior of $w$ in the common case. In conclusion, after infering the prior of $z$, it seems possible to infer the “prior” of $w$, which is why this method is named after “<em>hierarchical</em>“.</p>
 <p>In order to introduce sparsity to the model, several kinds of priors (of $z$) could be preferred.</p>
-<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $\mathbb{P}(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized. </p>
+<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $\mathbb{P}(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
 <blockquote>
 <p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $\mathbb{P}(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
 </blockquote>
@@ -423,7 +423,20 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
 <script type="math/tex; mode=display">
 \mathbb{P}(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
 </blockquote>
-<h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>// TODO</p>
+<p>Another interesting point is how to assign a dropout rate to a group of weights (neurons or <em>CNN</em> kernels). Say, for exemple, an MLP of two hidden layers $A$ and $B$. One choice is to let a group of neurons share one $z$ so that the posterior and the approximate one can be written as</p>
+<script type="math/tex; mode=display">
+    \mathbb{P}(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
+    q_\phi(z,w) = \prod_i^A\mathcal{N}(z_i|\mu_{z_i},\mu_{z_i}^2\alpha_i)\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|z_i\mu_{ij},z_i^2\sigma_{ij}^2)</script><p>The whole training process can be summarized as</p>
+<blockquote>
+<p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y\sim \mathcal{N}(xz\mu,x^2z^2\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$<br>Dropout the group with $\alpha$ larger than certain threshold</p>
+</blockquote>
+<h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>Proper half-Cauchy Prior is is form as $\mathcal{C}^+(0,s)=2(s\pi(1+(z/s)^2))^{-1}$, which induces a horseshoe prior. The hierarchy is expressed as</p>
+<script type="math/tex; mode=display">
+s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde{w}_{ij}\sim\mathcal{N}(0,1),\;\; w_{ij}=\tilde{w}_{ij}\tilde{z}_is.</script><p>The rest is similar to the section above. Details can be referred in the paper.</p>
+<h2 id="Weights-Encoding"><a href="#Weights-Encoding" class="headerlink" title="Weights Encoding"></a>Weights Encoding</h2><p>// TODO</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
+<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
+<p>[3] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
 
       
     </div>
@@ -610,7 +623,7 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hierarchical-Priors"><span class="nav-number">2.</span> <span class="nav-text">Hierarchical Priors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log-uniform-Prior"><span class="nav-number">2.1.</span> <span class="nav-text">Log-uniform Prior</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Half-Cauchy-Prior"><span class="nav-number">2.2.</span> <span class="nav-text">Half-Cauchy Prior</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hierarchical-Priors"><span class="nav-number">2.</span> <span class="nav-text">Hierarchical Priors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log-uniform-Prior"><span class="nav-number">2.1.</span> <span class="nav-text">Log-uniform Prior</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Half-Cauchy-Prior"><span class="nav-number">2.2.</span> <span class="nav-text">Half-Cauchy Prior</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Weights-Encoding"><span class="nav-number">3.</span> <span class="nav-text">Weights Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
