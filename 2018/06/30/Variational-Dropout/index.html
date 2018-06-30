@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Deep Compression,Bayesian Inference,Gaussian Dropout,Network Sparsity," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="I&apos;m description.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Remi&#39;s Hexo">
-<meta property="og:url" content="http://yoursite.com/tags/Deep-Compression/index.html">
+<meta name="description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Variational Dropout and the Local Reparameterization Trick and Variational Dropout Sparsiﬁes Deep Neural Netwo">
+<meta name="keywords" content="Deep Compression,Bayesian Inference,Gaussian Dropout,Network Sparsity">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Variational Dropout">
+<meta property="og:url" content="http://yoursite.com/2018/06/30/Variational-Dropout/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="I&apos;m description.">
+<meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Variational Dropout and the Local Reparameterization Trick and Variational Dropout Sparsiﬁes Deep Neural Netwo">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-06-30T11:29:55.563Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Remi&#39;s Hexo">
-<meta name="twitter:description" content="I&apos;m description.">
+<meta name="twitter:title" content="Variational Dropout">
+<meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Variational Dropout and the Local Reparameterization Trick and Variational Dropout Sparsiﬁes Deep Neural Netwo">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Deep-Compression/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/30/Variational-Dropout/"/>
 
 
 
 
 
-  <title>Tag: Deep Compression | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Variational Dropout | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -143,7 +145,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -237,110 +239,190 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Deep Compression<small>Tag</small>
-        </h1>
-      </div>
-
-      
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/Variational-Dropout/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/06/30/Variational-Dropout/" itemprop="url">
-              
-                <span itemprop="name">Variational Dropout</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Variational Dropout</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-30T18:50:36+08:00"
-              content="2018-06-30" >
-          06-30
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-30T18:50:36+08:00">
+                2018-06-30
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/28/Bayesian-Compression-for-Deep-Learning/" itemprop="url">
-              
-                <span itemprop="name">Bayesian Compression for Deep Learning</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-28T20:46:23+08:00"
-              content="2018-06-28" >
-          06-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
 
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/06/27/Principles-and-Possible-Methods/" itemprop="url">
-              
-                <span itemprop="name">Principles and Possible Methods</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-27T13:54:31+08:00"
-              content="2018-06-27" >
-          06-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsiﬁes Deep Neural Networks</a>.</p>
+<h2 id="Gaussian-Dropout"><a href="#Gaussian-Dropout" class="headerlink" title="Gaussian Dropout"></a>Gaussian Dropout</h2><p>// TODO</p>
+<h2 id="Binary-Dropout"><a href="#Binary-Dropout" class="headerlink" title="Binary Dropout"></a>Binary Dropout</h2><p>// TODO</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
+<p>[2] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Deep-Compression/" rel="tag"># Deep Compression</a>
+          
+            <a href="/tags/Bayesian-Inference/" rel="tag"># Bayesian Inference</a>
+          
+            <a href="/tags/Gaussian-Dropout/" rel="tag"># Gaussian Dropout</a>
+          
+            <a href="/tags/Network-Sparsity/" rel="tag"># Network Sparsity</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/28/Bayesian-Compression-for-Deep-Learning/" rel="next" title="Bayesian Compression for Deep Learning">
+                <i class="fa fa-chevron-left"></i> Bayesian Compression for Deep Learning
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -348,6 +430,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -368,8 +454,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -439,6 +534,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Dropout"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Binary-Dropout"><span class="nav-number">3.</span> <span class="nav-text">Binary Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -579,6 +690,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
