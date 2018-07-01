@@ -357,7 +357,13 @@
         
           
             <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
-<h2 id="Gaussian-Dropout"><a href="#Gaussian-Dropout" class="headerlink" title="Gaussian Dropout"></a>Gaussian Dropout</h2><p>// TODO</p>
+<p>Say a fully-connected layer with input $A\in M_{K,L}$ and output inactivated $B\in M_{K,N}$, the dropout can be expressed as</p>
+<script type="math/tex; mode=display">
+B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\mathbb{P}(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data.</p>
+<blockquote>
+<p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels.</p>
+</blockquote>
+<h2 id="Gaussian-Dropout"><a href="#Gaussian-Dropout" class="headerlink" title="Gaussian Dropout"></a>Gaussian Dropout</h2><p>Gaussian dropout refers to a Gaussian noise added to the training data.</p>
 <h2 id="Binary-Dropout"><a href="#Binary-Dropout" class="headerlink" title="Binary Dropout"></a>Binary Dropout</h2><p>// TODO</p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
 <p>[2] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
@@ -554,7 +560,18 @@ z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the low
     w|z \sim &\, \mathcal{N}(z\mu,z^2\sigma^2),
 \end{aligned}</script><p>where it is implicitly supposed $w=z\varepsilon$ with $\varepsilon\sim\mathcal{N}(\mu,\sigma^2)$ and $z\sim\mu_z\mathcal{N}(1,\alpha)$ with $\alpha$ interpreted as <em>dropout rate</em>. Eventually, the posterior is</p>
 <script type="math/tex; mode=display">
-q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2).</script><p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
+q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2).</script><blockquote>
+<p>$\texttt{Note}:$ The variance of $w$ indicates if it could be pruned. In fact,</p>
+<script type="math/tex; mode=display">
+   \begin{aligned}
+          \mathbb{V}ar_{q_\phi}[w] =& \mathbb{V}ar_{q_\phi}[z\varepsilon] \\    
+                                   =& \left(\mathbb{V}ar_{q_\phi}[z] + \mathbb{E}_{q_\phi}^2[z] \right)\left(\mathbb{V}ar[\varepsilon] + \mathbb{E}^2[\varepsilon] \right) - \mathbb{E}_{q_\phi}^2[z]\mathbb{E}^2[\varepsilon] \\
+                                   =& \left(\mu_z^2\alpha + \mu_z^2 \right)\left(\sigma^2 + \mu^2 \right) - \mu_z^2\mu^2 \\
+                                   =& \mu_z^2\left(\sigma^2 + \mu^2 \right)\alpha + \mu_z^2\sigma^2 \\
+                                     \propto&\,\alpha,
+   \end{aligned}</script><p>which means when $\sigma^2$ is fixed, the larger the variance is, the more unnecessary $w$ is.<br>$\texttt{Question}:$ What if the variance is large due to $\sigma^2$ ?</p>
+</blockquote>
+<p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
 <ul>
 <li>$KL(q_\phi(w|z)||\mathbb{P}(w|z))$ is independent of $z$. In fact,</li>
 </ul>
@@ -575,7 +592,7 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
 <script type="math/tex; mode=display">
 \begin{aligned}
     -KL(q_\phi(z)||\mathbb{P}(z)) =& \int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dz \\
-                                  =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
+                                  =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}+K}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
                                   \approx& k_1\sigma(k_2+k_3\log\alpha) - 0.5m(-\log\alpha) + C', 
 \end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||\mathbb{P}(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
 <blockquote>
@@ -588,7 +605,7 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
     \mathbb{P}(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
     q_\phi(z,w) = \prod_i^A\mathcal{N}(z_i|\mu_{z_i},\mu_{z_i}^2\alpha_i)\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|z_i\mu_{ij},z_i^2\sigma_{ij}^2)</script><p>The whole training process can be summarized as</p>
 <blockquote>
-<p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y\sim \mathcal{N}(xz\mu,x^2z^2\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$<br>Dropout the group with $\alpha$ larger than certain threshold</p>
+<p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y= xz\mathcal{N}(\mu,\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$ by gradient of $\mathcal{L}$<br>Dropout the group with $\alpha$ larger than certain threshold</p>
 </blockquote>
 <h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>Proper half-Cauchy Prior is is form as $\mathcal{C}^+(0,s)=2(s\pi(1+(z/s)^2))^{-1}$, which induces a horseshoe prior. The hierarchy is expressed as</p>
 <script type="math/tex; mode=display">
