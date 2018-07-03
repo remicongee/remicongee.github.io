@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Variational Dropout and the Local Reparameterization Trick and Variational Dropout Sparsifies Deep Neural Netw">
+<meta name="description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
 <meta name="keywords" content="Deep Compression,Bayesian Inference,Gaussian Dropout,Network Sparsity">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Variational Dropout">
 <meta property="og:url" content="http://yoursite.com/2018/06/30/Variational-Dropout/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Variational Dropout and the Local Reparameterization Trick and Variational Dropout Sparsifies Deep Neural Netw">
+<meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-01T08:43:01.973Z">
+<meta property="og:updated_time" content="2018-07-03T11:15:24.902Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Dropout">
-<meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Variational Dropout and the Local Reparameterization Trick and Variational Dropout Sparsifies Deep Neural Netw">
+<meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
 
 
 
@@ -353,17 +353,50 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://nlp.stanford.edu/pubs/sidaw13fast.pdf" target="_blank" rel="noopener">Fast Dropout Training</a>, <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
 <p>Say a fully-connected layer with input $A\in M_{K,L}$ and output inactivated $B\in M_{K,N}$, the dropout can be expressed as</p>
 <script type="math/tex; mode=display">
-B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\mathbb{P}(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data.</p>
+B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\mathbb{P}(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $\mathbb{P}(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
 <blockquote>
-<p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels.</p>
+<p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels ?</p>
 </blockquote>
-<h2 id="Gaussian-Dropout"><a href="#Gaussian-Dropout" class="headerlink" title="Gaussian Dropout"></a>Gaussian Dropout</h2><p>Gaussian dropout refers to a Gaussian noise added to the training data.</p>
-<h2 id="Binary-Dropout"><a href="#Binary-Dropout" class="headerlink" title="Binary Dropout"></a>Binary Dropout</h2><p>// TODO</p>
+<h2 id="Gaussian-Dropout"><a href="#Gaussian-Dropout" class="headerlink" title="Gaussian Dropout"></a>Gaussian Dropout</h2><p>Gaussian dropout refers to a Gaussian noise, $\xi\sim\mathcal{N}(1,\alpha)$ added to the training data. Compared with a binary dropout $\xi\sim\mathcal{B}(p)$, $\alpha=p/(1-p)$. Intuitionally, if $\alpha$ is large, the noise tends to be sampled uniformly from $\mathbb{R}$, which means even when the input feature is discriminant, the correspondant neuron performs the same as the Signal-Noise-Ratio (SNR) is null. Therefore, the larger $\alpha$ gets, the more possible the neuron gets dropped.</p>
+<p>From the view of mathmatics, Gaussian dropout is an approximation (or limit) of binary dropout. Let $x$ be input, $z\sim\mathcal{B}(p)$ the dropout noise, $w$ the weights. Say it is a classification task and modeled by logistic regression</p>
+<script type="math/tex; mode=display">
+\mathbb{P}(y|x,w,z) = \sigma(w^TD_zx),</script><p>where $\sigma(.)$ is sigmoid function, $D_z$ a matrix diagonalized by $z$. It could be further written as $\sum_i^m w_iz_ix_i$. At training stage, weights are updated, though often in batches, as $x$ is fixed. In this case, the only random variable is $z$. According to Lyapunov central limit theorem,</p>
+<script type="math/tex; mode=display">
+\sum_i^m w_iz_ix_i\xrightarrow[m\rightarrow+\infty]{d}S\sim\mathcal{N}(\mu_S,\sigma^2_S),</script><p>where</p>
+<script type="math/tex; mode=display">
+\mu_S=(1-p)\sum_i^mw_ix_i,\;\sigma^2_S=p(1-p)\sum_i^mw^2_ix^2_i.</script><p>For each training sample, the objective is maximizing the probability of predicting correctly. Therefore,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{E}_z[\log\mathbb{P}(y|\sum_i^mw_iz_ix_i)] \approx\,& \mathbb{E}_S[\log\mathbb{P}(y|S)] \\
+    =\,& \mathbb{E}_{v:v_i\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)}[\log\mathbb{P}(y|v^Tx)].
+\end{aligned}</script><p>In fact, the equivalence is valid because $S$ can be reformed as a linear combination of Gaussian variables which are independent:</p>
+<script type="math/tex; mode=display">
+S = \sum_i^m x_iv_i.</script><blockquote>
+<p>$\texttt{Note}:$ To justify the equivalence is valid, the combination and $S$ should have the same expectation and variance:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{E}\left[\sum_i^m x_iv_i\right] =& \sum_i^mx_i\mathbb{E}[v_i] \\
+                                =& \sum_i^mx_i\mu_i.
+\end{aligned}</script><p>Hence, it is necessary that $\mu_i=(1-p)w$.</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{V}ar\left[\sum_i^m x_iv_i\right] =& \sum_i^mx^2_i\mathbb{V}ar\left[v_i \right] \\
+                                             =& \sum_i^mx^2_i\sigma^2_i.
+\end{aligned}</script><p>Hence, it is necessary that $\sigma^2_i=p(1-p)w^2$.</p>
+<p>Given $\mu_i=pw$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
+</blockquote>
+<p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $\mathbb{P}(v)$ as prior, the evidence lower bound is hence</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\log\mathbb{P}(y|v^Tx) \right] - KL(q_\phi(v)||\mathbb{P}(v)).</script><p>The first term can be approximated by unbiased Monte Carlo sampling as $\mathcal{L}^{SGVB}$ mentioned in [1]. The second term is regularization. It can be noted that when $\alpha$ is fixed, variational dropout should degrade to Gaussian dropout, which means the KL term is expected to be independent of $\mu_i$. The improper log-uniform prior is hence proposed, but KL term is still intractable. In [1] and [2], different approximations are given. That of [2] is robust for a larger scale of $\alpha$.</p>
+<blockquote>
+<p>$\texttt{Question}:$ According to <a href="https://arxiv.org/abs/1711.02989" target="_blank" rel="noopener">Variational Gaussian Dropout is not Bayesian</a>, variational Gaussian dropout is pseudo Bayesian inference.</p>
+</blockquote>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
 <p>[2] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
+<p>[3] Wang, S., &amp; Manning, C. (2013, February). Fast dropout training. In international conference on machine learning (pp. 118-126).</p>
 
       
     </div>
@@ -550,7 +583,7 @@ B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\m
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Dropout"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Binary-Dropout"><span class="nav-number">3.</span> <span class="nav-text">Binary Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Dropout"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
