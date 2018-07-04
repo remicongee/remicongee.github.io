@@ -370,7 +370,16 @@ B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\m
 <script type="math/tex; mode=display">
 \sum_i^m w_iz_ix_i\xrightarrow[m\rightarrow+\infty]{d}S\sim\mathcal{N}(\mu_S,\sigma^2_S),</script><p>where</p>
 <script type="math/tex; mode=display">
-\mu_S=(1-p)\sum_i^mw_ix_i,\;\sigma^2_S=p(1-p)\sum_i^mw^2_ix^2_i.</script><p>For each training sample, the objective is maximizing the probability of predicting correctly. Therefore,</p>
+\mu_S=(1-p)\sum_i^mw_ix_i,\;\sigma^2_S=p(1-p)\sum_i^mw^2_ix^2_i.</script><blockquote>
+<p>$\texttt{Theorem}:$ <strong>Lyapunov Central Limit Theorem</strong> <br><br>Suppose $\{X_1,X_2,…,X_n\}$ is a sequence of independent variables, each with finite expected value $\mu_i$ and variance $\sigma^2_i$. Define</p>
+<script type="math/tex; mode=display">
+s^2_n = \sum_{i=1}^n\sigma^2_i.</script><p>If for some $\delta&gt;0$, <em>Lyapunov’s condition</em></p>
+<script type="math/tex; mode=display">
+\lim_{n\rightarrow+\infty}\frac{1}{s^{2+\delta}_n}\sum_{i=1}^n\mathbb{E}\left[|X_i - \mu_i|^{2+\delta} \right] = 0</script><p>is satisfied, then a sum of $\frac{X_i-\mu_i}{s_n}$ converges to a standard Gaussian random variable, as $n$ goes to infinity:</p>
+<script type="math/tex; mode=display">
+\frac{1}{s_n}\sum_{i=1}^n\left(X_i - \mu_i \right)\xrightarrow{d}\mathcal{N}(0,1).</script><p><a href="https://en.wikipedia.org/wiki/Central_limit_theorem" target="_blank" rel="noopener">&gt; GO TO WIKI &lt;</a></p>
+</blockquote>
+<p>For each training sample, the objective is maximizing the probability of predicting correctly. Therefore,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     \mathbb{E}_z[\log\mathbb{P}(y|\sum_i^mw_iz_ix_i)] \approx\,& \mathbb{E}_S[\log\mathbb{P}(y|S)] \\
