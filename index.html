@@ -252,6 +252,206 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/05/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" itemprop="url">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-05T13:51:22+08:00">
+                2018-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://arxiv.org/abs/1705.07283" target="_blank" rel="noopener">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a> published on NIPS 2017. The main novel point is utilizing <em>Log-Normal</em> distribution.</p>
+<h2 id="Log-Normal-Multiplicative-Noise"><a href="#Log-Normal-Multiplicative-Noise" class="headerlink" title="Log-Normal Multiplicative Noise"></a>Log-Normal Multiplicative Noise</h2><p>Say, for a dropout layer, input $x$ and output $y$ are in $R^I$. To introduce noise, each element of $x$ is multiplied a <strong>POSITIVE</strong> noise:</p>
+<script type="math/tex; mode=display">
+y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim \mathbb{P}(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
+<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $\mathbb{P}(\theta)$ in fully-fractorized way</p>
+<script type="math/tex; mode=display">
+\mathbb{\theta} = \prod_{i=1}^I\mathbb{P}(\theta_i) \;\;\;\; \mathbb{P}(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
+<script type="math/tex; mode=display">
+q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</p>
+<script type="math/tex; mode=display">
+\theta_i \sim LogN(\theta_i|\mu_i,\sigma^2_i)\;\;\iff\;\; \log\theta_i \sim \mathcal{N}(\mu_i,\sigma^2_i).</script><p>The log-normal distribution is chosen for these reason:</p>
+<ul>
+<li>The log-uniform distribution is a specific case of the log-normal one. In fact,</li>
+</ul>
+<script type="math/tex; mode=display">
+    q_\phi(\log\theta_i) = \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{|\theta_i - \mu_i|^2}{2\sigma^2} \right)
+                         \xrightarrow{\sigma\rightarrow+\infty} \frac{1}{\sigma\sqrt{2\pi}}
+                         \propto \frac{1}{\sqrt{2\pi}}</script><ul>
+<li>In the logarithmic space, the commonly used Gaussian posterior is asymetric and has different supports from log-uniform distribution.</li>
+</ul>
+<blockquote>
+<p>$\texttt{Note}:$ Given that $\theta$ is defined positive at the beginning, there is no reason to discuss symetry while comparing log-uniform and Gaussian.</p>
+</blockquote>
+<ul>
+<li><p>Log-normal noise is always non-negative, while Gaussian one is not. During training with the latter, the sign of output non-activated is arbitary, while during testing, it is always non-negative, because the noise equals $1$ and the input activated by most popular non-linearities (e.g. ReLU, Sigmoid, Softplus) is non-negative. This inconsistency can not be justified even though Gaussian dropout works well in some work.</p>
+</li>
+<li><p>$KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta))$ is computable analytically.</p>
+</li>
+</ul>
+<blockquote>
+<p>$\texttt{Note}:$ $KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta))=C-\log\sigma$, where $C=+\infty$.</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+      KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta)) =&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{LogU_{\infty}(\theta)}{LogN(\theta)}d\theta \\
+=&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{1}{C\theta}d\theta - H(LogN(\theta|\mu,\sigma^2)) \\
+=&\, \log C + \int \frac{1}{\theta\sigma\sqrt{2\pi}}\exp\left(-\frac{(\log\theta-\mu)^2}{2\sigma^2} \right)\log\theta d\theta - \frac{1}{2} - \frac{1}{2}\log(2\pi\sigma^2) - \mu \\
+=&\, C' + \int \exp(-u)\frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(u-\mu)^2}{2\sigma^2} \right)u\exp(u)du - \log\sigma \\
+=&\, C'' - \log\sigma,
+\end{aligned}</script><p>where $C’’=\log C - \frac{1}{2}\left(1+\log(2\pi)\right)-\mu$. <br><br>This term is not infinity if and only if </p>
+<script type="math/tex; mode=display">
+\log\sigma = \mathcal{O}(\log C),</script><p>which means $\sigma\rightarrow+\infty$.</p>
+</blockquote>
+<p>Given the above $\texttt{Note}$, the lower bound is ill-posed. In fact, the lower bound</p>
+<script type="math/tex; mode=display">
+\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||\mathbb{P}(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
+<h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$.</p>
+<h2 id="Some-Details"><a href="#Some-Details" class="headerlink" title="Some Details"></a>Some Details</h2><p>// TODO</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Neklyudov, K., Molchanov, D., Ashukha, A., &amp; Vetrov, D. P. (2017). Structured bayesian pruning via log-normal multiplicative noise. In Advances in Neural Information Processing Systems (pp. 6775-6784).</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/Variational-Dropout/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -398,7 +598,7 @@ S = \sum_i^m x_iv_i.</script><blockquote>
     \mathbb{V}ar\left[\sum_i^m x_iv_i\right] =& \sum_i^mx^2_i\mathbb{V}ar\left[v_i \right] \\
                                              =& \sum_i^mx^2_i\sigma^2_i.
 \end{aligned}</script><p>Hence, it is necessary that $\sigma^2_i=p(1-p)w^2$.</p>
-<p>Given $\mu_i=pw$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
+<p>Given $\mu_i=(1-p)w$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
 </blockquote>
 <p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $\mathbb{P}(v)$ as prior, the evidence lower bound is hence</p>
 <script type="math/tex; mode=display">
@@ -836,7 +1036,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
 \begin{aligned}
     w =& \mu + \sqrt{\phi}\cdot\varepsilon \\
     \varepsilon \sim& \mathcal{N}(0,1).
-\end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, datase is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
+\end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, dataset is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),\mathbb{P}(w|x_m,y_m)) \\
@@ -1068,7 +1268,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Deep Compression,Bayesian Inference,Gaussian Dropout,Network Sparsity," />
+  <meta name="keywords" content="Gaussian Dropout,Network Sparsity," />
 
 
 
@@ -80,14 +80,14 @@
 
 
 <meta name="description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
-<meta name="keywords" content="Deep Compression,Bayesian Inference,Gaussian Dropout,Network Sparsity">
+<meta name="keywords" content="Gaussian Dropout,Network Sparsity">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Variational Dropout">
 <meta property="og:url" content="http://yoursite.com/2018/06/30/Variational-Dropout/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-04T09:37:08.205Z">
+<meta property="og:updated_time" content="2018-07-05T06:03:16.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Dropout">
 <meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
@@ -395,7 +395,7 @@ S = \sum_i^m x_iv_i.</script><blockquote>
     \mathbb{V}ar\left[\sum_i^m x_iv_i\right] =& \sum_i^mx^2_i\mathbb{V}ar\left[v_i \right] \\
                                              =& \sum_i^mx^2_i\sigma^2_i.
 \end{aligned}</script><p>Hence, it is necessary that $\sigma^2_i=p(1-p)w^2$.</p>
-<p>Given $\mu_i=pw$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
+<p>Given $\mu_i=(1-p)w$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
 </blockquote>
 <p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $\mathbb{P}(v)$ as prior, the evidence lower bound is hence</p>
 <script type="math/tex; mode=display">
@@ -423,10 +423,6 @@ S = \sum_i^m x_iv_i.</script><blockquote>
       
         <div class="post-tags">
           
-            <a href="/tags/Deep-Compression/" rel="tag"># Deep Compression</a>
-          
-            <a href="/tags/Bayesian-Inference/" rel="tag"># Bayesian Inference</a>
-          
             <a href="/tags/Gaussian-Dropout/" rel="tag"># Gaussian Dropout</a>
           
             <a href="/tags/Network-Sparsity/" rel="tag"># Network Sparsity</a>
@@ -451,6 +447,10 @@ S = \sum_i^m x_iv_i.</script><blockquote>
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/05/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" rel="prev" title="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
+                Structured Bayesian Pruning via Log-Normal Multiplicative Noise <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -527,7 +527,7 @@ S = \sum_i^m x_iv_i.</script><blockquote>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
