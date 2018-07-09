@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-08T08:29:29.274Z">
+<meta property="og:updated_time" content="2018-07-09T15:50:37.321Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
 <meta name="twitter:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
@@ -387,7 +387,7 @@ q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</
 <script type="math/tex; mode=display">
 \begin{aligned}
       KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta)) =&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{LogU_{\infty}(\theta)}{LogN(\theta)}d\theta \\
-=&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{1}{C\theta}d\theta - H(LogN(\theta|\mu,\sigma^2)) \\
+=&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{1}{C\theta}d\theta - \mathcal{H}(LogN(\theta|\mu,\sigma^2)) \\
 =&\, \log C + \int \frac{1}{\theta\sigma\sqrt{2\pi}}\exp\left(-\frac{(\log\theta-\mu)^2}{2\sigma^2} \right)\log\theta d\theta - \frac{1}{2} - \frac{1}{2}\log(2\pi\sigma^2) - \mu \\
 =&\, C' + \int \exp(-u)\frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(u-\mu)^2}{2\sigma^2} \right)u\exp(u)du - \log\sigma \\
 =&\, C'' - \log\sigma,
@@ -398,9 +398,41 @@ q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</
 <p>Given the above $\texttt{Note}$, the lower bound is ill-posed. In fact, the lower bound</p>
 <script type="math/tex; mode=display">
 \mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||\mathbb{P}(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
-<h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$.</p>
-<h2 id="Some-Details"><a href="#Some-Details" class="headerlink" title="Some Details"></a>Some Details</h2><p>// TODO</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Neklyudov, K., Molchanov, D., Ashukha, A., &amp; Vetrov, D. P. (2017). Structured bayesian pruning via log-normal multiplicative noise. In Advances in Neural Information Processing Systems (pp. 6775-6784).</p>
+<h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$. Therefore, complete mass of log-uniform is useless. To construct a practicable prior, a truncted approximation is proposed</p>
+<script type="math/tex; mode=display">
+LogU_{[a,b]}(\theta)\propto LogU_\infty(\theta)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><script type="math/tex; mode=display">
+LogN_{[a,b]}(\theta|\mu,\sigma^2)\propto LogN(\theta|\mu,\sigma^2)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><p>The new KL term will be</p>
+<script type="math/tex; mode=display">
+KL(q_\phi(\theta)||\mathbb{P}(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
+<blockquote>
+<p>$\texttt{Note}:$ As for KL term with $\theta\in \left[e^a,e^b\right]$, in fact</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+      KL(q_\phi(\theta)||\mathbb{P}(\theta)) =&\, -\int q_\phi(\theta)\log\frac{\mathbb{P}(\theta)}{q_\phi(\theta)}d\theta \\
+                                             =&\, -\int e^uq_\phi(e^u)\log\frac{\mathbb{P}(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
+                                             =&\, -\int q'_\phi(u)\log\frac{\mathbb{P}(u)}{q'_\phi(u)}du \\
+                                             =&\, KL(q'_\phi(u)||\mathbb{P}(u)),
+\end{aligned}</script><p>where $q’_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $\mathbb{P}(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    KL(q'_\phi(u)||\mathbb{P}(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
+                                  =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\left(-\log(b-a) - \log\left(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b) \right) \right)du \\
+                                  =&\, \int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(b-a)du - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) \\
+                                  =&\, \log(b-a) - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)).
+\end{aligned}</script><p>Consider the entropy term,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b))du \\
+                                                      =&\, \log(\sqrt{2\pi}\sigma Z) + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2Z}
+\end{aligned}</script><p>where $\alpha=\frac{a-\mu}{\sigma}$, $\beta=\frac{b-\mu}{\sigma}$ and $Z=\Phi(\beta)-\Phi(\alpha)$.</p>
+<p><a href="https://en.wikipedia.org/wiki/Truncated_normal_distribution" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
+</blockquote>
+<h2 id="Thresholding"><a href="#Thresholding" class="headerlink" title="Thresholding"></a>Thresholding</h2><p>Different from Gaussian noise $\mathcal{N}(1,\alpha)$, log-normal noise does not have parameters like dropout rate $\alpha$, which could be used while thresholding for weight pruning. However, another quantity, Signal-to-Noise Ratio (<em>SNR</em>) is also usable:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    SNR =&\, \frac{\mathbb{E}[\theta]}{\sqrt{\mathbb{V}ar[\theta]}} \\
+        =&\, \frac{\left(\Phi(\sigma - \alpha) - \Phi(\sigma-\beta) \right) / \sqrt{\Phi(\beta - \Phi(\alpha))}}{\sqrt{\exp(\sigma^2) \left(\Phi(2\sigma - \alpha) - \Phi(2\sigma - \beta) \right) - \left(\Phi(\sigma - \alpha) - \Phi(\sigma - \beta) \right)^2}}.
+\end{aligned}</script><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Neklyudov, K., Molchanov, D., Ashukha, A., &amp; Vetrov, D. P. (2017). Structured bayesian pruning via log-normal multiplicative noise. In Advances in Neural Information Processing Systems (pp. 6775-6784).</p>
 
       
     </div>
@@ -581,7 +613,7 @@ q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Log-Normal-Multiplicative-Noise"><span class="nav-number">2.</span> <span class="nav-text">Log-Normal Multiplicative Noise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Truncated-Approximation"><span class="nav-number">3.</span> <span class="nav-text">Truncated Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Some-Details"><span class="nav-number">4.</span> <span class="nav-text">Some Details</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Log-Normal-Multiplicative-Noise"><span class="nav-number">2.</span> <span class="nav-text">Log-Normal Multiplicative Noise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Truncated-Approximation"><span class="nav-number">3.</span> <span class="nav-text">Truncated Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Thresholding"><span class="nav-number">4.</span> <span class="nav-text">Thresholding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
