@@ -252,6 +252,224 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/Keeping-Neural-Networks-Simple-by-MDL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/10/Keeping-Neural-Networks-Simple-by-MDL/" itemprop="url">Keeping Neural Networks Simple by MDL</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-10T18:50:00+08:00">
+                2018-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://dl.acm.org/citation.cfm?doid=168304.168306" target="_blank" rel="noopener">Keeping Neural Networks Simple by Minimizing the Description Length of the Weights</a> published on COLT 1993, which mainly proposes a view of MDL over simplifying neural networks.</p>
+<h2 id="MDL"><a href="#MDL" class="headerlink" title="MDL"></a>MDL</h2><p>When fitting data models to some data, a more complex model often performs better on training data but may be overfitting. So it is in need of methods to decide when extra complexity of the model is not worth the improvement in the data-fit. Minimum Description Length (<em>MDL</em>) Principle is proposed in [2], asserting that the best model is the one that minimizes the combined cost of decribing the model and the misfit between the model and the data. For example, in a supervised classification task, the model cost is the number of bits describing the model, and the data misfit cost is the number of bits describing the descrepency between model output and the ground truth.</p>
+<blockquote>
+<p>$\texttt{Note}:$ The principle could be viewed in a simple communication model as</p>
+<script type="math/tex; mode=display">
+input\;\; X = x</script><script type="math/tex; mode=display">
+sender (W = w, Y = y)\;\;\;\; \xrightarrow{\Delta y,\, w}\;\;\;\; receiver</script></blockquote>
+<h3 id="Coding"><a href="#Coding" class="headerlink" title="Coding"></a>Coding</h3><p>In order to compute communication cost, the first question is how to define the number of bits in need. For simplification, data misfit cost is discussed as an example for illustration.</p>
+<p>Clearly, if the data misfits are real numbers, an inifinite amount of information is needed to convey them. Hence, a simple quantization is included so that the real numbers within a width of $t$ will be degraded to one number.</p>
+<p>After quantization, the misfits $\Delta y$ are further coded into bits with length $-\log\mathbb{P}(\Delta Y=\Delta y)$. For example, let the misfit follow a Gaussian centralized:</p>
+<script type="math/tex; mode=display">
+\Delta Y \sim \mathcal{N}(0,\sigma^2)\;\; \iff\;\; \hat{Y}|Y \sim \mathcal{N}(y,\sigma^2).</script><p>Therefore,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{P}(\Delta Y = \Delta y|Y = y) =&\, \mathbb{P}(\hat{Y} = \hat{y}, \hat{y} = y + \Delta y|Y = y) \\
+                                          =&\, \int_{\hat{Y}\in\mathcal{B}(\hat{y},t)} \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(\hat{Y} - y)^2}{2\sigma^2} \right)d\hat{Y} \\
+                       \approx&\, \frac{t}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(\hat{y} - y)^2}{2\sigma^2} \right),
+\end{aligned}</script><p>where the approximation is valid if $t\ll\sigma$. Then the misfit cost (on average), i.e. the number of descrepency bits, becomes</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{C}^D =&\, \mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y = \Delta y|Y = y) \right] \\
+                  \approx&\, -\frac{1}{N}\sum_i^N \left(\log t -\frac{(\hat{y_i} - y_i)^2}{2\sigma^2} \right) + \log\sigma,
+\end{aligned}</script><p>where the approximation is induced by Monte Carlo Sampling.</p>
+<h2 id="Bits-Back-Argument"><a href="#Bits-Back-Argument" class="headerlink" title="Bits-Back Argument"></a>Bits-Back Argument</h2><p>The sender trains the model with data so that it learns the posterior distribution of weights, $q$. However, for sending precise weights to the receiver, the sender may need some random bits (e.g. random seeds) to collapse $q$ to a number. But note that, since the receiver receives the misfits, weights and shares the input with the sender, it is able to train the model itself, which means the receiver can know $q$ as well. In other words, the knowledge of $q$ does mainly come from $w$ once it has received misfits. Furthermore, the information given by $w$ may be rebundant, leading to unnecessary cost. Hence, for computing the necessary cost, it suffers to substract the cost of sending $w$ by the unnecessary cost.</p>
+<h3 id="Weight-Cost"><a href="#Weight-Cost" class="headerlink" title="Weight Cost"></a>Weight Cost</h3><p>Different from data, when model is fixed, weights are often preferred to be certain settings. This refers to, in fact, the prior of weight, $p(w)$. In this case, the sender and the receiver will share this knowledge. Given that, the sender can send $w$ by coding according to this prior (seen the section above). Hence, the cost of sending weights will be</p>
+<script type="math/tex; mode=display">
+\mathcal{C}^W = -\log\left(tp(w) \right) = -\log t - \log p(w).</script><h3 id="Random-Bits"><a href="#Random-Bits" class="headerlink" title="Random Bits"></a>Random Bits</h3><p>Actually, to sample $w$ from $q$, the sender needs some random bits (e.g. random seeds). On the other hand, the receiver can know these bits by computing inversely, i.e. from $w$ and $q$ to the random bits.</p>
+<blockquote>
+<p>$\texttt{Note}:$ In computer literature, there is no, as so far, real but <strong>pseudo</strong> random numbers. In most case, the “random” numbers is generated by certain iterative algorithm and based on a real random number, which is often given by hand, namely random seed.</p>
+<p><a href="https://en.wikipedia.org/wiki/Random_seed" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
+</blockquote>
+<p>However, thesr random bits are not necessary, because 1) they are not features of the model; 2) they can be generated on the receiver side as well. Therfore, we can conclude that the unncessary information is exactly the random bits. Given that these bits can be restored from $q$ and $w$, the cost of sending them will be the number of bits coded according to $q$:</p>
+<script type="math/tex; mode=display">
+\mathcal{C}^R = -\log\left(tq(w) \right) = -\log t - \log q(w).</script><h3 id="Substraction"><a href="#Substraction" class="headerlink" title="Substraction"></a>Substraction</h3><p>Therefore, by computing the expected value, the necessary cost to describe the model is</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{C}^M =&\, \mathbb{E}_q\left[\mathcal{C}^W - \mathcal{C}^R \right] \\
+                =&\, \int q(w) \left(\log q(w) - \log p(w) \right)dw \\
+                =&\, -\int q(w) \log\frac{p(w)}{q(w)}dw \\
+                =&\, KL(q(w)||p(w))
+\end{aligned}</script><p>This process can be compared as a special transaction between the sender and the receiver:</p>
+<script type="math/tex; mode=display">
+input\;\; X = x,\;\; prior\;\; p(w)</script><script type="math/tex; mode=display">
+sender (W \sim q, Y = y)\;\;\;\; \xrightarrow[w\,=\,g(r,\,q)]{\Delta y}\;\;\;\; receiver</script><script type="math/tex; mode=display">
+sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f(w,x) + \Delta y)</script><p>where $g(.)$ is some random number generation algorithm, $r$ random bits. </p>
+<blockquote>
+<p>$\texttt{Notes}:$ The receiver sends random bits $r$ back to the sender, because they are not necessary for description of the model. Hence, this argument is named by “<em>bits back</em>“.</p>
+</blockquote>
+<h2 id="With-Bayesian-Inference"><a href="#With-Bayesian-Inference" class="headerlink" title="With Bayesian Inference"></a>With Bayesian Inference</h2><p>Combine the cost of data misfits and model description, the total cost is</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{C} =&\, \mathcal{C}^D + \mathcal{C}^M \\
+                =&\, \mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y|Y) \right] + KL(q(w)||p(w)).
+\end{aligned}</script><p>To minimize the misfit term, it suffers that $\Delta Y = \hat{y} - y$ happens as frequently as possible, no matter how large it is. However, since it is always expected that $\Delta Y\rightarrow 0$, the first term can be further transformed:</p>
+<script type="math/tex; mode=display">
+\mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y|Y) \right] \xrightarrow{\Delta Y\, \rightarrow\, 0} \mathbb{E}_Y\left[-\log\mathbb{P}(\hat{Y} = Y|W,X) \right] \equiv \mathbb{E}_Y\left[-\log\mathbb{P}(Y|W = w,X) \right].</script><p>Hence,</p>
+<script type="math/tex; mode=display">
+\mathcal{C} = -\left(\mathbb{E}_Y\left[\log\mathbb{P}(Y|W = w,X) \right] - KL(q(w)||p(w)) \right).</script><p>To minimize the cost, it is equivalent to maximize</p>
+<script type="math/tex; mode=display">
+\mathcal{L} = \mathbb{E}_Y\left[\log\mathbb{P}(Y|W = w,X) \right] - KL(q(w)||p(w)),</script><p>which is exactly the <strong>evidence lower bound</strong> of Bayesian inference.</p>
+<blockquote>
+<p>$\texttt{Note}:$ In most case, the first term is approximated by Monte Carlo Sampling so that</p>
+<script type="math/tex; mode=display">
+\mathcal{L} \approx \frac{1}{N}\sum_{i=1}^N \left[\log\mathbb{P}(Y = y_i|W = w,X = x_i) \right] - KL(q(w)||p(w))</script></blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Hinton, G. E., &amp; van Camp, D. Keeping neural networks simple by minimising the description length of weights. 1993. In Proceedings of COLT-93 (pp. 5-13).</p>
+<p>[2] Rissanen, J. (1986). Stochastic complexity and modeling. The annals of statistics, 1080-1100.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1300,7 +1518,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1322,7 +1540,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
