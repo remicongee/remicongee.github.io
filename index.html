@@ -1273,7 +1273,7 @@ p(w|S,D) = \frac{\mathbb{P}(S,D|w)\cdot p(w)}{\mathbb{P}(S,D)}.</script><p><a hr
 </blockquote>
 <p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(w)||p(w|S,D)) = \int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
+KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     KL(q_\phi(w)||p(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||p(w)) + \log\mathbb{P}(y|x) \\
