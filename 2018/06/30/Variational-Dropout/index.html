@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-12T06:37:21.950Z">
+<meta property="og:updated_time" content="2018-07-12T07:52:04.313Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Dropout">
 <meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
@@ -356,7 +356,7 @@
         <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://nlp.stanford.edu/pubs/sidaw13fast.pdf" target="_blank" rel="noopener">Fast Dropout Training</a>, <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
 <p>Say a fully-connected layer with input $A\in M_{K,L}$ and output inactivated $B\in M_{K,N}$, the dropout can be expressed as</p>
 <script type="math/tex; mode=display">
-B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\simp(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $p(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
+B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim p(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $p(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
 <blockquote>
 <p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels ?</p>
 </blockquote>
