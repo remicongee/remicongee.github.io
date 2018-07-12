@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-05T06:10:38.400Z">
+<meta property="og:updated_time" content="2018-07-12T07:00:38.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Principles and Possible Methods">
 <meta name="twitter:description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
@@ -361,16 +361,21 @@
                       =& \frac{\mathbb{P}(w,S,D)}{\int\mathbb{P}(w,S,D)dw}.
 \end{aligned}</script><p>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as</p>
 <script type="math/tex; mode=display">
-q_\phi(w) \approx \mathbb{P}(w|S,D).</script><p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
+q_\phi(w) \approx p(w|S,D).</script><blockquote>
+<p>$\texttt{Note}:$ $w$ is considered as a real random variable with a continuous probability density function, denoted as $p$.<br>The Baysian’s Rule will be hence extended to be</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
+p(w|S,D) = \frac{\mathbb{P}(S,D|w)\cdot p(w)}{\mathbb{P}(S,D)}.</script><p><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
+</blockquote>
+<p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
+<script type="math/tex; mode=display">
+KL(q_\phi(w)||p(w|S,D)) = \int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q_\phi(w)||\mathbb{P}(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||\mathbb{P}(w)) + \log\mathbb{P}(y|x) \\
-                                     =& -\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) + \log\mathbb{P}(y|x),
+    KL(q_\phi(w)||p(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||p(w)) + \log\mathbb{P}(y|x) \\
+                                     =& -\mathcal{L}(q_\phi(w),p(w|D)) + \log\mathbb{P}(y|x),
 \end{aligned}</script><p>where </p>
 <script type="math/tex; mode=display">
-\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
+\mathcal{L}(q_\phi(w),p(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
 <blockquote>
 <p>$\texttt{Note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
 </blockquote>
@@ -384,7 +389,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
 \end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, dataset is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),\mathbb{P}(w|x_m,y_m)) \\
+    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),p(w|x_m,y_m)) \\
                                            =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
 \end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
 <script type="math/tex; mode=display">

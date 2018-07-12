@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-05T05:53:04.410Z">
+<meta property="og:updated_time" content="2018-07-12T06:24:41.453Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Bayesian Compression for Deep Learning">
 <meta name="twitter:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
@@ -360,32 +360,32 @@
 </ul>
 <h2 id="Hierarchical-Priors"><a href="#Hierarchical-Priors" class="headerlink" title="Hierarchical Priors"></a>Hierarchical Priors</h2><p>As mentioned in “Principles and Possible Methods”, the evidence lower bound is commonly like</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
+\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
 <script type="math/tex; mode=display">
-z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
+z \sim p(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
 <blockquote>
 <p>$\texttt{Note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$, which is not included in this text.</p>
 </blockquote>
 <p>In this case, $z$ also becomes a paramater to infer. Then reform the evidence lower bound as</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||\mathbb{P}(z,w)) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{\mathbb{P}(z,w)}{q_\phi(z,w)}d(z,w) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
+    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||p(z,w)) \\
+                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) \\
+                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
 \end{aligned}</script><p>In fact, the integration term in the second step could be further deducted as</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \int q_\phi(z,w)\log\frac{\mathbb{P}(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{\mathbb{P}(w|z)\mathbb{P}(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
-          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{\mathbb{P}(w|z)}{q_\phi(w|z)} + \log\frac{\mathbb{P}(z)}{q_\phi(z)}\right)dwdz \\
-          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{\mathbb{P}(w|z)}{q_\phi(w|z)}dwdz \\
-           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dzdw \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||\mathbb{P}(z))] \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
+    \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{p(w|z)p(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
+          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{p(w|z)}{q_\phi(w|z)} + \log\frac{p(z)}{q_\phi(z)}\right)dwdz \\
+          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{p(w|z)}{q_\phi(w|z)}dwdz \\
+           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dzdw \\
+          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||p(z))] \\
+          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
 \end{aligned}</script><p>It includes two KL-divergence terms. The former one concerns posterior of $w$ knowing $z$, while the latter one concerns prior of $z$. Furthermore, the former one is actually the prior of $w$ in the common case. In conclusion, after infering the prior of $z$, it seems possible to infer the “prior” of $w$, which is why this method is named after “<em>hierarchical</em>“.</p>
 <p>In order to introduce sparsity to the model, several kinds of priors (of $z$) could be preferred.</p>
-<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $\mathbb{P}(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
+<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $p(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
 <blockquote>
-<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $\mathbb{P}(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
+<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $p(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
 </blockquote>
 <p>In the approximate posterior, $(z,w)$ follows a mixed Gaussian distribution as</p>
 <script type="math/tex; mode=display">
@@ -407,11 +407,11 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
 </blockquote>
 <p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
 <ul>
-<li>$KL(q_\phi(w|z)||\mathbb{P}(w|z))$ is independent of $z$. In fact,</li>
+<li>$KL(q_\phi(w|z)||p(w|z))$ is independent of $z$. In fact,</li>
 </ul>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q_\phi(w|z)||\mathbb{P}(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
+    KL(q_\phi(w|z)||p(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
                                      =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\cdot \left(\frac{|w-z\mu |^2}{2z^2\sigma^2}-\frac{|w |^2}{2z^2} + \log\sigma \right)dw \\
                                      =& -\frac{1}{2z^2\sigma^2}\left(\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - 2z\mu\mathbb{E}[\mathcal{N}(z\mu,z^2\sigma^2)] + z^2\mu^2 \right) \\
                                       &+ \frac{1}{2z^2}\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - \log\sigma \\
@@ -421,22 +421,22 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
 <p>$\texttt{Note}:$ This independence is still valid even though $w|z$ follows <em>a prior</em> a non-centered law.</p>
 </blockquote>
 <ul>
-<li>$-KL(q_\phi(z)||\mathbb{P}(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
+<li>$-KL(q_\phi(z)||p(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
 </ul>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    -KL(q_\phi(z)||\mathbb{P}(z)) =& \int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dz \\
+    -KL(q_\phi(z)||p(z)) =& \int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dz \\
                                   =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}+K}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
                                   \approx& k_1\sigma(k_2+k_3\log\alpha) - 0.5m(-\log\alpha) + C', 
-\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||\mathbb{P}(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
+\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||p(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
 <blockquote>
-<p>$\texttt{Note}:$ Since $\mathbb{P}(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
+<p>$\texttt{Note}:$ Since $p(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
 <script type="math/tex; mode=display">
-\mathbb{P}(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
+p(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
 </blockquote>
 <p>Another interesting point is how to assign a dropout rate to a group of weights (neurons or <em>CNN</em> kernels). Say, for exemple, an MLP of two hidden layers $A$ and $B$. One choice is to let a group of neurons share one $z$ so that the posterior and the approximate one can be written as</p>
 <script type="math/tex; mode=display">
-    \mathbb{P}(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
+    p(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
     q_\phi(z,w) = \prod_i^A\mathcal{N}(z_i|\mu_{z_i},\mu_{z_i}^2\alpha_i)\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|z_i\mu_{ij},z_i^2\sigma_{ij}^2)</script><p>The whole training process can be summarized as</p>
 <blockquote>
 <p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y= xz\mathcal{N}(\mu,\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$ by gradient of $\mathcal{L}$<br>Dropout the group with $\alpha$ larger than certain threshold</p>

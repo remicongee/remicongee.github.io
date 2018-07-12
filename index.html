@@ -577,10 +577,10 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
             <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://arxiv.org/abs/1705.07283" target="_blank" rel="noopener">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a> published on NIPS 2017. The main novel point is utilizing <em>Log-Normal</em> distribution.</p>
 <h2 id="Log-Normal-Multiplicative-Noise"><a href="#Log-Normal-Multiplicative-Noise" class="headerlink" title="Log-Normal Multiplicative Noise"></a>Log-Normal Multiplicative Noise</h2><p>Say, for a dropout layer, input $x$ and output $y$ are in $R^I$. To introduce noise, each element of $x$ is multiplied a <strong>POSITIVE</strong> noise:</p>
 <script type="math/tex; mode=display">
-y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim \mathbb{P}(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
-<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $\mathbb{P}(\theta)$ in fully-fractorized way</p>
+y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim p(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
+<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $p(\theta)$ in fully-fractorized way</p>
 <script type="math/tex; mode=display">
-\mathbb{\theta} = \prod_{i=1}^I\mathbb{P}(\theta_i) \;\;\;\; \mathbb{P}(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
+p(\theta) = \prod_{i=1}^Ip(\theta_i) \;\;\;\; p(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
 <script type="math/tex; mode=display">
 q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</p>
 <script type="math/tex; mode=display">
@@ -618,25 +618,25 @@ q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</
 </blockquote>
 <p>Given the above $\texttt{Note}$, the lower bound is ill-posed. In fact, the lower bound</p>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||\mathbb{P}(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
+\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||p(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
 <h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$. Therefore, complete mass of log-uniform is useless. To construct a practicable prior, a truncted approximation is proposed</p>
 <script type="math/tex; mode=display">
 LogU_{[a,b]}(\theta)\propto LogU_\infty(\theta)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><script type="math/tex; mode=display">
 LogN_{[a,b]}(\theta|\mu,\sigma^2)\propto LogN(\theta|\mu,\sigma^2)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><p>The new KL term will be</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(\theta)||\mathbb{P}(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
+KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
 <blockquote>
 <p>$\texttt{Note}:$ As for KL term with $\theta\in \left[e^a,e^b\right]$, in fact</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-      KL(q_\phi(\theta)||\mathbb{P}(\theta)) =&\, -\int q_\phi(\theta)\log\frac{\mathbb{P}(\theta)}{q_\phi(\theta)}d\theta \\
-                                             =&\, -\int e^uq_\phi(e^u)\log\frac{\mathbb{P}(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
-                                             =&\, -\int q'_\phi(u)\log\frac{\mathbb{P}(u)}{q'_\phi(u)}du \\
-                                             =&\, KL(q'_\phi(u)||\mathbb{P}(u)),
-\end{aligned}</script><p>where $q’_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $\mathbb{P}(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
+      KL(q_\phi(\theta)||p(\theta)) =&\, -\int q_\phi(\theta)\log\frac{p(\theta)}{q_\phi(\theta)}d\theta \\
+                                             =&\, -\int e^uq_\phi(e^u)\log\frac{p(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
+                                             =&\, -\int q_\phi(u)\log\frac{p(u)}{q_\phi(u)}du \\
+                                             =&\, KL(q_\phi(u)||p(u)),
+\end{aligned}</script><p>where $q_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $p(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q'_\phi(u)||\mathbb{P}(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
+    KL(q_\phi(u)||p(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
                                   =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\left(-\log(b-a) - \log\left(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b) \right) \right)du \\
                                   =&\, \int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(b-a)du - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) \\
                                   =&\, \log(b-a) - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)).
@@ -809,7 +809,7 @@ KL(q_\phi(\theta)||\mathbb{P}(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} -
             <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://nlp.stanford.edu/pubs/sidaw13fast.pdf" target="_blank" rel="noopener">Fast Dropout Training</a>, <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
 <p>Say a fully-connected layer with input $A\in M_{K,L}$ and output inactivated $B\in M_{K,N}$, the dropout can be expressed as</p>
 <script type="math/tex; mode=display">
-B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\mathbb{P}(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $\mathbb{P}(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
+B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\simp(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $p(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
 <blockquote>
 <p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels ?</p>
 </blockquote>
@@ -850,9 +850,9 @@ S = \sum_i^m x_iv_i.</script><blockquote>
 \end{aligned}</script><p>Hence, it is necessary that $\sigma^2_i=p(1-p)w^2$.</p>
 <p>Given $\mu_i=(1-p)w$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
 </blockquote>
-<p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $\mathbb{P}(v)$ as prior, the evidence lower bound is hence</p>
+<p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $p(v)$ as prior, the evidence lower bound is hence</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\log\mathbb{P}(y|v^Tx) \right] - KL(q_\phi(v)||\mathbb{P}(v)).</script><p>The first term can be approximated by unbiased Monte Carlo sampling as $\mathcal{L}^{SGVB}$ mentioned in [1]. The second term is regularization. It can be noted that when $\alpha$ is fixed, variational dropout should degrade to Gaussian dropout, which means the KL term is expected to be independent of $\mu_i$. The improper log-uniform prior is hence proposed, but KL term is still intractable. In [1] and [2], different approximations are given. That of [2] is robust for a larger scale of $\alpha$.</p>
+\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\log\mathbb{P}(y|v^Tx) \right] - KL(q_\phi(v)||p(v)).</script><p>The first term can be approximated by unbiased Monte Carlo sampling as $\mathcal{L}^{SGVB}$ mentioned in [1]. The second term is regularization. It can be noted that when $\alpha$ is fixed, variational dropout should degrade to Gaussian dropout, which means the KL term is expected to be independent of $\mu_i$. The improper log-uniform prior is hence proposed, but KL term is still intractable. In [1] and [2], different approximations are given. That of [2] is robust for a larger scale of $\alpha$.</p>
 <blockquote>
 <p>$\texttt{Question}:$ According to <a href="https://arxiv.org/abs/1711.02989" target="_blank" rel="noopener">Variational Gaussian Dropout is not Bayesian</a>, variational Gaussian dropout is pseudo Bayesian inference.</p>
 </blockquote>
@@ -1018,32 +1018,32 @@ S = \sum_i^m x_iv_i.</script><blockquote>
 </ul>
 <h2 id="Hierarchical-Priors"><a href="#Hierarchical-Priors" class="headerlink" title="Hierarchical Priors"></a>Hierarchical Priors</h2><p>As mentioned in “Principles and Possible Methods”, the evidence lower bound is commonly like</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
+\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
 <script type="math/tex; mode=display">
-z \sim \mathbb{P}(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
+z \sim p(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
 <blockquote>
 <p>$\texttt{Note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$, which is not included in this text.</p>
 </blockquote>
 <p>In this case, $z$ also becomes a paramater to infer. Then reform the evidence lower bound as</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||\mathbb{P}(z,w)) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{\mathbb{P}(z,w)}{q_\phi(z,w)}d(z,w) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
+    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||p(z,w)) \\
+                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) \\
+                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
 \end{aligned}</script><p>In fact, the integration term in the second step could be further deducted as</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \int q_\phi(z,w)\log\frac{\mathbb{P}(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{\mathbb{P}(w|z)\mathbb{P}(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
-          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{\mathbb{P}(w|z)}{q_\phi(w|z)} + \log\frac{\mathbb{P}(z)}{q_\phi(z)}\right)dwdz \\
-          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{\mathbb{P}(w|z)}{q_\phi(w|z)}dwdz \\
-           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dzdw \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||\mathbb{P}(z))] \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||\mathbb{P}(w|z))] - KL(q_\phi(z)||\mathbb{P}(z)).
+    \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{p(w|z)p(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
+          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{p(w|z)}{q_\phi(w|z)} + \log\frac{p(z)}{q_\phi(z)}\right)dwdz \\
+          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{p(w|z)}{q_\phi(w|z)}dwdz \\
+           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dzdw \\
+          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||p(z))] \\
+          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
 \end{aligned}</script><p>It includes two KL-divergence terms. The former one concerns posterior of $w$ knowing $z$, while the latter one concerns prior of $z$. Furthermore, the former one is actually the prior of $w$ in the common case. In conclusion, after infering the prior of $z$, it seems possible to infer the “prior” of $w$, which is why this method is named after “<em>hierarchical</em>“.</p>
 <p>In order to introduce sparsity to the model, several kinds of priors (of $z$) could be preferred.</p>
-<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $\mathbb{P}(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
+<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $p(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
 <blockquote>
-<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $\mathbb{P}(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
+<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $p(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
 </blockquote>
 <p>In the approximate posterior, $(z,w)$ follows a mixed Gaussian distribution as</p>
 <script type="math/tex; mode=display">
@@ -1065,11 +1065,11 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
 </blockquote>
 <p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
 <ul>
-<li>$KL(q_\phi(w|z)||\mathbb{P}(w|z))$ is independent of $z$. In fact,</li>
+<li>$KL(q_\phi(w|z)||p(w|z))$ is independent of $z$. In fact,</li>
 </ul>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q_\phi(w|z)||\mathbb{P}(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
+    KL(q_\phi(w|z)||p(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
                                      =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\cdot \left(\frac{|w-z\mu |^2}{2z^2\sigma^2}-\frac{|w |^2}{2z^2} + \log\sigma \right)dw \\
                                      =& -\frac{1}{2z^2\sigma^2}\left(\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - 2z\mu\mathbb{E}[\mathcal{N}(z\mu,z^2\sigma^2)] + z^2\mu^2 \right) \\
                                       &+ \frac{1}{2z^2}\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - \log\sigma \\
@@ -1079,22 +1079,22 @@ q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2
 <p>$\texttt{Note}:$ This independence is still valid even though $w|z$ follows <em>a prior</em> a non-centered law.</p>
 </blockquote>
 <ul>
-<li>$-KL(q_\phi(z)||\mathbb{P}(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
+<li>$-KL(q_\phi(z)||p(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
 </ul>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    -KL(q_\phi(z)||\mathbb{P}(z)) =& \int q_\phi(z)\log\frac{\mathbb{P}(z)}{q_\phi(z)}dz \\
+    -KL(q_\phi(z)||p(z)) =& \int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dz \\
                                   =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}+K}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
                                   \approx& k_1\sigma(k_2+k_3\log\alpha) - 0.5m(-\log\alpha) + C', 
-\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||\mathbb{P}(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
+\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||p(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
 <blockquote>
-<p>$\texttt{Note}:$ Since $\mathbb{P}(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
+<p>$\texttt{Note}:$ Since $p(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
 <script type="math/tex; mode=display">
-\mathbb{P}(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
+p(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
 </blockquote>
 <p>Another interesting point is how to assign a dropout rate to a group of weights (neurons or <em>CNN</em> kernels). Say, for exemple, an MLP of two hidden layers $A$ and $B$. One choice is to let a group of neurons share one $z$ so that the posterior and the approximate one can be written as</p>
 <script type="math/tex; mode=display">
-    \mathbb{P}(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
+    p(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
     q_\phi(z,w) = \prod_i^A\mathcal{N}(z_i|\mu_{z_i},\mu_{z_i}^2\alpha_i)\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|z_i\mu_{ij},z_i^2\sigma_{ij}^2)</script><p>The whole training process can be summarized as</p>
 <blockquote>
 <p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y= xz\mathcal{N}(\mu,\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$ by gradient of $\mathcal{L}$<br>Dropout the group with $\alpha$ larger than certain threshold</p>
@@ -1266,16 +1266,21 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
                       =& \frac{\mathbb{P}(w,S,D)}{\int\mathbb{P}(w,S,D)dw}.
 \end{aligned}</script><p>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as</p>
 <script type="math/tex; mode=display">
-q_\phi(w) \approx \mathbb{P}(w|S,D).</script><p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
+q_\phi(w) \approx p(w|S,D).</script><blockquote>
+<p>$\texttt{Note}:$ $w$ is considered as a real random variable with a continuous probability density function, denoted as $p$.<br>The Baysian’s Rule will be hence extended to be</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
+p(w|S,D) = \frac{\mathbb{P}(S,D|w)\cdot p(w)}{\mathbb{P}(S,D)}.</script><p><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
+</blockquote>
+<p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
+<script type="math/tex; mode=display">
+KL(q_\phi(w)||p(w|S,D)) = \int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q_\phi(w)||\mathbb{P}(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||\mathbb{P}(w)) + \log\mathbb{P}(y|x) \\
-                                     =& -\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) + \log\mathbb{P}(y|x),
+    KL(q_\phi(w)||p(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||p(w)) + \log\mathbb{P}(y|x) \\
+                                     =& -\mathcal{L}(q_\phi(w),p(w|D)) + \log\mathbb{P}(y|x),
 \end{aligned}</script><p>where </p>
 <script type="math/tex; mode=display">
-\mathcal{L}(q_\phi(w),\mathbb{P}(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||\mathbb{P}(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
+\mathcal{L}(q_\phi(w),p(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
 <blockquote>
 <p>$\texttt{Note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
 </blockquote>
@@ -1289,7 +1294,7 @@ KL(q_\phi(w)||\mathbb{P}(w|S,D)) = \int q_\phi(w)\log\frac{\mathbb{P}(w|S,D)}{q_
 \end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, dataset is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),\mathbb{P}(w|x_m,y_m)) \\
+    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),p(w|x_m,y_m)) \\
                                            =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
 \end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
 <script type="math/tex; mode=display">

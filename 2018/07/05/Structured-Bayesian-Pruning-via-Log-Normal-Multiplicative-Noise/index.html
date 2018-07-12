@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-09T15:50:37.321Z">
+<meta property="og:updated_time" content="2018-07-12T06:35:26.587Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
 <meta name="twitter:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
@@ -356,10 +356,10 @@
         <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://arxiv.org/abs/1705.07283" target="_blank" rel="noopener">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a> published on NIPS 2017. The main novel point is utilizing <em>Log-Normal</em> distribution.</p>
 <h2 id="Log-Normal-Multiplicative-Noise"><a href="#Log-Normal-Multiplicative-Noise" class="headerlink" title="Log-Normal Multiplicative Noise"></a>Log-Normal Multiplicative Noise</h2><p>Say, for a dropout layer, input $x$ and output $y$ are in $R^I$. To introduce noise, each element of $x$ is multiplied a <strong>POSITIVE</strong> noise:</p>
 <script type="math/tex; mode=display">
-y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim \mathbb{P}(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
-<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $\mathbb{P}(\theta)$ in fully-fractorized way</p>
+y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim p(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
+<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $p(\theta)$ in fully-fractorized way</p>
 <script type="math/tex; mode=display">
-\mathbb{\theta} = \prod_{i=1}^I\mathbb{P}(\theta_i) \;\;\;\; \mathbb{P}(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
+p(\theta) = \prod_{i=1}^Ip(\theta_i) \;\;\;\; p(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
 <script type="math/tex; mode=display">
 q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</p>
 <script type="math/tex; mode=display">
@@ -397,25 +397,25 @@ q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</
 </blockquote>
 <p>Given the above $\texttt{Note}$, the lower bound is ill-posed. In fact, the lower bound</p>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||\mathbb{P}(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
+\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||p(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
 <h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$. Therefore, complete mass of log-uniform is useless. To construct a practicable prior, a truncted approximation is proposed</p>
 <script type="math/tex; mode=display">
 LogU_{[a,b]}(\theta)\propto LogU_\infty(\theta)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><script type="math/tex; mode=display">
 LogN_{[a,b]}(\theta|\mu,\sigma^2)\propto LogN(\theta|\mu,\sigma^2)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><p>The new KL term will be</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(\theta)||\mathbb{P}(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
+KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
 <blockquote>
 <p>$\texttt{Note}:$ As for KL term with $\theta\in \left[e^a,e^b\right]$, in fact</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-      KL(q_\phi(\theta)||\mathbb{P}(\theta)) =&\, -\int q_\phi(\theta)\log\frac{\mathbb{P}(\theta)}{q_\phi(\theta)}d\theta \\
-                                             =&\, -\int e^uq_\phi(e^u)\log\frac{\mathbb{P}(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
-                                             =&\, -\int q'_\phi(u)\log\frac{\mathbb{P}(u)}{q'_\phi(u)}du \\
-                                             =&\, KL(q'_\phi(u)||\mathbb{P}(u)),
-\end{aligned}</script><p>where $q’_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $\mathbb{P}(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
+      KL(q_\phi(\theta)||p(\theta)) =&\, -\int q_\phi(\theta)\log\frac{p(\theta)}{q_\phi(\theta)}d\theta \\
+                                             =&\, -\int e^uq_\phi(e^u)\log\frac{p(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
+                                             =&\, -\int q_\phi(u)\log\frac{p(u)}{q_\phi(u)}du \\
+                                             =&\, KL(q_\phi(u)||p(u)),
+\end{aligned}</script><p>where $q_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $p(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL(q'_\phi(u)||\mathbb{P}(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
+    KL(q_\phi(u)||p(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
                                   =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\left(-\log(b-a) - \log\left(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b) \right) \right)du \\
                                   =&\, \int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(b-a)du - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) \\
                                   =&\, \log(b-a) - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)).

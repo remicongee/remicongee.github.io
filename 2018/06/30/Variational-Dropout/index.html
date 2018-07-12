@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-05T06:03:16.913Z">
+<meta property="og:updated_time" content="2018-07-12T06:37:21.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Variational Dropout">
 <meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
@@ -356,7 +356,7 @@
         <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://nlp.stanford.edu/pubs/sidaw13fast.pdf" target="_blank" rel="noopener">Fast Dropout Training</a>, <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
 <p>Say a fully-connected layer with input $A\in M_{K,L}$ and output inactivated $B\in M_{K,N}$, the dropout can be expressed as</p>
 <script type="math/tex; mode=display">
-B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim\mathbb{P}(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $\mathbb{P}(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
+B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\simp(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $p(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
 <blockquote>
 <p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels ?</p>
 </blockquote>
@@ -397,9 +397,9 @@ S = \sum_i^m x_iv_i.</script><blockquote>
 \end{aligned}</script><p>Hence, it is necessary that $\sigma^2_i=p(1-p)w^2$.</p>
 <p>Given $\mu_i=(1-p)w$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
 </blockquote>
-<p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $\mathbb{P}(v)$ as prior, the evidence lower bound is hence</p>
+<p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $p(v)$ as prior, the evidence lower bound is hence</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\log\mathbb{P}(y|v^Tx) \right] - KL(q_\phi(v)||\mathbb{P}(v)).</script><p>The first term can be approximated by unbiased Monte Carlo sampling as $\mathcal{L}^{SGVB}$ mentioned in [1]. The second term is regularization. It can be noted that when $\alpha$ is fixed, variational dropout should degrade to Gaussian dropout, which means the KL term is expected to be independent of $\mu_i$. The improper log-uniform prior is hence proposed, but KL term is still intractable. In [1] and [2], different approximations are given. That of [2] is robust for a larger scale of $\alpha$.</p>
+\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\log\mathbb{P}(y|v^Tx) \right] - KL(q_\phi(v)||p(v)).</script><p>The first term can be approximated by unbiased Monte Carlo sampling as $\mathcal{L}^{SGVB}$ mentioned in [1]. The second term is regularization. It can be noted that when $\alpha$ is fixed, variational dropout should degrade to Gaussian dropout, which means the KL term is expected to be independent of $\mu_i$. The improper log-uniform prior is hence proposed, but KL term is still intractable. In [1] and [2], different approximations are given. That of [2] is robust for a larger scale of $\alpha$.</p>
 <blockquote>
 <p>$\texttt{Question}:$ According to <a href="https://arxiv.org/abs/1711.02989" target="_blank" rel="noopener">Variational Gaussian Dropout is not Bayesian</a>, variational Gaussian dropout is pseudo Bayesian inference.</p>
 </blockquote>
