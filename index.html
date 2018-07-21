@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/Keeping-Neural-Networks-Simple-by-MDL/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -271,7 +271,174 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/10/Keeping-Neural-Networks-Simple-by-MDL/" itemprop="url">Keeping Neural Networks Simple by MDL</a></h1>
+                <a class="post-title-link" href="/Idea/Deep-Compression/Binary-Dropout-Pruning/" itemprop="url">Binary Dropout Pruning</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-21T15:08:16+08:00">
+                2018-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Idea/" itemprop="url" rel="index">
+                    <span itemprop="name">Idea</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Idea/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to an original method tending to <strong>P</strong>rune neurons or kernels via <strong>B</strong>inary <strong>D</strong>ropout training (<strong>BDP</strong>). The main problem is how to introduce the dropout rate, denoted as $r$, to the parameters to be optimized. BDP utilizes a Gaussian approximation to attack this problem.</p>
+<h2 id="Gaussian-Approximation"><a href="#Gaussian-Approximation" class="headerlink" title="Gaussian Approximation"></a>Gaussian Approximation</h2><p>[1] proposed a Gaussian approximation for binary dropout training, making it much faster. Details are shown in <em><a href="/Deep-Compression/Bayesian-View/Variational-Dropout">Variational Dropout</a></em>. Say input $x$, ground truth $y$, weight $w$ of one neuron of a fully-connected layer and binary noise $\theta\sim\mathcal{B}(r)$, then the objective function becomes</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{L} =&\, \mathbb{E}_\theta\left[\log p(y|w^Tx, \theta) \right] \\
+                =&\, \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right],
+\end{aligned}</script><p>where $\mu_i=(1-r)w_i$ and $\alpha=r/(1-r)$.</p>
+<p>The approximation is as the form of Bayesian inference of $v$ without prior knowledge. To prune this neuron if necessary, some priors are preferred, denoted as $p(v)$, which can be viewed as a constraint. Therefore, the objective becomes</p>
+<script type="math/tex; mode=display">
+\mathcal{L} = \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right],</script><script type="math/tex; mode=display">
+s.t.\;\; KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)) = 0.</script><p>Then the final problem is maximizing</p>
+<script type="math/tex; mode=display">
+\mathcal{L} = \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right] - \tau KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)),</script><script type="math/tex; mode=display">
+s.t.\;\; \tau \ge 0.</script><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Wang, S., &amp; Manning, C. (2013, February). Fast dropout training. In international conference on machine learning (pp. 118-126).</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" itemprop="url">Keeping Neural Networks Simple by MDL</a></h1>
         
 
         <div class="post-meta">
@@ -470,7 +637,7 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/05/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -489,7 +656,7 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/05/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" itemprop="url">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a></h1>
+                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" itemprop="url">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a></h1>
         
 
         <div class="post-meta">
@@ -702,7 +869,7 @@ KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\lef
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/30/Variational-Dropout/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Variational-Dropout/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -721,7 +888,7 @@ KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\lef
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/30/Variational-Dropout/" itemprop="url">Variational Dropout</a></h1>
+                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Variational-Dropout/" itemprop="url">Variational Dropout</a></h1>
         
 
         <div class="post-meta">
@@ -918,7 +1085,7 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/28/Bayesian-Compression-for-Deep-Learning/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -937,7 +1104,7 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/28/Bayesian-Compression-for-Deep-Learning/" itemprop="url">Bayesian Compression for Deep Learning</a></h1>
+                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/" itemprop="url">Bayesian Compression for Deep Learning</a></h1>
         
 
         <div class="post-meta">
@@ -1165,7 +1332,7 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/27/Principles-and-Possible-Methods/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -1184,7 +1351,7 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/27/Principles-and-Possible-Methods/" itemprop="url">Principles and Possible Methods</a></h1>
+                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/" itemprop="url">Principles and Possible Methods</a></h1>
         
 
         <div class="post-meta">
@@ -1373,7 +1540,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/uncategorized/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -1392,7 +1559,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/26/hello-world/" itemprop="url">Hello World</a></h1>
+                <a class="post-title-link" href="/uncategorized/hello-world/" itemprop="url">Hello World</a></h1>
         
 
         <div class="post-meta">
@@ -1534,7 +1701,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1545,7 +1712,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1556,7 +1723,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

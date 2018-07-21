@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Log-Normal," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
+<meta name="keywords" content="Log-Normal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
+<meta property="og:url" content="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/index.html">
+<meta property="og:site_name" content="Remi&#39;s Hexo">
+<meta property="og:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-12T06:35:26.587Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
+<meta name="twitter:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/"/>
+
+
+
+
+
+  <title>Structured Bayesian Pruning via Log-Normal Multiplicative Noise | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Remi's Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-05T13:51:22+08:00">
+                2018-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://arxiv.org/abs/1705.07283" target="_blank" rel="noopener">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a> published on NIPS 2017. The main novel point is utilizing <em>Log-Normal</em> distribution.</p>
+<h2 id="Log-Normal-Multiplicative-Noise"><a href="#Log-Normal-Multiplicative-Noise" class="headerlink" title="Log-Normal Multiplicative Noise"></a>Log-Normal Multiplicative Noise</h2><p>Say, for a dropout layer, input $x$ and output $y$ are in $R^I$. To introduce noise, each element of $x$ is multiplied a <strong>POSITIVE</strong> noise:</p>
+<script type="math/tex; mode=display">
+y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim p(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
+<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $p(\theta)$ in fully-fractorized way</p>
+<script type="math/tex; mode=display">
+p(\theta) = \prod_{i=1}^Ip(\theta_i) \;\;\;\; p(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
+<script type="math/tex; mode=display">
+q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</p>
+<script type="math/tex; mode=display">
+\theta_i \sim LogN(\theta_i|\mu_i,\sigma^2_i)\;\;\iff\;\; \log\theta_i \sim \mathcal{N}(\mu_i,\sigma^2_i).</script><p>The log-normal distribution is chosen for these reason:</p>
+<ul>
+<li>The log-uniform distribution is a specific case of the log-normal one. In fact,</li>
+</ul>
+<script type="math/tex; mode=display">
+    q_\phi(\log\theta_i) = \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{|\theta_i - \mu_i|^2}{2\sigma^2} \right)
+                         \xrightarrow{\sigma\rightarrow+\infty} \frac{1}{\sigma\sqrt{2\pi}}
+                         \propto \frac{1}{\sqrt{2\pi}}</script><ul>
+<li>In the logarithmic space, the commonly used Gaussian posterior is asymetric and has different supports from log-uniform distribution.</li>
+</ul>
+<blockquote>
+<p>$\texttt{Note}:$ Given that $\theta$ is defined positive at the beginning, there is no reason to discuss symetry while comparing log-uniform and Gaussian.</p>
+</blockquote>
+<ul>
+<li><p>Log-normal noise is always non-negative, while Gaussian one is not. During training with the latter, the sign of output non-activated is arbitary, while during testing, it is always non-negative, because the noise equals $1$ and the input activated by most popular non-linearities (e.g. ReLU, Sigmoid, Softplus) is non-negative. This inconsistency can not be justified even though Gaussian dropout works well in some work.</p>
+</li>
+<li><p>$KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta))$ is computable analytically.</p>
+</li>
+</ul>
+<blockquote>
+<p>$\texttt{Note}:$ $KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta))=C-\log\sigma$, where $C=+\infty$.</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+      KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta)) =&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{LogU_{\infty}(\theta)}{LogN(\theta)}d\theta \\
+=&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{1}{C\theta}d\theta - \mathcal{H}(LogN(\theta|\mu,\sigma^2)) \\
+=&\, \log C + \int \frac{1}{\theta\sigma\sqrt{2\pi}}\exp\left(-\frac{(\log\theta-\mu)^2}{2\sigma^2} \right)\log\theta d\theta - \frac{1}{2} - \frac{1}{2}\log(2\pi\sigma^2) - \mu \\
+=&\, C' + \int \exp(-u)\frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(u-\mu)^2}{2\sigma^2} \right)u\exp(u)du - \log\sigma \\
+=&\, C'' - \log\sigma,
+\end{aligned}</script><p>where $C’’=\log C - \frac{1}{2}\left(1+\log(2\pi)\right)-\mu$. <br><br>This term is not infinity if and only if </p>
+<script type="math/tex; mode=display">
+\log\sigma = \mathcal{O}(\log C),</script><p>which means $\sigma\rightarrow+\infty$.</p>
+</blockquote>
+<p>Given the above $\texttt{Note}$, the lower bound is ill-posed. In fact, the lower bound</p>
+<script type="math/tex; mode=display">
+\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||p(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
+<h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$. Therefore, complete mass of log-uniform is useless. To construct a practicable prior, a truncted approximation is proposed</p>
+<script type="math/tex; mode=display">
+LogU_{[a,b]}(\theta)\propto LogU_\infty(\theta)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><script type="math/tex; mode=display">
+LogN_{[a,b]}(\theta|\mu,\sigma^2)\propto LogN(\theta|\mu,\sigma^2)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><p>The new KL term will be</p>
+<script type="math/tex; mode=display">
+KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
+<blockquote>
+<p>$\texttt{Note}:$ As for KL term with $\theta\in \left[e^a,e^b\right]$, in fact</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+      KL(q_\phi(\theta)||p(\theta)) =&\, -\int q_\phi(\theta)\log\frac{p(\theta)}{q_\phi(\theta)}d\theta \\
+                                             =&\, -\int e^uq_\phi(e^u)\log\frac{p(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
+                                             =&\, -\int q_\phi(u)\log\frac{p(u)}{q_\phi(u)}du \\
+                                             =&\, KL(q_\phi(u)||p(u)),
+\end{aligned}</script><p>where $q_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $p(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    KL(q_\phi(u)||p(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
+                                  =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\left(-\log(b-a) - \log\left(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b) \right) \right)du \\
+                                  =&\, \int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(b-a)du - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) \\
+                                  =&\, \log(b-a) - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)).
+\end{aligned}</script><p>Consider the entropy term,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b))du \\
+                                                      =&\, \log(\sqrt{2\pi}\sigma Z) + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2Z}
+\end{aligned}</script><p>where $\alpha=\frac{a-\mu}{\sigma}$, $\beta=\frac{b-\mu}{\sigma}$ and $Z=\Phi(\beta)-\Phi(\alpha)$.</p>
+<p><a href="https://en.wikipedia.org/wiki/Truncated_normal_distribution" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
+</blockquote>
+<h2 id="Thresholding"><a href="#Thresholding" class="headerlink" title="Thresholding"></a>Thresholding</h2><p>Different from Gaussian noise $\mathcal{N}(1,\alpha)$, log-normal noise does not have parameters like dropout rate $\alpha$, which could be used while thresholding for weight pruning. However, another quantity, Signal-to-Noise Ratio (<em>SNR</em>) is also usable:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    SNR =&\, \frac{\mathbb{E}[\theta]}{\sqrt{\mathbb{V}ar[\theta]}} \\
+        =&\, \frac{\left(\Phi(\sigma - \alpha) - \Phi(\sigma-\beta) \right) / \sqrt{\Phi(\beta - \Phi(\alpha))}}{\sqrt{\exp(\sigma^2) \left(\Phi(2\sigma - \alpha) - \Phi(2\sigma - \beta) \right) - \left(\Phi(\sigma - \alpha) - \Phi(\sigma - \beta) \right)^2}}.
+\end{aligned}</script><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Neklyudov, K., Molchanov, D., Ashukha, A., &amp; Vetrov, D. P. (2017). Structured bayesian pruning via log-normal multiplicative noise. In Advances in Neural Information Processing Systems (pp. 6775-6784).</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Log-Normal/" rel="tag"># Log-Normal</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Deep-Compression/Bayesian-View/Variational-Dropout/" rel="next" title="Variational Dropout">
+                <i class="fa fa-chevron-left"></i> Variational Dropout
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" rel="prev" title="Keeping Neural Networks Simple by MDL">
+                Keeping Neural Networks Simple by MDL <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">RemiC</p>
+              <p class="site-description motion-element" itemprop="description">I'm description.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/remicongee" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Log-Normal-Multiplicative-Noise"><span class="nav-number">2.</span> <span class="nav-text">Log-Normal Multiplicative Noise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Truncated-Approximation"><span class="nav-number">3.</span> <span class="nav-text">Truncated Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Thresholding"><span class="nav-number">4.</span> <span class="nav-text">Thresholding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RemiC</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
