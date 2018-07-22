@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-21T08:38:03.633Z">
+<meta property="og:updated_time" content="2018-07-22T13:41:41.242Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Binary Dropout Pruning">
 <meta name="twitter:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
@@ -354,7 +354,7 @@
 
       
         <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to an original method tending to <strong>P</strong>rune neurons or kernels via <strong>B</strong>inary <strong>D</strong>ropout training (<strong>BDP</strong>). The main problem is how to introduce the dropout rate, denoted as $r$, to the parameters to be optimized. BDP utilizes a Gaussian approximation to attack this problem.</p>
-<h2 id="Gaussian-Approximation"><a href="#Gaussian-Approximation" class="headerlink" title="Gaussian Approximation"></a>Gaussian Approximation</h2><p>[1] proposed a Gaussian approximation for binary dropout training, making it much faster. Details are shown in <em><a href="/Deep-Compression/Bayesian-View/Variational-Dropout">Variational Dropout</a></em>. Say input $x$, ground truth $y$, weight $w$ of one neuron of a fully-connected layer and binary noise $\theta\sim\mathcal{B}(r)$, then the objective function becomes</p>
+<h2 id="Gaussian-Approximation"><a href="#Gaussian-Approximation" class="headerlink" title="Gaussian Approximation"></a>Gaussian Approximation</h2><p>[1] proposed a Gaussian approximation for binary dropout training, making it much faster. Details are shown in <a href="/Deep-Compression/Bayesian-View/Variational-Dropout">Variational Dropout</a>. Say input $x$, ground truth $y$, weight $w$ of one neuron of a fully-connected layer and binary noise $\theta\sim\mathcal{B}(r)$, then the objective function becomes</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     \mathcal{L} =&\, \mathbb{E}_\theta\left[\log p(y|w^Tx, \theta) \right] \\
@@ -366,8 +366,40 @@
 s.t.\;\; KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)) = 0.</script><p>Then the final problem is maximizing</p>
 <script type="math/tex; mode=display">
 \mathcal{L} = \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right] - \tau KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)),</script><script type="math/tex; mode=display">
-s.t.\;\; \tau \ge 0.</script><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound.</p>
+s.t.\;\; \tau \ge 0.</script><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound. Given that, the only problem is to determine $p(v)$ so that the optimization prefers sparse weights. However, note that $v$ is a random variable deduced by $\theta$:</p>
+<script type="math/tex; mode=display">
+v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent of $v_j$ if $i\neq j$. Hence, the prior of $v$ is deduced by that of $\theta$. Say the variance of the prior $p(\theta)$ is $\sigma^2$ and the expectation $m$, then according to the central limit theorem,</p>
+<script type="math/tex; mode=display">
+(\theta \odot w)^Tx \sim \mathcal{N}(\sum mw_ix_i,\sum w_i^2x_i^2\sigma^2).</script><p>Therefore, $v_i\sim \mathcal{N}(mw_i,w_i^2\sigma^2)$. Calculate the KL-divergence</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    KL\left((q(v)||p(v) \right) =&\, KL\left(\mathcal{N}(1-r,r(1-r))\,||\,\mathcal{N}(m,\sigma^2) \right) \\
+                                                                                           =&\, -\int \mathcal{N}(u|1-r,r(1-r))\log\frac{\frac{1}{\sqrt{2\pi \sigma^2}}\exp\left(-\frac{|u - m|^2}{2\sigma^2} \right)}{\frac{1}{\sqrt{2\pi r(1-r)}}\exp\left(-\frac{|u - (1-r)|^2}{2r(1-r)} \right)}du \\
+                                                                                           =&\, -\int \mathcal{N}(u|1-r,r(1-r))\cdot\frac{1}{2}\log\frac{r(1-r)}{\sigma^2}du \\
+                                                                                            &\, - \frac{1}{2}\int \mathcal{N}(u|1-r,r(1-r))\cdot \left(\frac{|u - (1-r)|^2}{r(1-r)} - \frac{|u - m|^2}{\sigma^2} \right)du \\
+                                                                                            =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{1}{2r(1-r)}\cdot r(1-r) \\
+                                                                                             &\, + \frac{1}{2\sigma^2}\left(r(1-r) + (1-r)^2 - 2m(1-r) + m^2 \right) \\
+                                                                                            =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{((1-r)-m)^2}{2\sigma^2}.
+\end{aligned}</script><p>The first two terms force the variance of the noise to approach the prior knowledge, and so does the last term to the expectation. Intuitively, sparse networks prefer null noise, i.e. <em>a prior</em> $\theta\sim \mathcal{N}(0,0_+)$. Given that, it is reasonbale to assign $m=0$. Rewrite the KL term</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    KL\left((q(v)||p(v) \right) =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{(1-r)^2}{2\sigma^2} \\
+                                =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{1-r}{2\sigma^2}.
+\end{aligned}</script><p>In order that $\sigma^2\longrightarrow0_+$, it is possible to assign the minimal positive float number but $\texttt{inf}$ maybe arise during optimization. Another choice is tuning $\sigma^2$ as a tiny positive hyperparameter.</p>
+<blockquote>
+<p>$\texttt{Note}:$ The dropout rate $r$ is limited in $[0,1]$, which should be included during optimization. Two alternatives are possible:</p>
+<ul>
+<li>Clip the value of $r$ when forwarding and backwarding at each step.</li>
+<li>Reparameterize $r$ by another variable in $\mathbb{R}$.</li>
+</ul>
+</blockquote>
+<p>Compared with traditional variational dropout method as [2] and [3], the noise is sampled for each weight of a neuron instead of noise sampled for each neuron, leading to a Gaussian approximation. Therefore, there is no need to propose a specific prior for weights any more but only expectation and variance instead.</p>
+<blockquote>
+<p>$\texttt{Question}:$ [2] argues that the <strong>dependency</strong> among weights are not ignorable and therefore, the central limit theorem is not applicable because the Lyapunov’s condition is not satisfied. But is it true? If positive, how to prove?</p>
+</blockquote>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Wang, S., &amp; Manning, C. (2013, February). Fast dropout training. In international conference on machine learning (pp. 118-126).</p>
+<p>[2] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
+<p>[3] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
 
       
     </div>
