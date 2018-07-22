@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-22T13:41:41.242Z">
+<meta property="og:updated_time" content="2018-07-22T14:11:24.291Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Binary Dropout Pruning">
 <meta name="twitter:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
@@ -366,7 +366,7 @@
 s.t.\;\; KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)) = 0.</script><p>Then the final problem is maximizing</p>
 <script type="math/tex; mode=display">
 \mathcal{L} = \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right] - \tau KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)),</script><script type="math/tex; mode=display">
-s.t.\;\; \tau \ge 0.</script><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound. Given that, the only problem is to determine $p(v)$ so that the optimization prefers sparse weights. However, note that $v$ is a random variable deduced by $\theta$:</p>
+s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" class="headerlink" title="KL-divergence"></a>KL-divergence</h2><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound. Given that, the only problem is to determine $p(v)$ so that the optimization prefers sparse weights. However, note that $v$ is a random variable deduced by $\theta$:</p>
 <script type="math/tex; mode=display">
 v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent of $v_j$ if $i\neq j$. Hence, the prior of $v$ is deduced by that of $\theta$. Say the variance of the prior $p(\theta)$ is $\sigma^2$ and the expectation $m$, then according to the central limit theorem,</p>
 <script type="math/tex; mode=display">
@@ -582,7 +582,7 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Approximation"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Approximation"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KL-divergence"><span class="nav-number">3.</span> <span class="nav-text">KL-divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
