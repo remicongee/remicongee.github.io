@@ -380,14 +380,14 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
                                                                                            =&\, -\int \mathcal{N}(u|1-r,r(1-r))\log\frac{\frac{1}{\sqrt{2\pi \sigma^2}}\exp\left(-\frac{|u - m|^2}{2\sigma^2} \right)}{\frac{1}{\sqrt{2\pi r(1-r)}}\exp\left(-\frac{|u - (1-r)|^2}{2r(1-r)} \right)}du \\
                                                                                            =&\, -\int \mathcal{N}(u|1-r,r(1-r))\cdot\frac{1}{2}\log\frac{r(1-r)}{\sigma^2}du \\
                                                                                             &\, - \frac{1}{2}\int \mathcal{N}(u|1-r,r(1-r))\cdot \left(\frac{|u - (1-r)|^2}{r(1-r)} - \frac{|u - m|^2}{\sigma^2} \right)du \\
-                                                                                            =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{1}{2r(1-r)}\cdot r(1-r) \\
+                                                                                            =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} - \frac{1}{2r(1-r)}\cdot r(1-r) \\
                                                                                              &\, + \frac{1}{2\sigma^2}\left(r(1-r) + (1-r)^2 - 2m(1-r) + m^2 \right) \\
-                                                                                            =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{((1-r)-m)^2}{2\sigma^2}.
+                                                                                            =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{((1-r)-m)^2}{2\sigma^2} - \frac{1}{2}.
 \end{aligned}</script><p>The first two terms force the variance of the noise to approach the prior knowledge, and so does the last term to the expectation. Intuitively, sparse networks prefer null noise, i.e. <em>a prior</em> $\theta\sim \mathcal{N}(0,0_+)$. Given that, it is reasonbale to assign $m=0$. Rewrite the KL term</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL\left((q(v)||p(v) \right) =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{(1-r)^2}{2\sigma^2} \\
-                                =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{1-r}{2\sigma^2}.
+    KL\left((q(v)||p(v) \right) =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{(1-r)^2}{2\sigma^2} - \frac{1}{2} \\
+                                =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{1-r}{2\sigma^2} - \frac{1}{2}.
 \end{aligned}</script><p>In order that $\sigma^2\longrightarrow0_+$, it is possible to assign the minimal positive float number but $\texttt{inf}$ maybe arise during optimization. Another choice is tuning $\sigma^2$ as a tiny positive hyperparameter.</p>
 <blockquote>
 <p>$\texttt{Note}:$ The dropout rate $r$ is limited in $[0,1]$, which should be included during optimization. Two alternatives are possible:</p>
