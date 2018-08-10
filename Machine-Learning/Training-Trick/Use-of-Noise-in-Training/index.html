@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Minimum Description Length,Hierarchical Priors," />
+  <meta name="keywords" content="Noise Injection,Back-propagation," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
-<meta name="keywords" content="Minimum Description Length,Hierarchical Priors">
+<meta name="description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
+<meta name="keywords" content="Noise Injection,Back-propagation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Bayesian Compression for Deep Learning">
-<meta property="og:url" content="http://yoursite.com/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/index.html">
+<meta property="og:title" content="Use of Noise in Training">
+<meta property="og:url" content="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
+<meta property="og:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-22T13:31:11.700Z">
+<meta property="og:updated_time" content="2018-08-10T16:09:20.937Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bayesian Compression for Deep Learning">
-<meta name="twitter:description" content="OverviewThis text refers to the papar Bayesian Compression for Deep Learning published on NIPS 2017. The main two novel points are  hierarchical priors encode weights via optimal fixed point precision">
+<meta name="twitter:title" content="Use of Noise in Training">
+<meta name="twitter:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/"/>
+  <link rel="canonical" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/"/>
 
 
 
 
 
-  <title>Bayesian Compression for Deep Learning | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Use of Noise in Training | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Bayesian Compression for Deep Learning</h1>
+          <h1 class="post-title" itemprop="name headline">Use of Noise in Training</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T20:46:23+08:00">
-                2018-06-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T15:50:41+08:00">
+                2018-08-07
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
+                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
+                    <span itemprop="name">Training Trick</span>
                   </a>
                 </span>
 
@@ -364,101 +364,41 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the papar <a href="https://arxiv.org/abs/1705.08665" target="_blank" rel="noopener"><strong>Bayesian Compression for Deep Learning</strong></a> published on NIPS 2017. The main two novel points are</p>
-<ul>
-<li>hierarchical priors</li>
-<li>encode weights via optimal fixed point precision</li>
-</ul>
-<h2 id="Hierarchical-Priors"><a href="#Hierarchical-Priors" class="headerlink" title="Hierarchical Priors"></a>Hierarchical Priors</h2><p>As mentioned in <a href="Deep-Compression/Bayesian-View/Principles-and-Possible-Methods">Principles and Possible Methods</a>, the evidence lower bound is commonly like</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://ieeexplore.ieee.org/document/155944/" target="_blank" rel="noopener">Noise injection into inputs in back-propagation learning</a>, mainly discussing about the use of noise in training networks.</p>
+<h2 id="Noise-Sensitivity"><a href="#Noise-Sensitivity" class="headerlink" title="Noise Sensitivity"></a>Noise Sensitivity</h2><p>In literature of machine learning, generalization capacity is among the most important metrics. In short words, this metric refers to similar predictions for test samples that are not seen before but similar to certain ones are. Let $s_i$ be an input sample, $\tilde{s_i}$ a sample similar to the formal</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
+\tilde{s_i} = s_i + d,</script><p>where $d$ is a small distance. The corresponding distance of outputs are hence</p>
 <script type="math/tex; mode=display">
-z \sim p(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
-<blockquote>
-<p>$\texttt{Note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$, which is not included in this text.</p>
-</blockquote>
-<p>In this case, $z$ also becomes a paramater to infer. Then reform the evidence lower bound as</p>
+\delta y_i = f(\tilde{s_i}) - f(s_i) \approx \frac{\partial f}{\partial s}(s_i)d.</script><p>Assume that $d$ is a random variable independent of $s$ with the expectation and variance as</p>
+<script type="math/tex; mode=display">
+\mathbb{E}[d] = O,\;\; \mathbb{C}ov[d] = \sigma^2I_{N_I},</script><p>where $I_{N_I}\in M_{N_I,N_I}$ is the identity matrix and $N_I$ the dimension of input samples.</p>
+<p>Define the sensitivity $R$ to the distance $d$ as the mean ratio of the variances of $|\delta y_i|$ and $|d|$:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||p(z,w)) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
-\end{aligned}</script><p>In fact, the integration term in the second step could be further deducted as</p>
+    R(w) =&\, \sum_i \frac{\mathbb{V}ar[|\delta y_i|]}{\mathbb{V}ar[|d|]} \\
+         =&\, \sum_i \frac{\mathbb{E}[|\delta y_i|^2]}{\mathbb{E}[|d|^2]} \\
+         =&\, \sum_i \frac{\mathbb{E}[\delta y_i^T \delta y_i]}{\mathbb{E}[d^Td]}.
+\end{aligned}</script><p>Approximate this equation with the ones above,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{p(w|z)p(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
-          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{p(w|z)}{q_\phi(w|z)} + \log\frac{p(z)}{q_\phi(z)}\right)dwdz \\
-          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{p(w|z)}{q_\phi(w|z)}dwdz \\
-           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dzdw \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||p(z))] \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
-\end{aligned}</script><p>It includes two KL-divergence terms. The former one concerns posterior of $w$ knowing $z$, while the latter one concerns prior of $z$. Furthermore, the former one is actually the prior of $w$ in the common case. In conclusion, after infering the prior of $z$, it seems possible to infer the “prior” of $w$, which is why this method is named after “<em>hierarchical</em>“.</p>
-<p>In order to introduce sparsity to the model, several kinds of priors (of $z$) could be preferred.</p>
-<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $p(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $p(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
-</blockquote>
-<p>In the approximate posterior, $(z,w)$ follows a mixed Gaussian distribution as</p>
+    R(w) \approx&\, \sum_i \frac{\mathbb{E}\left[d^T\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s}d\right]}{\mathbb{E}[d^Td]} \\
+         =&\, \sum_i \frac{\mathbb{E}\left[\bold{trace}\{\frac{\partial f(s_i)}{\partial s}d\cdot d^T\frac{\partial f(s_i)}{\partial s}^T \}\right]}{\mathbb{E}\left[\bold{trace}\{dd^T \} \right]} \\
+         =&\, \sum_i \frac{\sigma^2\mathbb{E}\left[\bold{trace}\{\frac{\partial f(s_i)}{\partial s}\cdot \frac{\partial f(s_i)}{\partial s}^T \}\right]}{\sigma^2N_I} \\
+         =&\, \sum_i \frac{\mathbb{E}\left[\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s} \right]}{N_I} \\
+         =&\, \sum_i \frac{\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2}{N_I}.
+\end{aligned}</script><p>To make the model less sensitive to the disturbance of input pattern, $R(w)$ is preferred to be smaller, i.e. minimize the objective</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(w) = \sum_i \left\|y_i - f(s_i) \right\|^2 + \frac{\tau}{N_I}\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2,</script><p>where $\tau\in\mathbb{R}^*_+$ controls the balance.</p>
+<p>This optimization problem is not difficult, but calculating $\frac{\partial R}{\partial w}$ could be avoided via an interesting alternative. By introducing a noise</p>
+<script type="math/tex; mode=display">
+n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N_I},</script><p>the objective can be approximated as</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    z \sim &\, \mathcal{N}(\mu_z,\mu_z^2\alpha) \\
-    w|z \sim &\, \mathcal{N}(z\mu,z^2\sigma^2),
-\end{aligned}</script><p>where it is implicitly supposed $w=z\varepsilon$ with $\varepsilon\sim\mathcal{N}(\mu,\sigma^2)$ and $z\sim\mu_z\mathcal{N}(1,\alpha)$ with $\alpha$ interpreted as <em>dropout rate</em>. Eventually, the posterior is</p>
-<script type="math/tex; mode=display">
-q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2).</script><blockquote>
-<p>$\texttt{Note}:$ The variance of $w$ indicates if it could be pruned. In fact,</p>
-<script type="math/tex; mode=display">
-   \begin{aligned}
-          \mathbb{V}ar_{q_\phi}[w] =& \mathbb{V}ar_{q_\phi}[z\varepsilon] \\    
-                                   =& \left(\mathbb{V}ar_{q_\phi}[z] + \mathbb{E}_{q_\phi}^2[z] \right)\left(\mathbb{V}ar[\varepsilon] + \mathbb{E}^2[\varepsilon] \right) - \mathbb{E}_{q_\phi}^2[z]\mathbb{E}^2[\varepsilon] \\
-                                   =& \left(\mu_z^2\alpha + \mu_z^2 \right)\left(\sigma^2 + \mu^2 \right) - \mu_z^2\mu^2 \\
-                                   =& \mu_z^2\left(\sigma^2 + \mu^2 \right)\alpha + \mu_z^2\sigma^2 \\
-                                     \propto&\,\alpha,
-   \end{aligned}</script><p>which means when $\sigma^2$ is fixed, the larger the variance is, the more unnecessary $w$ is.<br>$\texttt{Question}:$ What if the variance is large due to $\sigma^2$ ?</p>
-</blockquote>
-<p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
-<ul>
-<li>$KL(q_\phi(w|z)||p(w|z))$ is independent of $z$. In fact,</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    KL(q_\phi(w|z)||p(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
-                                     =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\cdot \left(\frac{|w-z\mu |^2}{2z^2\sigma^2}-\frac{|w |^2}{2z^2} + \log\sigma \right)dw \\
-                                     =& -\frac{1}{2z^2\sigma^2}\left(\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - 2z\mu\mathbb{E}[\mathcal{N}(z\mu,z^2\sigma^2)] + z^2\mu^2 \right) \\
-                                      &+ \frac{1}{2z^2}\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - \log\sigma \\
-                                     =& \frac{1}{2}\left(\log\frac{1}{\sigma^2} - \frac{z^2\sigma^2-2z^2\mu^2+z^2\mu^2}{z^2\sigma^2} + \frac{z^2\sigma^2}{z^2} \right) \\
-                                     =& \frac{1}{2}\left(\log\frac{1}{\sigma^2} - 1 + \frac{\mu^2}{\sigma^2} + \sigma^2  \right)
-\end{aligned}</script><blockquote>
-<p>$\texttt{Note}:$ This independence is still valid even though $w|z$ follows <em>a prior</em> a non-centered law.</p>
-</blockquote>
-<ul>
-<li>$-KL(q_\phi(z)||p(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    -KL(q_\phi(z)||p(z)) =& \int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dz \\
-                                  =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}+K}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
-                                  \approx& k_1\sigma(k_2+k_3\log\alpha) - 0.5m(-\log\alpha) + C', 
-\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||p(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
-<blockquote>
-<p>$\texttt{Note}:$ Since $p(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
-<script type="math/tex; mode=display">
-p(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
-</blockquote>
-<p>Another interesting point is how to assign a dropout rate to a group of weights (neurons or <em>CNN</em> kernels). Say, for exemple, an MLP of two hidden layers $A$ and $B$. One choice is to let a group of neurons share one $z$ so that the posterior and the approximate one can be written as</p>
-<script type="math/tex; mode=display">
-    p(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
-    q_\phi(z,w) = \prod_i^A\mathcal{N}(z_i|\mu_{z_i},\mu_{z_i}^2\alpha_i)\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|z_i\mu_{ij},z_i^2\sigma_{ij}^2)</script><p>The whole training process can be summarized as</p>
-<blockquote>
-<p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y= xz\mathcal{N}(\mu,\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$ by gradient of $\mathcal{L}$<br>Dropout the group with $\alpha$ larger than certain threshold</p>
-</blockquote>
-<h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>Proper half-Cauchy Prior is is form as $\mathcal{C}^+(0,s)=2(s\pi(1+(z/s)^2))^{-1}$, which induces a horseshoe prior. The hierarchy is expressed as</p>
-<script type="math/tex; mode=display">
-s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde{w}_{ij}\sim\mathcal{N}(0,1),\;\; w_{ij}=\tilde{w}_{ij}\tilde{z}_is.</script><p>The rest is similar to the section above. Details can be referred in the paper.</p>
-<h2 id="Weights-Encoding"><a href="#Weights-Encoding" class="headerlink" title="Weights Encoding"></a>Weights Encoding</h2><p>// TODO</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
-<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
-<p>[3] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
+    \mathcal{L}(w) =&\, \sum_i \left\|y_i - f(s_i) \right\|^2 + \mathbb{E}\left[\left\|\frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
+                   =&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i)  + \frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
+                   \approx&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i + n) \right\|^2 \right].
+\end{aligned}</script><p>The variance $\frac{\tau}{N_I} I_{N_I}$ can be viewed as a parameter controlling the regularization. A large variance fits the model to be robust to the noise, leading to a good generalization capacity.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] K. Matsuoka. 1992. Noise injection into inputs in back-propagation learning. IEEE Transactions on Systems,<br>Man, and Cybernetics 22, 3 (1992), 436–440.</p>
 
       
     </div>
@@ -476,9 +416,9 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
       
         <div class="post-tags">
           
-            <a href="/tags/Minimum-Description-Length/" rel="tag"># Minimum Description Length</a>
+            <a href="/tags/Noise-Injection/" rel="tag"># Noise Injection</a>
           
-            <a href="/tags/Hierarchical-Priors/" rel="tag"># Hierarchical Priors</a>
+            <a href="/tags/Back-propagation/" rel="tag"># Back-propagation</a>
           
         </div>
       
@@ -491,8 +431,8 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/" rel="next" title="Principles and Possible Methods">
-                <i class="fa fa-chevron-left"></i> Principles and Possible Methods
+              <a href="/Idea/Deep-Compression/Binary-Dropout-Pruning/" rel="next" title="Binary Dropout Pruning">
+                <i class="fa fa-chevron-left"></i> Binary Dropout Pruning
               </a>
             
           </div>
@@ -500,10 +440,6 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Deep-Compression/Bayesian-View/Variational-Dropout/" rel="prev" title="Variational Dropout">
-                Variational Dropout <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -645,7 +581,7 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hierarchical-Priors"><span class="nav-number">2.</span> <span class="nav-text">Hierarchical Priors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Log-uniform-Prior"><span class="nav-number">2.1.</span> <span class="nav-text">Log-uniform Prior</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Half-Cauchy-Prior"><span class="nav-number">2.2.</span> <span class="nav-text">Half-Cauchy Prior</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Weights-Encoding"><span class="nav-number">3.</span> <span class="nav-text">Weights Encoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Noise-Sensitivity"><span class="nav-number">2.</span> <span class="nav-text">Noise Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
