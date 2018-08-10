@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Remi&#39;s Hexo">
 <meta property="og:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-10T16:09:20.937Z">
+<meta property="og:updated_time" content="2018-08-10T16:15:09.083Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Use of Noise in Training">
 <meta name="twitter:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
@@ -382,8 +382,8 @@
 <script type="math/tex; mode=display">
 \begin{aligned}
     R(w) \approx&\, \sum_i \frac{\mathbb{E}\left[d^T\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s}d\right]}{\mathbb{E}[d^Td]} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\bold{trace}\{\frac{\partial f(s_i)}{\partial s}d\cdot d^T\frac{\partial f(s_i)}{\partial s}^T \}\right]}{\mathbb{E}\left[\bold{trace}\{dd^T \} \right]} \\
-         =&\, \sum_i \frac{\sigma^2\mathbb{E}\left[\bold{trace}\{\frac{\partial f(s_i)}{\partial s}\cdot \frac{\partial f(s_i)}{\partial s}^T \}\right]}{\sigma^2N_I} \\
+         =&\, \sum_i \frac{\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}d\cdot d^T\frac{\partial f(s_i)}{\partial s}^T \}\right]}{\mathbb{E}\left[\text{trace}\{dd^T \} \right]} \\
+         =&\, \sum_i \frac{\sigma^2\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}\cdot \frac{\partial f(s_i)}{\partial s}^T \}\right]}{\sigma^2N_I} \\
          =&\, \sum_i \frac{\mathbb{E}\left[\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s} \right]}{N_I} \\
          =&\, \sum_i \frac{\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2}{N_I}.
 \end{aligned}</script><p>To make the model less sensitive to the disturbance of input pattern, $R(w)$ is preferred to be smaller, i.e. minimize the objective</p>
@@ -398,7 +398,7 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
                    =&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i)  + \frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
                    \approx&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i + n) \right\|^2 \right].
 \end{aligned}</script><p>The variance $\frac{\tau}{N_I} I_{N_I}$ can be viewed as a parameter controlling the regularization. A large variance fits the model to be robust to the noise, leading to a good generalization capacity.</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] K. Matsuoka. 1992. Noise injection into inputs in back-propagation learning. IEEE Transactions on Systems,<br>Man, and Cybernetics 22, 3 (1992), 436–440.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] K. Matsuoka. 1992. Noise injection into inputs in back-propagation learning. IEEE Transactions on Systems, Man, and Cybernetics 22, 3 (1992), 436–440.</p>
 
       
     </div>
