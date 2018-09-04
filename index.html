@@ -251,6 +251,217 @@
   <section id="posts" class="posts-expand">
     
 		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Idea/Deep-Compression/Data-Inference-Argument/" itemprop="url">Data Inference Argument</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-25T14:22:18+08:00">
+                2018-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Idea/" itemprop="url" rel="index">
+                    <span itemprop="name">Idea</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Idea/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based pruning, Hessian-based pruning and variational dropout.</p>
+<h2 id="Noise-Injection"><a href="#Noise-Injection" class="headerlink" title="Noise Injection"></a>Noise Injection</h2><p>The first purpose of pruning is to compress networks, especially deep ones. Moreover, the performance of the network pruned is supposed to be acceptable. Many recent works reveals the redundance of deep networks and argue that simplifying networks in a reasonable way may, by contrast, improve the generalization capacity by reducing the redundance. However, with regard to the generalization capacity, which is explained as the ability of giving similar predictions for similar data inputs, the root problem is that the training data is not enough when compared with millons of model parameters.</p>
+<p>Given that, noise injection is proposed. In each training batch, data is multiplied by a noise often sampled from Gaussian distribution so that the diversity of data is raised compared with before. Intuitively, the network sees more data, which is though made artificially, and hence improves prediction quality. This method attempts to solve the problem at the origin, however, the result depends much on the noise distribution, especially the variance. In fact, noise injection includes some effects of regularization, and the variance is the main hyper-parameter controlling the level of this regularization.</p>
+<h2 id="Norm-based-Pruning"><a href="#Norm-based-Pruning" class="headerlink" title="Norm-based Pruning"></a>Norm-based Pruning</h2><p>Norm-based pruning argues that the weights not significant are also not important for model performance. Actually, it can be proved that this argument is consistent with training by noise injection. Say for a fully-connected layer $f(.)$, data $(x,\,y)$ and weights $W$. The target is minimizing</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(x,y,W) = \|f(x) - y\|^2 = \|\sigma(W x + b) - y\|^2,</script><p>where $\sigma(.)$ is the activation function (often $\texttt{ReLU}$) and $b$ the bias.</p>
+<p>With the noise $N=n$, the target becomes then</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(x,y,W) = \mathbb{E}_N\left[\|f(x + n) - y\|^2 \right].</script><p>If small noise is adopted, which means $|n|\rightarrow 0$, then the target can be further developped as</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(x,y,w) = \mathbb{E}_N\left[\left\|f(x) + \partial _1f(x) n + \mathcal{O}(\|n\|^2) - y \right\|^2 \right].</script><p>Suppose $f(x)=y$ and elements of the noise are <em>i.i.d.</em>, then the following approximation is valid:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{L}(s,y,w) \approx&\, \mathbb{E}_N\left[\left\|\partial_1f(x) n \right\|^2 \right] \\
+                        \le&\, \mathbb{E}_N\left[\sum_i^I n_i^2 \sum_j^J W_{ji}^2 \right] \\
+                        =&\, \sum_i^I \mathbb{E}\left[n_i^2 \right] \sum_j^J W_{ji}^2.
+\end{aligned}</script><blockquote>
+<p>$\texttt{Note}:$ Consider the case where the activation function $\sigma(.)$ is $\texttt{ReLU}$. Then</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    f(x) =&\, \texttt{ReLU}(W x + b) \\
+         =&\, (W x + b) \odot \mathbb{I}_{+}(W x + b) \\
+         =&\, \left[\left(\sum_i^I x_i W_{ji} + b_j \right)\odot \mathbb{I}_+ \right]_{j\le J}.
+\end{aligned}</script><p>And the derivative becomes</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \partial_1 f(x) =&\, \partial_1 \left[\left(\sum_i^I x_i W_{ji} + b_j \right)\odot \mathbb{I}_+ \right]_{j\le J} \\
+                    =&\, \left[W_{ji}\odot \mathbb{I}_+ \right]_{(j,i)\le (J,I)}.
+\end{aligned}</script><p>Hence, when mutiplied by noise,</p>
+<script type="math/tex; mode=display">
+\partial_1 f(x) n = \left[\sum_i^I W_{ji}\odot \mathbb{I}_+ \cdot n_i \right]_{j\le J},</script><p>with its $\mathcal{L}^2$-norm as</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \|\partial_1 f(x) n \|^2 =&\, \sum_j^J \left(\sum_i^I W_{ji}\odot \mathbb{I}_+ \cdot n_i \right)^2 \\
+                             \le&\, \sum_j^J \sum_i^I W_{ji}^2 n_i^2 \\
+                             =&\, \sum_i^I \sum_j^J W_{ji}^2 n_i^2 \\
+                             =&\, \sum_i^I n_i^2 \sum_j^J W_{ji}^2.
+\end{aligned}</script></blockquote>
+<p>In common case, the noise is expected to be null in average, which means $\mathbb{E}[n]=0$, then the target can be further limited as</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(s,y,w) \le \sum_i^I \mathbb{V}ar[n_i]\sum_j^J W_{ji}^2.</script><p>Therefore, minimizing this upper bound of the target helps minimize itself. It can be also observed that small weights are preferred and a larger variance will punish weights more. Moreover, the element injected by a noise with large variance can be viewed as a piece of useless information, and hence its corresponding weights are preferred to be not significant. Given that, the small weights can be pruned, which is consistent with norm-based pruning methods.</p>
+<p>However, the latter do not prune weights from the view of information. Weights are pruned just because they are not significant when compared with some thresholds. In this case, weights are considered independently, which may introduce several problems:</p>
+<ul>
+<li>$W$ becomes sparse after pruned but also not structured.</li>
+<li>Since weights are considered independently, so should be thresholds. But millions of thresholds are costly.</li>
+<li>Without physical meanings of thresholds, there is no reasonable ways to set them, except cross-validation.</li>
+<li>…</li>
+</ul>
+<h2 id="Hessian-based-Pruning"><a href="#Hessian-based-Pruning" class="headerlink" title="Hessian-based Pruning"></a>Hessian-based Pruning</h2><p>The main idea of this kind of method is to prune the weights which barely influence the output. Reuse the example in the precedent section, but introduce a noise to weights instead. Then the target becomes</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(x, y, w + n) = \mathcal{L}(x, y, w) + \partial_3 \mathcal{L}(x, y, w)^T n + \frac{1}{2}n^T \partial^2_3\mathcal{L}(x, y, w)n + \mathcal{O}(\|n\|^3),</script><p>where $w$ is the weights vectorized, $\partial^2_3\mathcal{L}(x, y, w)$ is the Hessian matrix.</p>
+<p>Suppose $w$ is the optimal solution minimizing $\mathcal{L}$, then $\partial_3\mathcal{L}(x,y,w)$ should be zero and the Hessian matrix definitive positive. In this case, when $n$ is small enough, the only factor may increase $\mathcal{L}$ is the third term. Therefore, when pruning weights, those minimizing this term are selected. The target can be reformed as</p>
+<script type="math/tex; mode=display">
+\mathcal{Q} = n^T \partial^2_3\mathcal{L}(x, y, w)n,</script><script type="math/tex; mode=display">
+s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indicating which weight is selected to be pruned.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
 			
 
   
@@ -437,8 +648,6 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
   </article>
 
 
-		
-    
 		
     
 		
@@ -1748,7 +1957,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
+<meta name="description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). Although some works like [4, 5] propose pruning methods based on dropout training,">
 <meta name="keywords" content="Binary Dropout,Bayesian Inference">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Binary Dropout Pruning">
 <meta property="og:url" content="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
+<meta property="og:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). Although some works like [4, 5] propose pruning methods based on dropout training,">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-07T05:50:39.832Z">
+<meta property="og:image" content="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/Guide.jpg">
+<meta property="og:image" content="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/RHist.jpg">
+<meta property="og:updated_time" content="2018-09-04T08:16:00.235Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Binary Dropout Pruning">
-<meta name="twitter:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). The main problem is how to introduce the dropout rate, denoted as $r$, to the para">
+<meta name="twitter:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). Although some works like [4, 5] propose pruning methods based on dropout training,">
+<meta name="twitter:image" content="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/Guide.jpg">
 
 
 
@@ -293,8 +296,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-21T15:08:16+08:00">
-                2018-07-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-04T12:17:46+08:00">
+                2018-09-04
               </time>
             
 
@@ -364,39 +367,41 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to an original method tending to <strong>P</strong>rune neurons or kernels via <strong>B</strong>inary <strong>D</strong>ropout training (<strong>BDP</strong>). The main problem is how to introduce the dropout rate, denoted as $r$, to the parameters to be optimized. BDP utilizes a Gaussian approximation to attack this problem.</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to an original method tending to <strong>P</strong>rune neurons or kernels via <strong>B</strong>inary <strong>D</strong>ropout training (<strong>BDP</strong>).</p>
+<p>Although some works like [4, 5] propose pruning methods based on dropout training, they inject noise to weights. In fact, the reason why noise injection helps improve generalization capacity (<em>gen cap</em>) is mainly the effect of generating “data”. Therefore, noise injected to weights is not necessarily consistent with <em>gen cap</em>. By contrast, BDP injects noise to the data and infers its distribution so that it improves model’s <em>gen cap</em> and sparsity.</p>
+<p>The main contribution of this work is exploring another possibility of utilizing noise for weight pruning via a new form of Bayesian inference.</p>
+<p> <img src="/Idea/Deep-Compression/Binary-Dropout-Pruning/Guide.jpg" alt="Guide"></p>
 <h2 id="Gaussian-Approximation"><a href="#Gaussian-Approximation" class="headerlink" title="Gaussian Approximation"></a>Gaussian Approximation</h2><p>[1] proposed a Gaussian approximation for binary dropout training, making it much faster. Details are shown in <a href="/Deep-Compression/Bayesian-View/Variational-Dropout">Variational Dropout</a>. Say input $x$, ground truth $y$, weight $w$ of one neuron of a fully-connected layer and binary noise $\theta\sim\mathcal{B}(r)$, then the objective function becomes</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
     \mathcal{L} =&\, \mathbb{E}_\theta\left[\log p(y|w^Tx, \theta) \right] \\
                 =&\, \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right],
-\end{aligned}</script><p>where $\mu_i=(1-r)w_i$ and $\alpha=r/(1-r)$.</p>
-<p>The approximation is as the form of Bayesian inference of $v$ without prior knowledge. To prune this neuron if necessary, some priors are preferred, denoted as $p(v)$, which can be viewed as a constraint. Therefore, the objective becomes</p>
+\end{aligned}</script><p>where $\mu_i=(1-r)w_i$ and $\alpha=r/(1-r)$.<br>The result can be further developped from the view of data as</p>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right],</script><script type="math/tex; mode=display">
-s.t.\;\; KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)) = 0.</script><p>Then the final problem is maximizing</p>
+\mathcal{L} = \mathbb{E}_{\tilde{x}:\tilde{x}_i\sim \mathcal{N}\left((1-r)x_i, r(1-r)x_i^2 \right)}\left[\log p(y|w^T \tilde{x}) \right],</script><p>where $\tilde{x}=\theta\odot x$ and $\theta_i\sim\mathcal{N}(1-r,\, r(1-r))$. After seperating input neurons/channels, weights can share the same dropout rate according to the neurons/channels concerned.</p>
+<p>This is as the form of Bayesian inference of $\theta$ without prior knowledge. To prune this neuron if necessary, some priors are preferred, denoted as $p(\theta)$, which can be viewed as a constraint. Therefore, the objective becomes</p>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathbb{E}_{v:v_i\sim \mathcal{N}(\mu_i,\mu_i^2\alpha)}\left[\log p(y|v^Tx) \right] - \tau KL(\mathcal{N}(v_i|\mu_i,\mu_i^2\alpha)||p(v_i)),</script><script type="math/tex; mode=display">
-s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" class="headerlink" title="KL-divergence"></a>KL-divergence</h2><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound. Given that, the only problem is to determine $p(v)$ so that the optimization prefers sparse weights. However, note that $v$ is a random variable deduced by $\theta$:</p>
+\mathcal{L} = \mathbb{E}_{\theta:\theta_i\sim \mathcal{N}\left((1-r), r(1-r) \right)}\left[\log p(y|w^T (\theta\odot x)) \right],</script><script type="math/tex; mode=display">
+s.t.\;\; KL(\mathcal{N}(\theta_i|1-r,r(1-r))\,||\,p(\theta_i)) = 0.</script><p>Then the final problem is maximizing</p>
 <script type="math/tex; mode=display">
-v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent of $v_j$ if $i\neq j$. Hence, the prior of $v$ is deduced by that of $\theta$. Say the variance of the prior $p(\theta)$ is $\sigma^2$ and the expectation $m$, then according to the central limit theorem,</p>
-<script type="math/tex; mode=display">
-(\theta \odot w)^Tx \sim \mathcal{N}(\sum mw_ix_i,\sum w_i^2x_i^2\sigma^2).</script><p>Therefore, $v_i\sim \mathcal{N}(mw_i,w_i^2\sigma^2)$. Calculate the KL-divergence</p>
+\mathcal{L} = \mathbb{E}_{\theta:\theta_i\sim \mathcal{N}\left((1-r), r(1-r) \right)}\left[\log p(y|w^T (\theta\odot x)) \right] - \tau KL(\mathcal{N}(\theta_i|1-r,r(1-r))\,||\,p(\theta_i)),</script><script type="math/tex; mode=display">
+s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" class="headerlink" title="KL-divergence"></a>KL-divergence</h2><p>In case where $\tau=1$, $\mathcal{L}$ degrades to the evidence lower-bound. Given that, the only problem is to determine $p(\theta)$ so that the optimization prefers sparse weights. Intuitively, the noise concentrating on zero means the corresponding input tends to be pruned. In this text, the noise <em>a priori</em> is proposed as $\mathcal{N}(m,\sigma^2)$ with $m=0$ and $\sigma^2$ close to zero.</p>
+<p>Calculate the KL-divergence</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL\left((q(v)||p(v) \right) =&\, KL\left(\mathcal{N}(1-r,r(1-r))\,||\,\mathcal{N}(m,\sigma^2) \right) \\
+    KL\left((q(\theta)||p(\theta) \right) =&\, KL\left(\mathcal{N}(1-r,r(1-r))\,||\,\mathcal{N}(m,\sigma^2) \right) \\
                                                                                            =&\, -\int \mathcal{N}(u|1-r,r(1-r))\log\frac{\frac{1}{\sqrt{2\pi \sigma^2}}\exp\left(-\frac{|u - m|^2}{2\sigma^2} \right)}{\frac{1}{\sqrt{2\pi r(1-r)}}\exp\left(-\frac{|u - (1-r)|^2}{2r(1-r)} \right)}du \\
                                                                                            =&\, -\int \mathcal{N}(u|1-r,r(1-r))\cdot\frac{1}{2}\log\frac{r(1-r)}{\sigma^2}du \\
                                                                                             &\, - \frac{1}{2}\int \mathcal{N}(u|1-r,r(1-r))\cdot \left(\frac{|u - (1-r)|^2}{r(1-r)} - \frac{|u - m|^2}{\sigma^2} \right)du \\
                                                                                             =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} - \frac{1}{2r(1-r)}\cdot r(1-r) \\
                                                                                              &\, + \frac{1}{2\sigma^2}\left(r(1-r) + (1-r)^2 - 2m(1-r) + m^2 \right) \\
                                                                                             =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{((1-r)-m)^2}{2\sigma^2} - \frac{1}{2}.
-\end{aligned}</script><p>The first two terms force the variance of the noise to approach the prior knowledge, and so does the last term to the expectation. Intuitively, sparse networks prefer null noise, i.e. <em>a prior</em> $\theta\sim \mathcal{N}(0,0_+)$. Given that, it is reasonbale to assign $m=0$. Rewrite the KL term</p>
+\end{aligned}</script><p>Apply $m=0$ and rewrite the KL term</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL\left((q(v)||p(v) \right) =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{(1-r)^2}{2\sigma^2} - \frac{1}{2} \\
+    KL\left((q(\theta)||p(\theta) \right) =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{r(1-r)}{2\sigma^2} + \frac{(1-r)^2}{2\sigma^2} - \frac{1}{2} \\
                                 =&\, -\frac{1}{2}\log\frac{r(1-r)}{\sigma^2} + \frac{1-r}{2\sigma^2} - \frac{1}{2}.
-\end{aligned}</script><p>In order that $\sigma^2\longrightarrow0_+$, it is possible to assign the minimal positive float number but $\texttt{inf}$ maybe arise during optimization. Another choice is tuning $\sigma^2$ as a tiny positive hyperparameter.</p>
+\end{aligned}</script><p>In order that $\sigma^2\longrightarrow0^+$, it is possible to assign the minimal positive float number but $\texttt{inf}$ maybe arise during optimization. Another choice is tuning $\sigma^2$ as a tiny positive hyperparameter.</p>
 <blockquote>
 <p>$\texttt{Note}:$ The dropout rate $r$ is limited in $[0,1]$, which should be included during optimization. Two alternatives are possible:</p>
 <ul>
@@ -404,13 +409,144 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
 <li>Reparameterize $r$ by another variable in $\mathbb{R}$.</li>
 </ul>
 </blockquote>
-<p>Compared with traditional variational dropout method as [2] and [3], the noise is sampled for each weight of a neuron instead of noise sampled for each neuron, leading to a Gaussian approximation. Therefore, there is no need to propose a specific prior for weights any more but only expectation and variance instead.</p>
-<blockquote>
-<p>$\texttt{Question}:$ [2] argues that the <strong>dependency</strong> among weights are not ignorable and therefore, the central limit theorem is not applicable because the Lyapunov’s condition is not satisfied. But is it true? If positive, how to prove?</p>
-</blockquote>
+<p>Compared with traditional variational dropout method as [2] and [3], the inference is directly deducted on noise, instead of weights. Several advantages are included:</p>
+<ul>
+<li>No need to attack the improper prior.</li>
+<li>Noise injected to input is proved to benefit the generalization capacity.</li>
+<li>The variance of noise is generally not large, hence so is that of the gradient.</li>
+<li>…</li>
+</ul>
+<h2 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h2><p>Several common deep networks are tested, including LeNet-300-100 (MNIST), LeNet-5 (MNIST) and VGG16 (CIFAR10).</p>
+<h3 id="LeNet-300-100"><a href="#LeNet-300-100" class="headerlink" title="LeNet-300-100"></a>LeNet-300-100</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">Struct</th>
+<th style="text-align:center">CR</th>
+<th style="text-align:center">Err</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Original</td>
+<td style="text-align:center">784-300-100</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">1.6%</td>
+</tr>
+<tr>
+<td style="text-align:center">[4]</td>
+<td style="text-align:center">311-86-14</td>
+<td style="text-align:center">10.6%</td>
+<td style="text-align:center">1.8%</td>
+</tr>
+<tr>
+<td style="text-align:center">BDP</td>
+<td style="text-align:center">179-108-57</td>
+<td style="text-align:center"><strong>9.8%</strong></td>
+<td style="text-align:center">1.8%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="LeNet-5"><a href="#LeNet-5" class="headerlink" title="LeNet-5"></a>LeNet-5</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">Struct</th>
+<th style="text-align:center">CR</th>
+<th style="text-align:center">Err</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Original</td>
+<td style="text-align:center"><strong>20-50</strong>-800-500</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">0.9%</td>
+</tr>
+<tr>
+<td style="text-align:center">[4]</td>
+<td style="text-align:center"><strong>5-10</strong>-76-16</td>
+<td style="text-align:center"><strong>0.64%</strong></td>
+<td style="text-align:center">1.0%</td>
+</tr>
+<tr>
+<td style="text-align:center">[5]</td>
+<td style="text-align:center"><strong>3-18</strong>-284-283</td>
+<td style="text-align:center">19.66%</td>
+<td style="text-align:center">0.9%</td>
+</tr>
+<tr>
+<td style="text-align:center">BDP</td>
+<td style="text-align:center"><strong>6-8</strong>-51-36</td>
+<td style="text-align:center">0.82%</td>
+<td style="text-align:center">1.0%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="VGG16"><a href="#VGG16" class="headerlink" title="VGG16"></a>VGG16</h3><style>
+table th:nth-of-type(1){
+width: 10%;
+}
+table th:nth-of-type(2){
+width: 60%;
+}
+table th:nth-of-type(3){
+width: 25%;
+}
+table th:nth-of-type(4){
+width: 15%;
+}
+</style>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">Struct</th>
+<th style="text-align:center">CR</th>
+<th style="text-align:center">Err</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Original</td>
+<td style="text-align:center"><strong>64-64-128-128-256-256-256-512-512-512-512-512</strong>-512-512</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">8.4%</td>
+</tr>
+<tr>
+<td style="text-align:center">[4]</td>
+<td style="text-align:center"><strong>51-62-125-128-228-129-38-13-9-6-5-6-6</strong>-6-20</td>
+<td style="text-align:center">5.49%</td>
+<td style="text-align:center">9.0%</td>
+</tr>
+<tr>
+<td style="text-align:center">[5]</td>
+<td style="text-align:center"><strong>44-54-92-115-234-155-31-76-55-9-34-35-21</strong>-21-280</td>
+<td style="text-align:center">5.78%</td>
+<td style="text-align:center">9.0%</td>
+</tr>
+<tr>
+<td style="text-align:center">BDP</td>
+<td style="text-align:center"><strong>55-63-123-105-103-59-29-18-11-9-8-7-14</strong>-14-12</td>
+<td style="text-align:center"><strong>2.64%</strong></td>
+<td style="text-align:center">9.0%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="Threshold"><a href="#Threshold" class="headerlink" title="Threshold"></a>Threshold</h2><p>There is a bonus after our proposed noisy training: threshold-insensitive pruning. As shown in the figure below, for a typical deep networks like VGG16, dropout rates are seperatively distributed. Hence, as long as the threshold is not too close to zero or one, the network can be well pruned, which saves the cost of searching effective thresholds.</p>
+<p><img src="/Idea/Deep-Compression/Binary-Dropout-Pruning/RHist.jpg" alt="RHist"></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Wang, S., &amp; Manning, C. (2013, February). Fast dropout training. In international conference on machine learning (pp. 118-126).</p>
 <p>[2] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
 <p>[3] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
+<p>[4] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
+<p>[5] Neklyudov, K., Molchanov, D., Ashukha, A., &amp; Vetrov, D. P. (2017). Structured bayesian pruning via log-normal multiplicative noise. In Advances in Neural Information Processing Systems (pp. 6775-6784).</p>
 
       
     </div>
@@ -443,8 +579,8 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" rel="next" title="Keeping Neural Networks Simple by MDL">
-                <i class="fa fa-chevron-left"></i> Keeping Neural Networks Simple by MDL
+              <a href="/Idea/Deep-Compression/Data-Inference-Argument/" rel="next" title="Data Inference Argument">
+                <i class="fa fa-chevron-left"></i> Data Inference Argument
               </a>
             
           </div>
@@ -452,10 +588,6 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/" rel="prev" title="Use of Noise in Training">
-                Use of Noise in Training <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -532,7 +664,7 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -597,7 +729,7 @@ v^Tx = (\theta \odot w)^Tx,</script><p>where $v_i\sim\mathcal{N}$ is independent
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Approximation"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KL-divergence"><span class="nav-number">3.</span> <span class="nav-text">KL-divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Approximation"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KL-divergence"><span class="nav-number">3.</span> <span class="nav-text">KL-divergence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experiments"><span class="nav-number">4.</span> <span class="nav-text">Experiments</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LeNet-300-100"><span class="nav-number">4.1.</span> <span class="nav-text">LeNet-300-100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LeNet-5"><span class="nav-number">4.2.</span> <span class="nav-text">LeNet-5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VGG16"><span class="nav-number">4.3.</span> <span class="nav-text">VGG16</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Threshold"><span class="nav-number">5.</span> <span class="nav-text">Threshold</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>

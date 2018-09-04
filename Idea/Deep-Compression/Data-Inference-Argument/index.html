@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Gaussian Dropout,Network Sparsity," />
+  <meta name="keywords" content="Binary Dropout,Bayesian Inference,Noise Injection," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
-<meta name="keywords" content="Gaussian Dropout,Network Sparsity">
+<meta name="description" content="OverviewThis text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based">
+<meta name="keywords" content="Binary Dropout,Bayesian Inference,Noise Injection">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Variational Dropout">
-<meta property="og:url" content="http://yoursite.com/Deep-Compression/Bayesian-View/Variational-Dropout/index.html">
+<meta property="og:title" content="Data Inference Argument">
+<meta property="og:url" content="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
+<meta property="og:description" content="OverviewThis text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-27T00:59:12.115Z">
+<meta property="og:updated_time" content="2018-09-02T10:52:35.677Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Variational Dropout">
-<meta name="twitter:description" content="OverviewThis text is mainly about dropout as a variational method, referring to the paper Fast Dropout Training, Variational Dropout and the Local Reparameterization Trick and Variational Dropout Spar">
+<meta name="twitter:title" content="Data Inference Argument">
+<meta name="twitter:description" content="OverviewThis text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Deep-Compression/Bayesian-View/Variational-Dropout/"/>
+  <link rel="canonical" href="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/"/>
 
 
 
 
 
-  <title>Variational Dropout | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Data Inference Argument | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Variational-Dropout/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Variational Dropout</h1>
+          <h1 class="post-title" itemprop="name headline">Data Inference Argument</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-30T18:50:36+08:00">
-                2018-06-30
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-25T14:22:18+08:00">
+                2018-08-25
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
+                  <a href="/categories/Idea/" itemprop="url" rel="index">
+                    <span itemprop="name">Idea</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
+                  <a href="/categories/Idea/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
                   </a>
                 </span>
 
@@ -364,70 +364,61 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about dropout as a variational method, referring to the paper <a href="https://nlp.stanford.edu/pubs/sidaw13fast.pdf" target="_blank" rel="noopener">Fast Dropout Training</a>, <a href="https://arxiv.org/abs/1506.02557" target="_blank" rel="noopener">Variational Dropout and the Local Reparameterization Trick</a> and <a href="https://arxiv.org/abs/1701.05369" target="_blank" rel="noopener">Variational Dropout Sparsifies Deep Neural Networks</a>.</p>
-<p>Say a fully-connected layer with input $A\in M_{K,L}$ and output inactivated $B\in M_{K,N}$, the dropout can be expressed as</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based pruning, Hessian-based pruning and variational dropout.</p>
+<h2 id="Noise-Injection"><a href="#Noise-Injection" class="headerlink" title="Noise Injection"></a>Noise Injection</h2><p>The first purpose of pruning is to compress networks, especially deep ones. Moreover, the performance of the network pruned is supposed to be acceptable. Many recent works reveals the redundance of deep networks and argue that simplifying networks in a reasonable way may, by contrast, improve the generalization capacity by reducing the redundance. However, with regard to the generalization capacity, which is explained as the ability of giving similar predictions for similar data inputs, the root problem is that the training data is not enough when compared with millons of model parameters.</p>
+<p>Given that, noise injection is proposed. In each training batch, data is multiplied by a noise often sampled from Gaussian distribution so that the diversity of data is raised compared with before. Intuitively, the network sees more data, which is though made artificially, and hence improves prediction quality. This method attempts to solve the problem at the origin, however, the result depends much on the noise distribution, especially the variance. In fact, noise injection includes some effects of regularization, and the variance is the main hyper-parameter controlling the level of this regularization.</p>
+<h2 id="Norm-based-Pruning"><a href="#Norm-based-Pruning" class="headerlink" title="Norm-based Pruning"></a>Norm-based Pruning</h2><p>Norm-based pruning argues that the weights not significant are also not important for model performance. Actually, it can be proved that this argument is consistent with training by noise injection. Say for a fully-connected layer $f(.)$, data $(x,\,y)$ and weights $W$. The target is minimizing</p>
 <script type="math/tex; mode=display">
-B = (A \circ\xi)W,</script><p>where $\circ$ is Hadamard product, $\xi_{ij}\sim p(\xi_{ij})$ is a noise and $W\in M_{L,N}$ is weight matrix. Through this way, $W$ is less likely to overfit to the training data. Commonly, $p(\xi_{ij})$ includes a parameter named as <em>dropout rate</em>.</p>
-<blockquote>
-<p>$\texttt{Question}:$ Is this conclusion also valid for <em>CNN</em> kernels ?</p>
-</blockquote>
-<h2 id="Gaussian-Dropout"><a href="#Gaussian-Dropout" class="headerlink" title="Gaussian Dropout"></a>Gaussian Dropout</h2><p>Gaussian dropout refers to a Gaussian noise, $\xi\sim\mathcal{N}(1,\alpha)$ added to the training data. Compared with a binary dropout $\xi\sim\mathcal{B}(p)$, $\alpha=p/(1-p)$. Intuitionally, if $\alpha$ is large, the noise tends to be sampled uniformly from $\mathbb{R}$, which means even when the input feature is discriminant, the correspondant neuron performs the same as the Signal-Noise-Ratio (SNR) is null. Therefore, the larger $\alpha$ gets, the more possible the neuron gets dropped.</p>
-<p>From the view of mathmatics, Gaussian dropout is an approximation (or limit) of binary dropout. Let $x$ be input, $z\sim\mathcal{B}(p)$ the dropout noise, $w$ the weights. Say it is a classification task and modeled by logistic regression</p>
+\mathcal{L}(x,y,W) = \|f(x) - y\|^2 = \|\sigma(W x + b) - y\|^2,</script><p>where $\sigma(.)$ is the activation function (often $\texttt{ReLU}$) and $b$ the bias.</p>
+<p>With the noise $N=n$, the target becomes then</p>
 <script type="math/tex; mode=display">
-\mathbb{P}(y|x,w,z) = \sigma(w^TD_zx),</script><p>where $\sigma(.)$ is sigmoid function, $D_z$ a matrix diagonalized by $z$. It could be further written as $\sum_i^m w_iz_ix_i$. At training stage, weights are updated, though often in batches, as $x$ is fixed. In this case, the only random variable is $z$. According to Lyapunov central limit theorem,</p>
+\mathcal{L}(x,y,W) = \mathbb{E}_N\left[\|f(x + n) - y\|^2 \right].</script><p>If small noise is adopted, which means $|n|\rightarrow 0$, then the target can be further developped as</p>
 <script type="math/tex; mode=display">
-\sum_i^m w_iz_ix_i\xrightarrow[m\rightarrow+\infty]{d}S\sim\mathcal{N}(\mu_S,\sigma^2_S),</script><p>where</p>
-<script type="math/tex; mode=display">
-\mu_S=(1-p)\sum_i^mw_ix_i,\;\sigma^2_S=p(1-p)\sum_i^mw^2_ix^2_i.</script><blockquote>
-<p>$\texttt{Theorem}:$ <strong>Lyapunov Central Limit Theorem</strong> <br><br>Suppose $\{X_1,X_2,…,X_n\}$ is a sequence of independent variables, each with finite expected value $\mu_i$ and variance $\sigma^2_i$. Define</p>
-<script type="math/tex; mode=display">
-s^2_n = \sum_{i=1}^n\sigma^2_i.</script><p>If for some $\delta&gt;0$, <em>Lyapunov’s condition</em></p>
-<script type="math/tex; mode=display">
-\lim_{n\rightarrow+\infty}\frac{1}{s^{2+\delta}_n}\sum_{i=1}^n\mathbb{E}\left[|X_i - \mu_i|^{2+\delta} \right] = 0</script><p>is satisfied, then a sum of $\frac{X_i-\mu_i}{s_n}$ converges to a standard Gaussian random variable, as $n$ goes to infinity:</p>
-<script type="math/tex; mode=display">
-\frac{1}{s_n}\sum_{i=1}^n\left(X_i - \mu_i \right)\xrightarrow{d}\mathcal{N}(0,1).</script><p><a href="https://en.wikipedia.org/wiki/Central_limit_theorem" target="_blank" rel="noopener">&gt; GO TO WIKI &lt;</a></p>
-</blockquote>
-<p>For each training sample, the objective is maximizing the probability of predicting correctly. Therefore,</p>
+\mathcal{L}(x,y,w) = \mathbb{E}_N\left[\left\|f(x) + \partial _1f(x) n + \mathcal{O}(\|n\|^2) - y \right\|^2 \right].</script><p>Suppose $f(x)=y$ and elements of the noise are <em>i.i.d.</em>, then the following approximation is valid:</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathbb{E}_z[\log\mathbb{P}(y|\sum_i^mw_iz_ix_i)] \approx\,& \mathbb{E}_S[\log\mathbb{P}(y|S)] \\
-    =\,& \mathbb{E}_{v:v_i\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)}[\log\mathbb{P}(y|v^Tx)].
-\end{aligned}</script><p>In fact, the equivalence is valid because $S$ can be reformed as a linear combination of Gaussian variables which are independent:</p>
-<script type="math/tex; mode=display">
-S = \sum_i^m x_iv_i.</script><blockquote>
-<p>$\texttt{Note}:$ To justify the equivalence is valid, the combination and $S$ should have the same expectation and variance:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathbb{E}\left[\sum_i^m x_iv_i\right] =& \sum_i^mx_i\mathbb{E}[v_i] \\
-                                =& \sum_i^mx_i\mu_i.
-\end{aligned}</script><p>Hence, it is necessary that $\mu_i=(1-p)w$.</p>
+    \mathcal{L}(s,y,w) \approx&\, \mathbb{E}_N\left[\left\|\partial_1f(x) n \right\|^2 \right] \\
+                        \le&\, \mathbb{E}_N\left[\sum_i^I n_i^2 \sum_j^J W_{ji}^2 \right] \\
+                        =&\, \sum_i^I \mathbb{E}\left[n_i^2 \right] \sum_j^J W_{ji}^2.
+\end{aligned}</script><blockquote>
+<p>$\texttt{Note}:$ Consider the case where the activation function $\sigma(.)$ is $\texttt{ReLU}$. Then</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathbb{V}ar\left[\sum_i^m x_iv_i\right] =& \sum_i^mx^2_i\mathbb{V}ar\left[v_i \right] \\
-                                             =& \sum_i^mx^2_i\sigma^2_i.
-\end{aligned}</script><p>Hence, it is necessary that $\sigma^2_i=p(1-p)w^2$.</p>
-<p>Given $\mu_i=(1-p)w$, then $\sigma^2_i=\mu_i^2\alpha$, with $\alpha=p/(1-p)$.</p>
-</blockquote>
-<p>The optimization can be therefore interpreted as inference of $v\sim\mathcal{N}(\mu_i,\mu_i^2\alpha)$ indexed by $\mu_i$ instead of $w$. In terms of variational inference, propose $q_\phi(v_i)=\mathcal{N}(v|\mu_i,\mu_i^2\alpha)$ as the variational posterior and $p(v)$ as prior, the evidence lower bound is hence</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}\left[\log\mathbb{P}(y|v^Tx) \right] - KL(q_\phi(v)||p(v)).</script><p>The first term can be approximated by unbiased Monte Carlo sampling as $\mathcal{L}^{SGVB}$ mentioned in [1]. The second term is regularization. It can be noted that when $\alpha$ is fixed, variational dropout should degrade to Gaussian dropout, which means the KL term is expected to be independent of $\mu_i$. This property is justified as long as the noise is sampled independently for each element of inputs.</p>
-<p>In [1] and [2], another form of dropout is proposed. The noise is sampled for each weight parameter, instead of element of inputs. The obejective of this change is to retain the dependency among weights, which are ignored in the paper referred to in this text [3]. In this case, the improper log-uniform prior is the only choice satisfying the property mentioned above.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In [1], it is supposed that $v=z\mu$ and $z\sim\mathcal{N}(1,\alpha)$, then the KL term becomes</p>
+    f(x) =&\, \texttt{ReLU}(W x + b) \\
+         =&\, (W x + b) \odot \mathbb{I}_{+}(W x + b) \\
+         =&\, \left[\left(\sum_i^I x_i W_{ji} + b_j \right)\odot \mathbb{I}_+ \right]_{j\le J}.
+\end{aligned}</script><p>And the derivative becomes</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    KL\left(q_\phi(v)||p(v) \right) =&\, -\int \frac{1}{|\mu|\sqrt{2\pi\alpha}}\exp\left(-\frac{|v - \mu|^2}{2\alpha\mu^2} \right) \log\frac{p(v)}{\frac{1}{|\mu|\sqrt{2\pi\alpha}}\exp\left(-\frac{|v - \mu|^2}{2\alpha\mu^2} \right)}dv \\
-                                    =&\, -\int \frac{1}{\sqrt{2\pi\alpha}}\exp\left(-\frac{|z - 1|^2}{2\alpha} \right) \log\frac{p(z\mu)}{\frac{1}{|\mu|\sqrt{2\pi\alpha}}\exp\left(-\frac{|z - 1|^2}{2\alpha} \right)}dz,
-\end{aligned}</script><p>where $dv=|\mu|dz$.<br>Hence, it is necessary that $p(z\mu)\propto\frac{1}{|\mu|}$ so that KL term is independent of $\mu$. Therefore,</p>
+    \partial_1 f(x) =&\, \partial_1 \left[\left(\sum_i^I x_i W_{ji} + b_j \right)\odot \mathbb{I}_+ \right]_{j\le J} \\
+                    =&\, \left[W_{ji}\odot \mathbb{I}_+ \right]_{(j,i)\le (J,I)}.
+\end{aligned}</script><p>Hence, when mutiplied by noise,</p>
 <script type="math/tex; mode=display">
-p(z) \propto \frac{1}{|z|}.</script></blockquote>
-<p>However, KL term from the variational posterior to the prior is still intractable. Therfore, different approximations are given in [1] and [2]. And [2] proposed a form of approximation that is more robust for a larger scale of $\alpha$.</p>
-<blockquote>
-<p>$\texttt{Question}:$ According to <a href="https://arxiv.org/abs/1711.02989" target="_blank" rel="noopener">Variational Gaussian Dropout is not Bayesian</a>, variational Gaussian dropout is pseudo Bayesian inference.</p>
-</blockquote>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
-<p>[2] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
-<p>[3] Wang, S., &amp; Manning, C. (2013, February). Fast dropout training. In international conference on machine learning (pp. 118-126).</p>
+\partial_1 f(x) n = \left[\sum_i^I W_{ji}\odot \mathbb{I}_+ \cdot n_i \right]_{j\le J},</script><p>with its $\mathcal{L}^2$-norm as</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \|\partial_1 f(x) n \|^2 =&\, \sum_j^J \left(\sum_i^I W_{ji}\odot \mathbb{I}_+ \cdot n_i \right)^2 \\
+                             \le&\, \sum_j^J \sum_i^I W_{ji}^2 n_i^2 \\
+                             =&\, \sum_i^I \sum_j^J W_{ji}^2 n_i^2 \\
+                             =&\, \sum_i^I n_i^2 \sum_j^J W_{ji}^2.
+\end{aligned}</script></blockquote>
+<p>In common case, the noise is expected to be null in average, which means $\mathbb{E}[n]=0$, then the target can be further limited as</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(s,y,w) \le \sum_i^I \mathbb{V}ar[n_i]\sum_j^J W_{ji}^2.</script><p>Therefore, minimizing this upper bound of the target helps minimize itself. It can be also observed that small weights are preferred and a larger variance will punish weights more. Moreover, the element injected by a noise with large variance can be viewed as a piece of useless information, and hence its corresponding weights are preferred to be not significant. Given that, the small weights can be pruned, which is consistent with norm-based pruning methods.</p>
+<p>However, the latter do not prune weights from the view of information. Weights are pruned just because they are not significant when compared with some thresholds. In this case, weights are considered independently, which may introduce several problems:</p>
+<ul>
+<li>$W$ becomes sparse after pruned but also not structured.</li>
+<li>Since weights are considered independently, so should be thresholds. But millions of thresholds are costly.</li>
+<li>Without physical meanings of thresholds, there is no reasonable ways to set them, except cross-validation.</li>
+<li>…</li>
+</ul>
+<h2 id="Hessian-based-Pruning"><a href="#Hessian-based-Pruning" class="headerlink" title="Hessian-based Pruning"></a>Hessian-based Pruning</h2><p>The main idea of this kind of method is to prune the weights which barely influence the output. Reuse the example in the precedent section, but introduce a noise to weights instead. Then the target becomes</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(x, y, w + n) = \mathcal{L}(x, y, w) + \partial_3 \mathcal{L}(x, y, w)^T n + \frac{1}{2}n^T \partial^2_3\mathcal{L}(x, y, w)n + \mathcal{O}(\|n\|^3),</script><p>where $w$ is the weights vectorized, $\partial^2_3\mathcal{L}(x, y, w)$ is the Hessian matrix.</p>
+<p>Suppose $w$ is the optimal solution minimizing $\mathcal{L}$, then $\partial_3\mathcal{L}(x,y,w)$ should be zero and the Hessian matrix definitive positive. In this case, when $n$ is small enough, the only factor may increase $\mathcal{L}$ is the third term. Therefore, when pruning weights, those minimizing this term are selected. The target can be reformed as</p>
+<script type="math/tex; mode=display">
+\mathcal{Q} = n^T \partial^2_3\mathcal{L}(x, y, w)n,</script><script type="math/tex; mode=display">
+s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indicating which weight is selected to be pruned.</p>
 
       
     </div>
@@ -445,9 +436,11 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
       
         <div class="post-tags">
           
-            <a href="/tags/Gaussian-Dropout/" rel="tag"># Gaussian Dropout</a>
+            <a href="/tags/Binary-Dropout/" rel="tag"># Binary Dropout</a>
           
-            <a href="/tags/Network-Sparsity/" rel="tag"># Network Sparsity</a>
+            <a href="/tags/Bayesian-Inference/" rel="tag"># Bayesian Inference</a>
+          
+            <a href="/tags/Noise-Injection/" rel="tag"># Noise Injection</a>
           
         </div>
       
@@ -460,8 +453,8 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/" rel="next" title="Bayesian Compression for Deep Learning">
-                <i class="fa fa-chevron-left"></i> Bayesian Compression for Deep Learning
+              <a href="/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/" rel="next" title="Use of Noise in Training">
+                <i class="fa fa-chevron-left"></i> Use of Noise in Training
               </a>
             
           </div>
@@ -470,8 +463,8 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" rel="prev" title="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
-                Structured Bayesian Pruning via Log-Normal Multiplicative Noise <i class="fa fa-chevron-right"></i>
+              <a href="/Idea/Deep-Compression/Binary-Dropout-Pruning/" rel="prev" title="Binary Dropout Pruning">
+                Binary Dropout Pruning <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -614,7 +607,7 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Dropout"><span class="nav-number">2.</span> <span class="nav-text">Gaussian Dropout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Noise-Injection"><span class="nav-number">2.</span> <span class="nav-text">Noise Injection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Norm-based-Pruning"><span class="nav-number">3.</span> <span class="nav-text">Norm-based Pruning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hessian-based-Pruning"><span class="nav-number">4.</span> <span class="nav-text">Hessian-based Pruning</span></a></li></ol></div>
             
 
           </div>
@@ -768,7 +761,24 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -821,43 +831,6 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
   
 
 
