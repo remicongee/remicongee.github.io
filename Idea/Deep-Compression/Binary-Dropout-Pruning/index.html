@@ -89,7 +89,7 @@
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/Guide.jpg">
 <meta property="og:image" content="http://yoursite.com/Idea/Deep-Compression/Binary-Dropout-Pruning/RHist.jpg">
-<meta property="og:updated_time" content="2018-09-04T12:21:55.818Z">
+<meta property="og:updated_time" content="2018-09-06T16:01:13.893Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Binary Dropout Pruning">
 <meta name="twitter:description" content="OverviewThis text refers to an original method tending to Prune neurons or kernels via Binary Dropout training (BDP). Although some works like [4, 5] propose pruning methods based on dropout training,">
@@ -424,6 +424,7 @@ s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" cla
 <th style="text-align:center">Method</th>
 <th style="text-align:center">Struct</th>
 <th style="text-align:center">CR</th>
+<th style="text-align:center">FLOPs</th>
 <th style="text-align:center">Err</th>
 </tr>
 </thead>
@@ -431,19 +432,22 @@ s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" cla
 <tr>
 <td style="text-align:center">Original</td>
 <td style="text-align:center">784-300-100</td>
-<td style="text-align:center">100%</td>
+<td style="text-align:center">1.0x</td>
+<td style="text-align:center">1.0x</td>
 <td style="text-align:center">1.6%</td>
 </tr>
 <tr>
 <td style="text-align:center">[4]</td>
 <td style="text-align:center">311-86-14</td>
-<td style="text-align:center">10.6%</td>
+<td style="text-align:center">9.5x</td>
+<td style="text-align:center">9.5x</td>
 <td style="text-align:center">1.8%</td>
 </tr>
 <tr>
 <td style="text-align:center">BDP</td>
 <td style="text-align:center">179-108-57</td>
-<td style="text-align:center"><strong>9.8%</strong></td>
+<td style="text-align:center"><strong>10.2x</strong></td>
+<td style="text-align:center"><strong>10.2x</strong></td>
 <td style="text-align:center">1.8%</td>
 </tr>
 </tbody>
@@ -456,6 +460,7 @@ s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" cla
 <th style="text-align:center">Method</th>
 <th style="text-align:center">Struct</th>
 <th style="text-align:center">CR</th>
+<th style="text-align:center">FLOPs</th>
 <th style="text-align:center">Err</th>
 </tr>
 </thead>
@@ -463,25 +468,29 @@ s.t.\;\; \tau \ge 0.</script><h2 id="KL-divergence"><a href="#KL-divergence" cla
 <tr>
 <td style="text-align:center">Original</td>
 <td style="text-align:center"><strong>20-50</strong>-800-500</td>
-<td style="text-align:center">100%</td>
+<td style="text-align:center">1.0x</td>
+<td style="text-align:center">1.0x</td>
 <td style="text-align:center">0.9%</td>
 </tr>
 <tr>
 <td style="text-align:center">[4]</td>
 <td style="text-align:center"><strong>5-10</strong>-76-16</td>
-<td style="text-align:center"><strong>0.6%</strong></td>
+<td style="text-align:center"><strong>156.5x</strong></td>
+<td style="text-align:center"><strong>14.8x</strong></td>
 <td style="text-align:center">1.0%</td>
 </tr>
 <tr>
 <td style="text-align:center">[5]</td>
 <td style="text-align:center"><strong>3-18</strong>-284-283</td>
-<td style="text-align:center">19.7%</td>
+<td style="text-align:center">5.1x</td>
+<td style="text-align:center">10.9x</td>
 <td style="text-align:center">0.9%</td>
 </tr>
 <tr>
 <td style="text-align:center">BDP</td>
 <td style="text-align:center"><strong>6-8</strong>-51-36</td>
-<td style="text-align:center">0.8%</td>
+<td style="text-align:center">121.4x</td>
+<td style="text-align:center">13.7x</td>
 <td style="text-align:center">1.0%</td>
 </tr>
 </tbody>
@@ -495,7 +504,7 @@ table th:nth-of-type(2){
 width: 60%;
 }
 table th:nth-of-type(3){
-width: 25%;
+width: 15%;
 }
 table th:nth-of-type(4){
 width: 15%;
@@ -509,6 +518,7 @@ width: 15%;
 <th style="text-align:center">Method</th>
 <th style="text-align:center">Struct</th>
 <th style="text-align:center">CR</th>
+<th style="text-align:center">FLOPs</th>
 <th style="text-align:center">Err</th>
 </tr>
 </thead>
@@ -516,25 +526,29 @@ width: 15%;
 <tr>
 <td style="text-align:center">Original</td>
 <td style="text-align:center"><strong>64-64-128-128-256-256-256-512-512-512-512-512</strong>-512-512</td>
-<td style="text-align:center">100%</td>
+<td style="text-align:center">1.0x</td>
+<td style="text-align:center">1.0x</td>
 <td style="text-align:center">8.4%</td>
 </tr>
 <tr>
 <td style="text-align:center">[4]</td>
 <td style="text-align:center"><strong>51-62-125-128-228-129-38-13-9-6-5-6-6</strong>-6-20</td>
-<td style="text-align:center">5.5%</td>
+<td style="text-align:center">18.6x</td>
+<td style="text-align:center">2.6x</td>
 <td style="text-align:center">9.0%</td>
 </tr>
 <tr>
 <td style="text-align:center">[5]</td>
 <td style="text-align:center"><strong>44-54-92-115-234-155-31-76-55-9-34-35-21</strong>-21-280</td>
-<td style="text-align:center">5.8%</td>
+<td style="text-align:center">17.7x</td>
+<td style="text-align:center">3.2x</td>
 <td style="text-align:center">9.0%</td>
 </tr>
 <tr>
 <td style="text-align:center">BDP</td>
 <td style="text-align:center"><strong>50-63-123-108-104-57-23-14-9-8-6-7-11</strong>-11-12</td>
-<td style="text-align:center"><strong>2.6%</strong></td>
+<td style="text-align:center"><strong>39.1x</strong></td>
+<td style="text-align:center"><strong>3.5x</strong></td>
 <td style="text-align:center">9.0%</td>
 </tr>
 </tbody>
