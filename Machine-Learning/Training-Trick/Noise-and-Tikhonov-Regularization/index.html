@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Binary Dropout,Bayesian Inference,Noise Injection," />
+  <meta name="keywords" content="Noise Injection,Tikhonov Regularization," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based">
-<meta name="keywords" content="Binary Dropout,Bayesian Inference,Noise Injection">
+<meta name="description" content="OverviewThis text refers to Training with Noise is Equivalent to Tikhonov Regularization. PreliminaryConsider a feed-forward neural network mapping input data $\mathbf{x}=(x_1,…,x_D)$ to output $f(\ma">
+<meta name="keywords" content="Noise Injection,Tikhonov Regularization">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Data Inference Argument">
-<meta property="og:url" content="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/index.html">
+<meta property="og:title" content="Noise and Tikhonov Regularization">
+<meta property="og:url" content="http://yoursite.com/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based">
+<meta property="og:description" content="OverviewThis text refers to Training with Noise is Equivalent to Tikhonov Regularization. PreliminaryConsider a feed-forward neural network mapping input data $\mathbf{x}=(x_1,…,x_D)$ to output $f(\ma">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-02T10:52:35.677Z">
+<meta property="og:updated_time" content="2018-09-10T13:36:24.502Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Data Inference Argument">
-<meta name="twitter:description" content="OverviewThis text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based">
+<meta name="twitter:title" content="Noise and Tikhonov Regularization">
+<meta name="twitter:description" content="OverviewThis text refers to Training with Noise is Equivalent to Tikhonov Regularization. PreliminaryConsider a feed-forward neural network mapping input data $\mathbf{x}=(x_1,…,x_D)$ to output $f(\ma">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/"/>
+  <link rel="canonical" href="http://yoursite.com/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/"/>
 
 
 
 
 
-  <title>Data Inference Argument | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Noise and Tikhonov Regularization | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Idea/Deep-Compression/Data-Inference-Argument/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Data Inference Argument</h1>
+          <h1 class="post-title" itemprop="name headline">Noise and Tikhonov Regularization</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-25T14:22:18+08:00">
-                2018-08-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-10T19:15:24+08:00">
+                2018-09-10
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Idea/" itemprop="url" rel="index">
-                    <span itemprop="name">Idea</span>
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Idea/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
+                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
+                    <span itemprop="name">Training Trick</span>
                   </a>
                 </span>
 
@@ -364,61 +364,70 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text summarizes the most common methods in network pruning literature and provides a new view connecting the very methods. The methods discussed below include noise injection, norm-based pruning, Hessian-based pruning and variational dropout.</p>
-<h2 id="Noise-Injection"><a href="#Noise-Injection" class="headerlink" title="Noise Injection"></a>Noise Injection</h2><p>The first purpose of pruning is to compress networks, especially deep ones. Moreover, the performance of the network pruned is supposed to be acceptable. Many recent works reveals the redundance of deep networks and argue that simplifying networks in a reasonable way may, by contrast, improve the generalization capacity by reducing the redundance. However, with regard to the generalization capacity, which is explained as the ability of giving similar predictions for similar data inputs, the root problem is that the training data is not enough when compared with millons of model parameters.</p>
-<p>Given that, noise injection is proposed. In each training batch, data is multiplied by a noise often sampled from Gaussian distribution so that the diversity of data is raised compared with before. Intuitively, the network sees more data, which is though made artificially, and hence improves prediction quality. This method attempts to solve the problem at the origin, however, the result depends much on the noise distribution, especially the variance. In fact, noise injection includes some effects of regularization, and the variance is the main hyper-parameter controlling the level of this regularization.</p>
-<h2 id="Norm-based-Pruning"><a href="#Norm-based-Pruning" class="headerlink" title="Norm-based Pruning"></a>Norm-based Pruning</h2><p>Norm-based pruning argues that the weights not significant are also not important for model performance. Actually, it can be proved that this argument is consistent with training by noise injection. Say for a fully-connected layer $f(.)$, data $(x,\,y)$ and weights $W$. The target is minimizing</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(x,y,W) = \|f(x) - y\|^2 = \|\sigma(W x + b) - y\|^2,</script><p>where $\sigma(.)$ is the activation function (often $\texttt{ReLU}$) and $b$ the bias.</p>
-<p>With the noise $N=n$, the target becomes then</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(x,y,W) = \mathbb{E}_N\left[\|f(x + n) - y\|^2 \right].</script><p>If small noise is adopted, which means $|n|\rightarrow 0$, then the target can be further developped as</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(x,y,w) = \mathbb{E}_N\left[\left\|f(x) + \partial _1f(x) n + \mathcal{O}(\|n\|^2) - y \right\|^2 \right].</script><p>Suppose $f(x)=y$ and elements of the noise are <em>i.i.d.</em>, then the following approximation is valid:</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to <a href="https://ieeexplore.ieee.org/document/6796505/" target="_blank" rel="noopener">Training with Noise is Equivalent to Tikhonov Regularization</a>.</p>
+<h2 id="Preliminary"><a href="#Preliminary" class="headerlink" title="Preliminary"></a>Preliminary</h2><p>Consider a feed-forward neural network mapping input data $\mathbf{x}=(x_1,…,x_D)$ to output $f(\mathbf{x})=(f_1(\mathbf{x}),…,f_C(\mathbf{x}))$, associated with ground truth $\mathbf{t}=(t_1,…,t_C)$. A common choice of loss function is</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{L}(s,y,w) \approx&\, \mathbb{E}_N\left[\left\|\partial_1f(x) n \right\|^2 \right] \\
-                        \le&\, \mathbb{E}_N\left[\sum_i^I n_i^2 \sum_j^J W_{ji}^2 \right] \\
-                        =&\, \sum_i^I \mathbb{E}\left[n_i^2 \right] \sum_j^J W_{ji}^2.
+    \mathcal{L} =&\, \frac{1}{2}\int\int \left\|f(\mathbf{x}) - \mathbf{t} \right\|^2 p(\mathbf{x}, \mathbf{t}) d\mathbf{x}d\mathbf{t} \\
+                =&\, \frac{1}{2} \int\int \sum_{k=1}^C \left(f_k(\mathbf{x}) - t_k \right)^2 p(t_k | \mathbf{x})p(\mathbf{x})d\mathbf{x}dt_k.
 \end{aligned}</script><blockquote>
-<p>$\texttt{Note}:$ Consider the case where the activation function $\sigma(.)$ is $\texttt{ReLU}$. Then</p>
+<p>$\texttt{Note}:$ Especially, for a finit discrete dataset,</p>
+<script type="math/tex; mode=display">
+p(\mathbf{x}, \mathbf{t}) = \frac{1}{n}\sum_q (\mathbf{x} - \mathbf{x}^q)(\mathbf{t} - \mathbf{t}^q).</script><p>Then the loss function becomes</p>
+<script type="math/tex; mode=display">
+\mathcal{L} = \frac{1}{2n}\sum_q \left\|f(\mathbf{x}^q) - \mathbf{t}^q \right\|^2.</script></blockquote>
+<h2 id="Tikhonov-Regularization"><a href="#Tikhonov-Regularization" class="headerlink" title="Tikhonov Regularization"></a>Tikhonov Regularization</h2><p>One common way to prevend model $f$ from overfitting is regularizing the original loss function as</p>
+<script type="math/tex; mode=display">
+\tilde{\mathcal{L}} = \mathcal{L} + \lambda \Omega(f),</script><p>where $\lambda$ is a hyper-parameter balance the bias and variance of the model. For the case of one input $x$ and one output $f(x)$, the class of Tikhonov regularizers takes the form as</p>
+<script type="math/tex; mode=display">
+\Omega(f) = \sum_{r=0}^R \int_a^b h_r(x) \left(\frac{d^rf}{dx^r} \right)^2 dx,</script><p>where $h_r(.)\ge 0$ for $r=0,…,R-1$ and $h_R(.)&gt;0$.</p>
+<h2 id="Noise-Injection"><a href="#Noise-Injection" class="headerlink" title="Noise Injection"></a>Noise Injection</h2><p>Apart from regularized loss function, adding noise to the input data is another well-known approach. In this case, the loss function is</p>
+<script type="math/tex; mode=display">
+\tilde{\mathcal{L}} = \frac{1}{2}\int\int\int \sum_{k=1}^C \left(f_k(\mathbf{x} + \mathbf{n}) - t_k \right)^2 p(t_k | \mathbf{x})p(\mathbf{x})p(\mathbf{n}) d\mathbf{x}dt_kd\mathbf{n}.</script><p>Expand the model function $f$ <em>w.r.t</em> $\mathbf{n}$,</p>
+<script type="math/tex; mode=display">
+f_k(\mathbf{x} + \mathbf{n}) = f_k(\mathbf{x}) + \sum_{i=1}^D n_i\frac{\partial f_k}{\partial x_i} + \frac{1}{2}\sum_{i=1}^D\sum_{j=1}^D n_in_j \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} + \mathcal{O}(\|\mathbf{n} \|^3).</script><p>The noise distribution is generally chosen to be null on average and uncorrelated between different input elements. Hence,</p>
+<script type="math/tex; mode=display">
+\int n_i p(\mathbf{n})d\mathbf{n} = 0,</script><script type="math/tex; mode=display">
+\int n_i n_j p(\mathbf{n})d\mathbf{n} = \eta^2\delta_{ij},</script><p>where $\eta^2$ is the amplitude of the noise injected.</p>
+<p>By using these two properties and assuming small noise, the loss function can be written as</p>
+<script type="math/tex; mode=display">
+\tilde{\mathcal{L}} = \mathcal{L} + \eta^2\mathcal{L}_r,</script><p>where</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_r = \frac{1}{2}\int\int \sum_{k=1}^C\sum_{i=1}^D \left(\left(\frac{\partial f_k}{\partial x_i} \right)^2 + \left(f_k(\mathbf{x}) - t_k \right)\frac{\partial^2 f_k}{\partial x_i^2} \right) p(t_k | \mathbf{x})p(\mathbf{x})d\mathbf{x}dt_k.</script><blockquote>
+<p>$\texttt{Note}:$ In fact,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    f(x) =&\, \texttt{ReLU}(W x + b) \\
-         =&\, (W x + b) \odot \mathbb{I}_{+}(W x + b) \\
-         =&\, \left[\left(\sum_i^I x_i W_{ji} + b_j \right)\odot \mathbb{I}_+ \right]_{j\le J}.
-\end{aligned}</script><p>And the derivative becomes</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \partial_1 f(x) =&\, \partial_1 \left[\left(\sum_i^I x_i W_{ji} + b_j \right)\odot \mathbb{I}_+ \right]_{j\le J} \\
-                    =&\, \left[W_{ji}\odot \mathbb{I}_+ \right]_{(j,i)\le (J,I)}.
-\end{aligned}</script><p>Hence, when mutiplied by noise,</p>
-<script type="math/tex; mode=display">
-\partial_1 f(x) n = \left[\sum_i^I W_{ji}\odot \mathbb{I}_+ \cdot n_i \right]_{j\le J},</script><p>with its $\mathcal{L}^2$-norm as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \|\partial_1 f(x) n \|^2 =&\, \sum_j^J \left(\sum_i^I W_{ji}\odot \mathbb{I}_+ \cdot n_i \right)^2 \\
-                             \le&\, \sum_j^J \sum_i^I W_{ji}^2 n_i^2 \\
-                             =&\, \sum_i^I \sum_j^J W_{ji}^2 n_i^2 \\
-                             =&\, \sum_i^I n_i^2 \sum_j^J W_{ji}^2.
+    \tilde{\mathcal{L}} =&\, \frac{1}{2}\int \sum_{k=1}^C \left(f_k(\mathbf{x}) + \sum_{i=1}^D n_i\frac{\partial f_k}{\partial x_i} + \frac{1}{2}\sum_{i=1}^D\sum_{j=1}^D n_in_j \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} - t_k \right)^2 p(t_k, \mathbf{x}, \mathbf{n}) d(t_k, \mathbf{x}, \mathbf{n}) \\
+                        =&\, \frac{1}{2}\int \sum_{k=1}^C \left(f_k(\mathbf{x}) - t_k \right)^2 p(t_k, \mathbf{x}) d(t_k, \mathbf{x}) \\
+                         &\,+ \frac{1}{2}\int \sum_{k=1}^C 2\left(f_k(\mathbf{x}) - t_k \right)\left(\sum_{i=1}^D n_i\frac{\partial f_k}{\partial x_i} + \frac{1}{2}\sum_{i=1}^D\sum_{j=1}^D n_in_j \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} \right) p(t_k, \mathbf{x}, \mathbf{n}) d(t_k, \mathbf{x}, \mathbf{n}) \\
+                         &\,+  \frac{1}{2}\int \sum_{k=1}^C \left(\sum_{i=1}^D n_i\frac{\partial f_k}{\partial x_i} + \frac{1}{2}\sum_{i=1}^D\sum_{j=1}^D n_in_j \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} \right)^2 p(t_k, \mathbf{x}, \mathbf{n}) d(t_k, \mathbf{x}, \mathbf{n}) \\
+                        =&\, \mathcal{L} \\
+                         &\,+ \frac{1}{2}\int \sum_{k=1}^C \left(f_k(\mathbf{x}) - t_k \right)\sum_{i=1}^D\sum_{j=1}^D n_in_j \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} p(t_k, \mathbf{x}, \mathbf{n}) d(t_k, \mathbf{x}, \mathbf{n}) \\
+                         &\,+ \frac{1}{2}\int \sum_{k=1}^C \left(\sum_{i=1}^D n_i\frac{\partial f_k}{\partial x_i} + \frac{1}{2}\sum_{i=1}^D\sum_{j=1}^D n_in_j \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} \right)^2 p(t_k, \mathbf{x}, \mathbf{n}) d(t_k, \mathbf{x}, \mathbf{n}) \\
+                        =&\, \mathcal{L} \\
+                         &\, + \frac{\eta^2}{2}\int \sum_{k=1}^C \left(f_k(\mathbf{x}) - t_k \right)\sum_{i=1}^D \frac{\partial^2 f_k}{\partial{x_i}\partial{x_j}} p(t_k, \mathbf{x}) d(t_k, \mathbf{x}) \\
+                         &\, + \frac{\eta^2}{2} \int \sum_{k=1}^C \sum_{i=1}^D \left(\frac{\partial f_k}{\partial x_i} \right)^2 p(t_k, \mathbf{x}) d(t_k, \mathbf{x}) + \mathcal{O}(\|n\|^3) \\
+                        =&\, \mathcal{L} + \eta^2\mathcal{L}_r,
 \end{aligned}</script></blockquote>
-<p>In common case, the noise is expected to be null in average, which means $\mathbb{E}[n]=0$, then the target can be further limited as</p>
+<h2 id="Equivalence"><a href="#Equivalence" class="headerlink" title="Equivalence"></a>Equivalence</h2><p>To simplify the expressions, define</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(s,y,w) \le \sum_i^I \mathbb{V}ar[n_i]\sum_j^J W_{ji}^2.</script><p>Therefore, minimizing this upper bound of the target helps minimize itself. It can be also observed that small weights are preferred and a larger variance will punish weights more. Moreover, the element injected by a noise with large variance can be viewed as a piece of useless information, and hence its corresponding weights are preferred to be not significant. Given that, the small weights can be pruned, which is consistent with norm-based pruning methods.</p>
-<p>However, the latter do not prune weights from the view of information. Weights are pruned just because they are not significant when compared with some thresholds. In this case, weights are considered independently, which may introduce several problems:</p>
-<ul>
-<li>$W$ becomes sparse after pruned but also not structured.</li>
-<li>Since weights are considered independently, so should be thresholds. But millions of thresholds are costly.</li>
-<li>Without physical meanings of thresholds, there is no reasonable ways to set them, except cross-validation.</li>
-<li>…</li>
-</ul>
-<h2 id="Hessian-based-Pruning"><a href="#Hessian-based-Pruning" class="headerlink" title="Hessian-based Pruning"></a>Hessian-based Pruning</h2><p>The main idea of this kind of method is to prune the weights which barely influence the output. Reuse the example in the precedent section, but introduce a noise to weights instead. Then the target becomes</p>
+\langle t_k | \mathbf{x} \rangle = \int t_k p(t_k | \mathbf{x}) dt_k,</script><script type="math/tex; mode=display">
+\langle t_k^2 | \mathbf{x} \rangle = \int t_k^2 p(t_k | \mathbf{x}) dt_k.</script><p>Then the original loss can be rewritten as</p>
 <script type="math/tex; mode=display">
-\mathcal{L}(x, y, w + n) = \mathcal{L}(x, y, w) + \partial_3 \mathcal{L}(x, y, w)^T n + \frac{1}{2}n^T \partial^2_3\mathcal{L}(x, y, w)n + \mathcal{O}(\|n\|^3),</script><p>where $w$ is the weights vectorized, $\partial^2_3\mathcal{L}(x, y, w)$ is the Hessian matrix.</p>
-<p>Suppose $w$ is the optimal solution minimizing $\mathcal{L}$, then $\partial_3\mathcal{L}(x,y,w)$ should be zero and the Hessian matrix definitive positive. In this case, when $n$ is small enough, the only factor may increase $\mathcal{L}$ is the third term. Therefore, when pruning weights, those minimizing this term are selected. The target can be reformed as</p>
+\begin{aligned}
+    \mathcal{L} =&\, \frac{1}{2}\sum_{k=1}^C\int \left(f_k(\mathbf{x}) - \langle t_k | \mathbf{x} \rangle \right)^2 p(\mathbf{x}) d\mathbf{x} \\
+                 &\,+ \frac{1}{2}\sum_{k=1}^C\int \langle t_k^2 | \mathbf{x} \rangle - \langle t_k | \mathbf{x} \rangle^2 p(\mathbf{x}) d(\mathbf{x}).
+\end{aligned}</script><p>The minimum is reached when $f_k(\mathbf{x})=\langle t_k | \mathbf{x} \rangle$. Therefore, the optimal for the total loss will have the form as</p>
 <script type="math/tex; mode=display">
-\mathcal{Q} = n^T \partial^2_3\mathcal{L}(x, y, w)n,</script><script type="math/tex; mode=display">
-s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indicating which weight is selected to be pruned.</p>
+f^*_k(\mathbf{x}) = \langle t_k | \mathbf{x} \rangle + \mathcal{O}(\eta^2).</script><p>Note that the regularization term becomes</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_r = \frac{1}{2}\int\sum_{k=1}^C\sum_{i=1}^D \left(\left(\frac{\partial f_k}{\partial x_i} \right)^2 + \left(f_k(\mathbf{x}) - \langle t_k | \mathbf{x} \rangle \right)\frac{\partial^2 f_k}{\partial x_i^2} \right)p(\mathbf{x})d\mathbf{x},</script><p>where the second term vanishes to the order of $\eta^2$. Given that the noise is small, indicating small $\eta^2$, the second term can be removed. Then the regularization term becomes</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_r = \frac{1}{2}\int\sum_{k=1}^C\sum_{i=1}^D \left(\frac{\partial f_k}{\partial x_i} \right)^2 p(\mathbf{x})d\mathbf{x}.</script><blockquote>
+<p>$\texttt{Note}:$ For the discrete dataset, the regularization can be written as</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_r = \frac{1}{2}\sum_q\sum_{k=1}^C\sum_{i=1}^D \left(\frac{\partial f_k}{\partial x_i^q} \right)^2.</script></blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Bishop, C. M. (1995). Training with noise is equivalent to tikhonov regularization. Neural Computation, 7(1), 108-116.</p>
 
       
     </div>
@@ -436,11 +445,9 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
       
         <div class="post-tags">
           
-            <a href="/tags/Binary-Dropout/" rel="tag"># Binary Dropout</a>
-          
-            <a href="/tags/Bayesian-Inference/" rel="tag"># Bayesian Inference</a>
-          
             <a href="/tags/Noise-Injection/" rel="tag"># Noise Injection</a>
+          
+            <a href="/tags/Tikhonov-Regularization/" rel="tag"># Tikhonov Regularization</a>
           
         </div>
       
@@ -453,8 +460,8 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/" rel="next" title="Use of Noise in Training">
-                <i class="fa fa-chevron-left"></i> Use of Noise in Training
+              <a href="/Idea/Deep-Compression/Binary-Dropout-Pruning/" rel="next" title="Binary Dropout Pruning">
+                <i class="fa fa-chevron-left"></i> Binary Dropout Pruning
               </a>
             
           </div>
@@ -462,10 +469,6 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Idea/Deep-Compression/Binary-Dropout-Pruning/" rel="prev" title="Binary Dropout Pruning">
-                Binary Dropout Pruning <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -564,7 +567,7 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -607,7 +610,7 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Noise-Injection"><span class="nav-number">2.</span> <span class="nav-text">Noise Injection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Norm-based-Pruning"><span class="nav-number">3.</span> <span class="nav-text">Norm-based Pruning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hessian-based-Pruning"><span class="nav-number">4.</span> <span class="nav-text">Hessian-based Pruning</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Preliminary"><span class="nav-number">2.</span> <span class="nav-text">Preliminary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tikhonov-Regularization"><span class="nav-number">3.</span> <span class="nav-text">Tikhonov Regularization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Noise-Injection"><span class="nav-number">4.</span> <span class="nav-text">Noise Injection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Equivalence"><span class="nav-number">5.</span> <span class="nav-text">Equivalence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
@@ -761,24 +764,7 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
 
 
 
@@ -831,6 +817,43 @@ s.t.\;\;\;\; e n + w = e w,</script><p>where $e=\texttt{diag}(0,…1…,0)$ indi
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
