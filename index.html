@@ -264,6 +264,235 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Basic-Method/Deep-Neural-Networks-as-Gaussian-Processes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Machine-Learning/Basic-Method/Deep-Neural-Networks-as-Gaussian-Processes/" itemprop="url">Deep Neural Networks as Gaussian Processes</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-24T18:57:22+08:00">
+                2018-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/Basic-Method/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic Method</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://arxiv.org/abs/1711.00165" target="_blank" rel="noopener">DEEP NEURAL NETWORKS AS GAUSSIAN PROCESSES</a> published at ICLR 2018, mainly revealing the equivalence between infinitely wide deep neural networks (NN) and Gaussian processes (GP).</p>
+<h2 id="Notation"><a href="#Notation" class="headerlink" title="Notation"></a>Notation</h2><ul>
+<li><p>$L$: depth of NN</p>
+</li>
+<li><p>$N_l$: width of layer $l$</p>
+</li>
+<li><p>$\phi$: activation function (nonlinearities)</p>
+</li>
+<li><p>$x^l_i$: $i$-th post-nonlinearity of $l$-th layer</p>
+</li>
+<li><p>$z^l_i$: $i$-th post-affine of $l$-th layer</p>
+</li>
+<li><p>$x^\alpha$: input data $\alpha$ in $\mathbb{R}^D$</p>
+</li>
+<li><p>$W^l_{ij}$: weight element of $l$-th layer</p>
+</li>
+<li><p>$b^l_i$: bias element of $l$-th layer</p>
+</li>
+<li><p>$\mathcal{GP}(\mu, K)$: Gaussian process with expectation $\mu(.)$ and covariance $K(.,.)$</p>
+</li>
+</ul>
+<h2 id="GP-and-Single-layer-NN"><a href="#GP-and-Single-layer-NN" class="headerlink" title="GP and Single-layer NN"></a>GP and Single-layer NN</h2><p>As for a single-layer NN, the $i$-th output is computed as</p>
+<script type="math/tex; mode=display">
+z^1_i(x) = b^1_i + \sum_{j=1}^{N_1} W^1_{ij}x^1_j(x),\;\;\;\; x^1_j(x) = \phi\left(b^0_j + \sum_{k=1}^D W^0_{jk}x_k \right).</script><p>According to the Central Limit Theorem, when $N_1\rightarrow\infty$, $z^1_i(x)$ will be Gaussian distributed. Given that, $\{z^1_i(x^{\alpha=1}),…,z^1_i(x^{\alpha=k}) \}$ will have a joint multivariate Gaussian distribution, i.e. $z^1_i\sim\mathcal{GP}(\mu^1,K^1)$.</p>
+<blockquote>
+<p>$\texttt{Note}:$ The expectation and the covariance are independent of $i$, because <em>a priori</em> there is no knowledge that the output varies from the position of neurons. The same for $\sigma^2_b$ and $\sigma^2_w$.</p>
+</blockquote>
+<p>Moreover, because the expectation of parameters ($W$ and $b$) is null <em>a priori</em>, $\mu^1$ is then null as well and</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    K^1(x, x') =&\, \mathbb{E}\left[z^1_i(x) z^1_i(x') \right] \\
+               =&\, \sigma^2_b + \sigma^2_w \mathbb{E}\left[x^1_i(x) x^1_i(x') \right] \\
+               =&\, \sigma^2_b + \sigma^2_w \mathbb{C}(x, x'),
+\end{aligned}</script><p>where $\mathbb{C}(x,x’)$ is an integral against $W^0$ and $b^0$, as seen in <a href="http://www.cs.toronto.edu/~radford/bnn.book.html" target="_blank" rel="noopener">Bayesian Learning for Neural Networks</a>.</p>
+<h2 id="GP-and-Deep-NN"><a href="#GP-and-Deep-NN" class="headerlink" title="GP and Deep NN"></a>GP and Deep NN</h2><p>Generalize the post-nonlinearity and the post-affine in a deep NN as</p>
+<script type="math/tex; mode=display">
+z^l_i(x) = b^l_i + \sum_{j=1}^{N_1} W^l_{ij}x^l_j(x),\;\;\;\; x^l_j(x) = \phi\left(z^{l-1}_j(x) \right).</script><p>Similar with the single-layer case, $z^l_i\sim\mathcal{GP}(0,K^l)$, with</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    K^l(x, x') =&\, \mathbb{E}\left[z^l_i(x) z^l_i(x') \right] \\
+               =&\, \sigma^2_b + \sigma^2_w \mathbb{E}\left[x^l_i(x) x^l_i(x') \right] \\
+               =&\, \sigma^2_b + \sigma^2_w \mathbb{E}_{z^{l-1}_i\sim \mathcal{GP}(0, K^{l-1})}\left[\phi(z^{l-1}_i(x) z^{l-1}_i(x')) \right].
+\end{aligned}</script><p>As the joint Gaussian distribution is described with $K^l(x,x)$, $K^l(x,x’)$ and $K^l(x’,x’)$, the covariance can be rewritten as</p>
+<script type="math/tex; mode=display">
+K^l(x, x') = \sigma^2_b + \sigma^2_w F_\phi \left(K^{l-1}(x, x), K^{l-1}(x, x'), K^{l-1}(x', x') \right).</script><p>For the beginning of this iterative series of GP, note $W_{ij}^0$, $b^0_j$ and $K^0$, and then</p>
+<script type="math/tex; mode=display">
+K^0(x, x') = \mathbb{E}\left[z^0_j(x) z^0_j(x') \right] = \sigma^2_b + \sigma^2_w \cdot \frac{\langle x, x' \rangle}{N^D}.</script><p>Therefore, the each layer (with infinity of neurons) of the deep NN is equivalent to a Gaussian Process.</p>
+<h2 id="Bayesian-Training"><a href="#Bayesian-Training" class="headerlink" title="Bayesian Training"></a>Bayesian Training</h2><p>Given a dataset $\mathcal{D}=\{(x^1,t^1),…,(x^n,t^n) \}$, the model $z(.)$ is supposed to make prediction for a test sample $x^*$. In Bayesian training process, the prediction is over a distribution as</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    p(z^* | x^*, \mathcal{D}) =&\, \int p(z^* | x^*, z, x) p(z | \mathcal{D}) dz \\
+                              =&\, \int \frac{p(z^*, z | x^*, x)}{p(z | x^*, x)} p(z | \mathcal{D}) dz \\
+                              =&\, \int p(z^*, z | x^*, x)\frac{p(z | t, x)}{p(z | x)}  dz \\
+                              =&\, \int p(z^*, z | x^*, x)\frac{p(z, t | x)}{p(z | x) p(t | x)}  dz \\
+                              =&\, \int p(z^*, z | x^*, x)\frac{p(t | z, x)}{p(t | x)}  dz \\
+                              =&\, \frac{1}{p(t)} \int p(z^*, z | x^*, x)p(t | z) dz,
+\end{aligned}</script><p>where $t|z\sim\mathcal{N}(0, \sigma^2_\epsilon)$ due to a noise effect added to the prediction.</p>
+<p>Since</p>
+<script type="math/tex; mode=display">
+z^*, z | x^*, x \sim \mathcal{GP}(0,K),</script><p>where</p>
+<script type="math/tex; mode=display">
+K = \left[
+\begin{matrix}
+    K_{\mathcal{D},\mathcal{D}} & K^T_{x^*, \mathcal{D}} \\
+    K_{x^*, \mathcal{D}} & K_{x^*, x^*}
+\end{matrix} \right],</script><p>the integral can be calculated analytically, resulting in </p>
+<script type="math/tex; mode=display">
+z* | \mathcal{D}, x^* \sim \mathcal{N}(\bar{\mu}, \bar{K}),</script><p>where</p>
+<script type="math/tex; mode=display">
+\bar{\mu} = K_{x^*, \mathcal{D}} \left(K_{\mathcal{D},\mathcal{D}} + \sigma^2_\epsilon \mathbb{I}_n \right)^{-1} t,</script><script type="math/tex; mode=display">
+\bar{K} = K_{x^*, x^*} - K_{x^*, \mathcal{D}} \left(K_{\mathcal{D},\mathcal{D}} + \sigma^2_\epsilon \mathbb{I}_n \right)^{-1} K^T_{x^*, \mathcal{D}}.</script><p>Therefore, the prediction can be done with any decision function over $z$ <em>a posterior</em>.</p>
+<blockquote>
+<p>$\texttt{Note}:$ To achieve a high performance, various methods can be applied to optimize the parameters, e.g. cross-validation, gradiant ascent.</p>
+</blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Lee, J., Bahri, Y., Novak, R., Schoenholz, S. S., Pennington, J., &amp; Sohl-Dickstein, J. (2017). Deep neural networks as gaussian processes.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1966,7 +2195,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1977,7 +2206,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -1988,7 +2217,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
