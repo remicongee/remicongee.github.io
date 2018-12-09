@@ -264,6 +264,226 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/" itemprop="url">On Gradients of Stochastic Neurons</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-06T21:06:26+08:00">
+                2018-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/Basic-Method/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic Method</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text mainly refers to the paper <a href="https://arxiv.org/abs/1308.3432" target="_blank" rel="noopener">Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation</a> [1]. Regardless of Stochastic Times Smooth (STS) units and Straight-Through Estimator (STE), the technique detail of an unbiased estimator of gradient for stochastic binary neurons is discussed in this text.</p>
+<h2 id="Stochastic-Binary-Neurons"><a href="#Stochastic-Binary-Neurons" class="headerlink" title="Stochastic Binary Neurons"></a>Stochastic Binary Neurons</h2><p>Considering hard non-linearity as activation function in neural networks, the gradients are normaly incomputable, but can be estimated with the help of stochaistic pertubation, which is actually a random noise multiplied on neurons, e.g. dropout. These kind of neurons are referred as stochastic neurons in this text, and become more insteresting in binary case, i.e. the output activated of neurons is either 0 or 1, namely stochastic binary neurons. One may ask for the strategy to binarize the outputs, which is proposed to be based on a sigmoid probability. For illustration, say a fully-connected layer with input $x$, weight $W$, bias $b$ and output activated $h$, then</p>
+<script type="math/tex; mode=display">
+h_i = f(a_i, z_i) = \mathbb{I}_{z_i > \sigma(a_i)},\;\; a_i = b_i + \sum_j W_{ij}x_j,</script><p>where $z_i\sim \mathcal{U}[0,1]$ is uniform and $\sigma(u)=1/(1+\exp(-u))$ is sigmoid function.</p>
+<h2 id="Unbiased-Estimator-for-Gradient"><a href="#Unbiased-Estimator-for-Gradient" class="headerlink" title="Unbiased Estimator for Gradient"></a>Unbiased Estimator for Gradient</h2><p>Let $\mathcal{L}$ be the objective function, then computing directly the gradient of $\mathcal{L}$ with regard to parameters are intractable. However, an unbiases estimator is still feasible. Note that accordint to the chain rule, i.e.</p>
+<script type="math/tex; mode=display">
+\frac{\partial\mathcal{L}}{\partial W_{ij}} = \frac{\partial\mathcal{L}}{\partial a_i}\cdot \frac{\partial a_i}{\partial W_{ij}},</script><p>the first term on the right is the only one in need to estimate, whose expectation is thus in need if the estimation is supposed to be unbiased. </p>
+<p>Additionally, among advances of recent network designs, dropout is commonly included, which is stochastic as well as $z$. In this case, these random parameters should also be considered during the estimation for gradient. Note that this dropout noise does not require updates and is viewed as fixed once sampled when forwarding. Therefore, the expectation is conditionned on the random parameters if they influence $a$. For clarity, let $\Gamma=\{z_i\}\bigcup\ c_i\bigcup c_{-i}$ be the set of all random variables divided according to whether they influence $a_i$ as $c_i$ does. Note $\mathcal{L}=\mathcal{L}(h_i,c_i,c_{-i})$.</p>
+<p>Now compute the expectation of $L$ conditioned on $c_i$,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{E}\left[\mathcal{L} | c_i \right] =&\, \mathbb{E}_{c_{-i}}\left[\mathbb{E}_{z_i}\left[L | c_i \right] \right] \\
+                                    =&\, \mathbb{E}_{c_{-i}}\left[\mathbb{E}_{z_i}\left[h_i\mathcal{L}\left(1, c_i, c_{-i} \right) + (1 - h_i)\mathcal{L}\left(0, c_i, c_{-i} \right) \right] \right] \\
+                                    =&\, \mathbb{E}_{c_{-i}}\left[\mathbb{P}\left(h_i=1 | a_i \right)\mathcal{L}\left(1, c_i, c_{-i} \right) + \mathbb{P}\left(h_i=0 | a_i \right)\mathcal{L}\left(0, c_i, c_{-i} \right) \right] \\
+                                    =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\mathcal{L}\left(1, c_i, c_{-i} \right) + \left(1 - \sigma(a_i) \right)\mathcal{L}\left(0, c_i, c_{-i} \right) \right].
+\end{aligned}</script><p>Further derive the average gradient,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    g_i = \mathbb{E}\left[\frac{\partial\mathcal{L}}{\partial a_i} | c_i \right] =&\, \frac{\partial\mathbb{E}\left[\mathcal{L} | c_i\right]}{\partial a_i} \\
+                                                                     =&\, \mathbb{E}_{c_{-i}}\left[\sigma'(a_i)\mathcal{L}\left(1, c_i, c_{-i} \right) - \sigma'(a_i)\mathcal{L}\left(0, c_i, c_{-i} \right) \right] \\
+                                                                     =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\left(1 - \sigma(a_i) \right)\left(\mathcal{L}\left(1, c_i, c_{-i} \right) - \mathcal{L}\left(0, c_i, c_{-i} \right) \right) \right].
+\end{aligned}</script><p>Now consider the estimator</p>
+<script type="math/tex; mode=display">
+\hat{g}_i = \left(h_i - \sigma(a_i) \right)\mathcal{L}(h_i, c_i, c_{-i}) = h_i\left(1 - \sigma(a_i) \right)\mathcal{L}(1, c_i, c_{-i}) - \sigma(a_i)(1 - h_i)\mathcal{L}(0, c_i, c_{-i}),</script><p>whose expectation is</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{E}[\hat{g}_i | c_i] =&\, \mathbb{E}_{c_{-i}, z_i}\left[h_i\left(1 - \sigma(a_i) \right)\mathcal{L}(1, c_i, c_{-i}) - \sigma(a_i)(1 - h_i)\mathcal{L}(0, c_i, c_{-i})\right] \\
+                                =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\left(1 - \sigma(a_i) \right)\mathcal{L}(1, c_i, c_{-i}) - \sigma(a_i)(1 - \sigma(a_i))\mathcal{L}(0, c_i, c_{-i}) \right] \\
+                                =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\left(1 - \sigma(a_i) \right)\left(\mathcal{L}(1, c_i, c_{-i}) - \mathcal{L}(0, c_i, c_{-i}) \right) \right],
+\end{aligned}</script><p>which is the same as that of the gradient. Thus $\hat{g}_i$ is an unbiased estimator for gradient.</p>
+<h2 id="Low-Variance-Choice"><a href="#Low-Variance-Choice" class="headerlink" title="Low Variance Choice"></a>Low Variance Choice</h2><p>The very estimator is actually a special case of <a href="https://link.springer.com/article/10.1007/BF00992696" target="_blank" rel="noopener">policy gradient</a> [2] widely used in reinforcement learning. Consider the binarization as a random action sampled from $\mathcal{B}(\sigma(a_i))$, the objective $\mathcal{L}$ as reward $R$, and suppose trajectory $\tau$ to be unitary. The common choice for optimization is policy gradient method,</p>
+<script type="math/tex; mode=display">
+\frac{\partial\mathbb{E}_\tau[R]}{\partial a_i} = \mathbb{E}_\tau\left[R\cdot \frac{\partial \log p_{a_i}(h_i)}{\partial a_i} \right].</script><blockquote>
+<p>$\texttt{Proof}:$<br>Suppose $p_{a_i}(h_i)$ is derivable on $0$ with regard to $a_i$, then</p>
+<script type="math/tex; mode=display">
+\frac{\partial \log p_{a_i}(h_i)}{\partial a_i} = \frac{1}{p_{a_i}(h_i)}\frac{\partial p_{a_i}(h_i)}{\partial a_i}.</script><p>After discretization, </p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+   \mathbb{E}_\tau\left[R\cdot \frac{\partial \log p_{a_i}(h_i)}{\partial a_i} \right] =&\, R_1\cdot \mathbb{P}\left(h_i=1 | a_i \right) \frac{1}{\mathbb{P}\left(h_i=1 | a_i \right)}\frac{\partial \mathbb{P}\left(h_i=1 | a_i \right)}{\partial a_i} \\
++&\, R_0\cdot \mathbb{P}\left(h_i=0 | a_i \right)\frac{1}{\mathbb{P}\left(h_i=0 | a_i \right)}\frac{\partial \mathbb{P}\left(h_i=0 | a_i \right)}{\partial a_i} \\
+=&\, R_1\cdot \frac{\partial \mathbb{P}\left(h_i=1 | a_i \right)}{\partial a_i} + R_0\cdot \frac{\partial \mathbb{P}\left(h_i=0 | a_i \right)}{\partial a_i} \\
+=&\, \frac{\partial}{\partial a_i}\left(R_1\cdot \mathbb{P}\left(h_i=1 | a_i \right) + R_0\cdot \mathbb{P}\left(h_i=0 | a_i \right) \right) \\
+=&\, \frac{\partial\mathbb{E}_{h_i}[R]}{\partial a_i} \\
+=&\, \frac{\partial\mathbb{E}_\tau[R]}{\partial a_i}.
+\end{aligned}</script></blockquote>
+<p>Given that, it is natural to extract $R\cdot \partial_{a_i} \log p_{a_i}(h_i)$ for gradient estimator, which in this case, is</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{L}\cdot \frac{\partial \log \mathbb{P}(h_i | a_i)}{\partial a_i} =&\, h_i\mathcal{L}\cdot \left(1 + \exp(-a_i) \right) \frac{\exp(-a_i)}{\left(1 + \exp(-a_i) \right)^2} \\
+                                                                              +&\, (1 - h_i)\mathcal{L}\cdot \left(1 + \exp(a_i) \right) \frac{-\exp(a_i)}{\left(1 + \exp(a_i) \right)^2}  \\
+                                                                              =&\, h_i\mathcal{L}\cdot \left(1 - \sigma(a_i) \right) - (1 - h_i)\mathcal{L} \cdot \sigma(a_i) \\
+                                                                              =&\, h_i\mathcal{L} - \sigma(a_i)\mathcal{L} - h_i\mathcal{L}\cdot \sigma(a_i) + h_i\mathcal{L}\cdot \sigma(a_i) \\
+                                                                              =&\, \left(h_i - \sigma(a_i) \right)\mathcal{L},
+\end{aligned}</script><p>which is exactly the estimator proposed.</p>
+<p>Furthermore, in reinforcement learning, normaly a baseline is assigned for reward so that the gradient is of low variance. Similarly, this baseline is also necessary in the estimator, denoted by $\bar{\mathcal{L}}_i$. Then reformulate the estimator</p>
+<script type="math/tex; mode=display">
+\hat{g}_i = \left(h_i - \sigma(a_i) \right)\left(\mathcal{L} - \bar{\mathcal{L}}_i \right).</script><p>To minmize its variance, which is</p>
+<script type="math/tex; mode=display">
+\mathbb{V}ar\left[\hat{g}_i \right] = \mathbb{V}ar\left[\left(h_i - \sigma(a_i) \right)\mathcal{L} \right] - \Delta,</script><p>where</p>
+<script type="math/tex; mode=display">
+\Delta = \mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\left(\mathcal{L}^2 - \left(\mathcal{L} - \bar{\mathcal{L}}_i\right)^2 \right) \right]</script><p>should be maximized by minimizing $\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\left(\mathcal{L} - \bar{\mathcal{L}}_i\right)^2 \right]$. Then by derivating with regrad to $\bar{\mathcal{L}}_i$,</p>
+<script type="math/tex; mode=display">
+\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\left(\mathcal{L} - \bar{\mathcal{L}}_i\right) \right] = 0,</script><p>thus</p>
+<script type="math/tex; mode=display">
+\bar{\mathcal{L}}_i = \frac{\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\mathcal{L} \right]}{\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2 \right]}.</script><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Bengio, Y., Léonard, N., &amp; Courville, A. (2013). Estimating or propagating gradients through stochastic neurons for conditional computation. arXiv preprint arXiv:1308.3432.</p>
+<p>[2] Williams, R. J. (1992). Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning, 8(3-4), 229-256.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Basic-Method/Deep-Neural-Networks-as-Gaussian-Processes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2193,7 +2413,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2215,7 +2435,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

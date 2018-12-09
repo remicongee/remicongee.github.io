@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="MDL,Bits-Back Argument," />
+  <meta name="keywords" content="Stochastic Neurons,Hard Non-linearity," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to the paper Keeping Neural Networks Simple by Minimizing the Description Length of the Weights published on COLT 1993, which mainly proposes a view of MDL over simplifying ne">
-<meta name="keywords" content="MDL,Bits-Back Argument">
+<meta name="description" content="OverviewThis text mainly refers to the paper Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation [1]. Regardless of Stochastic Times Smooth (STS) units and Strai">
+<meta name="keywords" content="Stochastic Neurons,Hard Non-linearity">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Keeping Neural Networks Simple by MDL">
-<meta property="og:url" content="http://yoursite.com/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/index.html">
+<meta property="og:title" content="On Gradients of Stochastic Neurons">
+<meta property="og:url" content="http://yoursite.com/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to the paper Keeping Neural Networks Simple by Minimizing the Description Length of the Weights published on COLT 1993, which mainly proposes a view of MDL over simplifying ne">
+<meta property="og:description" content="OverviewThis text mainly refers to the paper Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation [1]. Regardless of Stochastic Times Smooth (STS) units and Strai">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-27T11:29:27.520Z">
+<meta property="og:updated_time" content="2018-12-09T08:10:21.144Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Keeping Neural Networks Simple by MDL">
-<meta name="twitter:description" content="OverviewThis text refers to the paper Keeping Neural Networks Simple by Minimizing the Description Length of the Weights published on COLT 1993, which mainly proposes a view of MDL over simplifying ne">
+<meta name="twitter:title" content="On Gradients of Stochastic Neurons">
+<meta name="twitter:description" content="OverviewThis text mainly refers to the paper Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation [1]. Regardless of Stochastic Times Smooth (STS) units and Strai">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/"/>
+  <link rel="canonical" href="http://yoursite.com/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/"/>
 
 
 
 
 
-  <title>Keeping Neural Networks Simple by MDL | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>On Gradients of Stochastic Neurons | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Keeping Neural Networks Simple by MDL</h1>
+          <h1 class="post-title" itemprop="name headline">On Gradients of Stochastic Neurons</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-10T18:50:00+08:00">
-                2018-07-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-06T21:06:26+08:00">
+                2018-12-06
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
+                  <a href="/categories/Machine-Learning/Basic-Method/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic Method</span>
                   </a>
                 </span>
 
@@ -364,72 +364,72 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://dl.acm.org/citation.cfm?doid=168304.168306" target="_blank" rel="noopener">Keeping Neural Networks Simple by Minimizing the Description Length of the Weights</a> published on COLT 1993, which mainly proposes a view of MDL over simplifying neural networks.</p>
-<h2 id="MDL"><a href="#MDL" class="headerlink" title="MDL"></a>MDL</h2><p>When fitting data models to some data, a more complex model often performs better on training data but may be overfitting. So it is in need of methods to decide when extra complexity of the model is not worth the improvement in the data-fit. Minimum Description Length (<em>MDL</em>) Principle is proposed in [2], asserting that the best model is the one that minimizes the combined cost of decribing the model and the misfit between the model and the data. For example, in a supervised classification task, the model cost is the number of bits describing the model, and the data misfit cost is the number of bits describing the descrepency between model output and the ground truth.</p>
-<blockquote>
-<p>$\texttt{Note}:$ The principle could be viewed in a simple communication model as</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text mainly refers to the paper <a href="https://arxiv.org/abs/1308.3432" target="_blank" rel="noopener">Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation</a> [1]. Regardless of Stochastic Times Smooth (STS) units and Straight-Through Estimator (STE), the technique detail of an unbiased estimator of gradient for stochastic binary neurons is discussed in this text.</p>
+<h2 id="Stochastic-Binary-Neurons"><a href="#Stochastic-Binary-Neurons" class="headerlink" title="Stochastic Binary Neurons"></a>Stochastic Binary Neurons</h2><p>Considering hard non-linearity as activation function in neural networks, the gradients are normaly incomputable, but can be estimated with the help of stochaistic pertubation, which is actually a random noise multiplied on neurons, e.g. dropout. These kind of neurons are referred as stochastic neurons in this text, and become more insteresting in binary case, i.e. the output activated of neurons is either 0 or 1, namely stochastic binary neurons. One may ask for the strategy to binarize the outputs, which is proposed to be based on a sigmoid probability. For illustration, say a fully-connected layer with input $x$, weight $W$, bias $b$ and output activated $h$, then</p>
 <script type="math/tex; mode=display">
-input\;\; X = x</script><script type="math/tex; mode=display">
-sender (W = w, Y = y)\;\;\;\; \xrightarrow{\Delta y,\, w}\;\;\;\; receiver</script></blockquote>
-<h3 id="Coding"><a href="#Coding" class="headerlink" title="Coding"></a>Coding</h3><p>In order to compute communication cost, the first question is how to define the number of bits in need. For simplification, data misfit cost is discussed as an example for illustration.</p>
-<p>Clearly, if the data misfits are real numbers, an inifinite amount of information is needed to convey them. Hence, a simple quantization is included so that the real numbers within a width of $t$ will be degraded to one number.</p>
-<p>After quantization, the misfits $\Delta y$ are further coded into bits with length $-\log\mathbb{P}(\Delta Y=\Delta y)$. For example, let the misfit follow a Gaussian centralized:</p>
+h_i = f(a_i, z_i) = \mathbb{I}_{z_i > \sigma(a_i)},\;\; a_i = b_i + \sum_j W_{ij}x_j,</script><p>where $z_i\sim \mathcal{U}[0,1]$ is uniform and $\sigma(u)=1/(1+\exp(-u))$ is sigmoid function.</p>
+<h2 id="Unbiased-Estimator-for-Gradient"><a href="#Unbiased-Estimator-for-Gradient" class="headerlink" title="Unbiased Estimator for Gradient"></a>Unbiased Estimator for Gradient</h2><p>Let $\mathcal{L}$ be the objective function, then computing directly the gradient of $\mathcal{L}$ with regard to parameters are intractable. However, an unbiases estimator is still feasible. Note that accordint to the chain rule, i.e.</p>
 <script type="math/tex; mode=display">
-\Delta Y \sim \mathcal{N}(0,\sigma^2)\;\; \iff\;\; \hat{Y}|Y \sim \mathcal{N}(y,\sigma^2).</script><p>Therefore,</p>
+\frac{\partial\mathcal{L}}{\partial W_{ij}} = \frac{\partial\mathcal{L}}{\partial a_i}\cdot \frac{\partial a_i}{\partial W_{ij}},</script><p>the first term on the right is the only one in need to estimate, whose expectation is thus in need if the estimation is supposed to be unbiased. </p>
+<p>Additionally, among advances of recent network designs, dropout is commonly included, which is stochastic as well as $z$. In this case, these random parameters should also be considered during the estimation for gradient. Note that this dropout noise does not require updates and is viewed as fixed once sampled when forwarding. Therefore, the expectation is conditionned on the random parameters if they influence $a$. For clarity, let $\Gamma=\{z_i\}\bigcup\ c_i\bigcup c_{-i}$ be the set of all random variables divided according to whether they influence $a_i$ as $c_i$ does. Note $\mathcal{L}=\mathcal{L}(h_i,c_i,c_{-i})$.</p>
+<p>Now compute the expectation of $L$ conditioned on $c_i$,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathbb{P}(\Delta Y = \Delta y|Y = y) =&\, \mathbb{P}(\hat{Y} = \hat{y}, \hat{y} = y + \Delta y|Y = y) \\
-                                          =&\, \int_{\hat{Y}\in\mathcal{B}(\hat{y},t)} \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(\hat{Y} - y)^2}{2\sigma^2} \right)d\hat{Y} \\
-                       \approx&\, \frac{t}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(\hat{y} - y)^2}{2\sigma^2} \right),
-\end{aligned}</script><p>where the approximation is valid if $t\ll\sigma$. Then the misfit cost (on average), i.e. the number of descrepency bits, becomes</p>
+    \mathbb{E}\left[\mathcal{L} | c_i \right] =&\, \mathbb{E}_{c_{-i}}\left[\mathbb{E}_{z_i}\left[L | c_i \right] \right] \\
+                                    =&\, \mathbb{E}_{c_{-i}}\left[\mathbb{E}_{z_i}\left[h_i\mathcal{L}\left(1, c_i, c_{-i} \right) + (1 - h_i)\mathcal{L}\left(0, c_i, c_{-i} \right) \right] \right] \\
+                                    =&\, \mathbb{E}_{c_{-i}}\left[\mathbb{P}\left(h_i=1 | a_i \right)\mathcal{L}\left(1, c_i, c_{-i} \right) + \mathbb{P}\left(h_i=0 | a_i \right)\mathcal{L}\left(0, c_i, c_{-i} \right) \right] \\
+                                    =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\mathcal{L}\left(1, c_i, c_{-i} \right) + \left(1 - \sigma(a_i) \right)\mathcal{L}\left(0, c_i, c_{-i} \right) \right].
+\end{aligned}</script><p>Further derive the average gradient,</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{C}^D =&\, \mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y = \Delta y|Y = y) \right] \\
-                  \approx&\, -\frac{1}{N}\sum_{i=1}^N \left(\log t -\frac{(\hat{y_i} - y_i)^2}{2\sigma^2} \right) + \log\sigma,
-\end{aligned}</script><p>where the approximation is induced by Monte Carlo Sampling.</p>
-<h2 id="Bits-Back-Argument"><a href="#Bits-Back-Argument" class="headerlink" title="Bits-Back Argument"></a>Bits-Back Argument</h2><p>The sender trains the model with data so that it learns the posterior distribution of weights, $q$. However, for sending precise weights to the receiver, the sender may need some random bits (e.g. random seeds) to collapse $q$ to a number. But note that, since the receiver receives the misfits, weights and shares the input with the sender, it is able to train the model itself, which means the receiver can know $q$ as well. In other words, the knowledge of $q$ does mainly come from $w$ once it has received misfits. Furthermore, the information given by $w$ may be rebundant, leading to unnecessary cost. Hence, for computing the necessary cost, it suffers to substract the cost of sending $w$ by the unnecessary cost.</p>
-<h3 id="Weight-Cost"><a href="#Weight-Cost" class="headerlink" title="Weight Cost"></a>Weight Cost</h3><p>Different from data, when model is fixed, weights are often preferred to be certain settings. This refers to, in fact, the prior of weight, $p(w)$. In this case, the sender and the receiver will share this knowledge. Given that, the sender can send $w$ by coding according to this prior (seen the section above). Hence, the cost of sending weights will be</p>
+    g_i = \mathbb{E}\left[\frac{\partial\mathcal{L}}{\partial a_i} | c_i \right] =&\, \frac{\partial\mathbb{E}\left[\mathcal{L} | c_i\right]}{\partial a_i} \\
+                                                                     =&\, \mathbb{E}_{c_{-i}}\left[\sigma'(a_i)\mathcal{L}\left(1, c_i, c_{-i} \right) - \sigma'(a_i)\mathcal{L}\left(0, c_i, c_{-i} \right) \right] \\
+                                                                     =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\left(1 - \sigma(a_i) \right)\left(\mathcal{L}\left(1, c_i, c_{-i} \right) - \mathcal{L}\left(0, c_i, c_{-i} \right) \right) \right].
+\end{aligned}</script><p>Now consider the estimator</p>
 <script type="math/tex; mode=display">
-\mathcal{C}^W = -\log\left(tp(w) \right) = -\log t - \log p(w).</script><h3 id="Random-Bits"><a href="#Random-Bits" class="headerlink" title="Random Bits"></a>Random Bits</h3><p>Actually, to sample $w$ from $q$, the sender needs some random bits (e.g. random seeds). On the other hand, the receiver can know these bits by computing inversely, i.e. from $w$ and $q$ to the random bits.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In computer literature, there is no, as so far, real but <strong>pseudo</strong> random numbers. In most case, the “random” numbers is generated by certain iterative algorithm and based on a real random number, which is often given by hand, namely random seed.</p>
-<p><a href="https://en.wikipedia.org/wiki/Random_seed" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
-</blockquote>
-<p>However, these random bits are not necessary, because 1) they are not features of the model; 2) they can be generated on the receiver side as well. Therfore, we can conclude that the unncessary information is exactly the random bits. Given that these bits can be restored from $q$ and $w$, the cost of sending them will be the number of bits coded according to $q$:</p>
-<script type="math/tex; mode=display">
-\mathcal{C}^R = -\log\left(tq(w) \right) = -\log t - \log q(w).</script><h3 id="Substraction"><a href="#Substraction" class="headerlink" title="Substraction"></a>Substraction</h3><p>Therefore, by computing the expected value, the necessary cost to describe the model is</p>
+\hat{g}_i = \left(h_i - \sigma(a_i) \right)\mathcal{L}(h_i, c_i, c_{-i}) = h_i\left(1 - \sigma(a_i) \right)\mathcal{L}(1, c_i, c_{-i}) - \sigma(a_i)(1 - h_i)\mathcal{L}(0, c_i, c_{-i}),</script><p>whose expectation is</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{C}^M =&\, \mathbb{E}_q\left[\mathcal{C}^W - \mathcal{C}^R \right] \\
-                =&\, \int q(w) \left(\log q(w) - \log p(w) \right)dw \\
-                =&\, -\int q(w) \log\frac{p(w)}{q(w)}dw \\
-                =&\, KL(q(w)||p(w))
-\end{aligned}</script><p>This process can be compared as a special transaction between the sender and the receiver:</p>
+    \mathbb{E}[\hat{g}_i | c_i] =&\, \mathbb{E}_{c_{-i}, z_i}\left[h_i\left(1 - \sigma(a_i) \right)\mathcal{L}(1, c_i, c_{-i}) - \sigma(a_i)(1 - h_i)\mathcal{L}(0, c_i, c_{-i})\right] \\
+                                =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\left(1 - \sigma(a_i) \right)\mathcal{L}(1, c_i, c_{-i}) - \sigma(a_i)(1 - \sigma(a_i))\mathcal{L}(0, c_i, c_{-i}) \right] \\
+                                =&\, \mathbb{E}_{c_{-i}}\left[\sigma(a_i)\left(1 - \sigma(a_i) \right)\left(\mathcal{L}(1, c_i, c_{-i}) - \mathcal{L}(0, c_i, c_{-i}) \right) \right],
+\end{aligned}</script><p>which is the same as that of the gradient. Thus $\hat{g}_i$ is an unbiased estimator for gradient.</p>
+<h2 id="Low-Variance-Choice"><a href="#Low-Variance-Choice" class="headerlink" title="Low Variance Choice"></a>Low Variance Choice</h2><p>The very estimator is actually a special case of <a href="https://link.springer.com/article/10.1007/BF00992696" target="_blank" rel="noopener">policy gradient</a> [2] widely used in reinforcement learning. Consider the binarization as a random action sampled from $\mathcal{B}(\sigma(a_i))$, the objective $\mathcal{L}$ as reward $R$, and suppose trajectory $\tau$ to be unitary. The common choice for optimization is policy gradient method,</p>
 <script type="math/tex; mode=display">
-input\;\; X = x,\;\; prior\;\; p(w)</script><script type="math/tex; mode=display">
-sender (W \sim q, Y = y)\;\;\;\; \xrightarrow[w\,=\,g(r,\,q)]{\Delta y}\;\;\;\; receiver</script><script type="math/tex; mode=display">
-sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f(w,x) + \Delta y)</script><p>where $g(.)$ is some random number generation algorithm, $r$ random bits. </p>
-<blockquote>
-<p>$\texttt{Note}:$ The receiver sends random bits $r$ back to the sender, because they are not necessary for description of the model. Hence, this argument is named by “<em>bits back</em>“.</p>
-</blockquote>
-<h2 id="With-Bayesian-Inference"><a href="#With-Bayesian-Inference" class="headerlink" title="With Bayesian Inference"></a>With Bayesian Inference</h2><p>Combine the cost of data misfits and model description, the total cost is</p>
+\frac{\partial\mathbb{E}_\tau[R]}{\partial a_i} = \mathbb{E}_\tau\left[R\cdot \frac{\partial \log p_{a_i}(h_i)}{\partial a_i} \right].</script><blockquote>
+<p>$\texttt{Proof}:$<br>Suppose $p_{a_i}(h_i)$ is derivable on $0$ with regard to $a_i$, then</p>
+<script type="math/tex; mode=display">
+\frac{\partial \log p_{a_i}(h_i)}{\partial a_i} = \frac{1}{p_{a_i}(h_i)}\frac{\partial p_{a_i}(h_i)}{\partial a_i}.</script><p>After discretization, </p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    \mathcal{C} =&\, \mathcal{C}^D + \mathcal{C}^M \\
-                =&\, \mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y|Y) \right] + KL(q(w)||p(w)).
-\end{aligned}</script><p>To minimize the misfit term, it suffers that $\Delta Y = \hat{y} - y$ happens as frequently as possible, no matter how large it is. However, since it is always expected that $\Delta Y\rightarrow 0$, the first term can be further transformed:</p>
+   \mathbb{E}_\tau\left[R\cdot \frac{\partial \log p_{a_i}(h_i)}{\partial a_i} \right] =&\, R_1\cdot \mathbb{P}\left(h_i=1 | a_i \right) \frac{1}{\mathbb{P}\left(h_i=1 | a_i \right)}\frac{\partial \mathbb{P}\left(h_i=1 | a_i \right)}{\partial a_i} \\
++&\, R_0\cdot \mathbb{P}\left(h_i=0 | a_i \right)\frac{1}{\mathbb{P}\left(h_i=0 | a_i \right)}\frac{\partial \mathbb{P}\left(h_i=0 | a_i \right)}{\partial a_i} \\
+=&\, R_1\cdot \frac{\partial \mathbb{P}\left(h_i=1 | a_i \right)}{\partial a_i} + R_0\cdot \frac{\partial \mathbb{P}\left(h_i=0 | a_i \right)}{\partial a_i} \\
+=&\, \frac{\partial}{\partial a_i}\left(R_1\cdot \mathbb{P}\left(h_i=1 | a_i \right) + R_0\cdot \mathbb{P}\left(h_i=0 | a_i \right) \right) \\
+=&\, \frac{\partial\mathbb{E}_{h_i}[R]}{\partial a_i} \\
+=&\, \frac{\partial\mathbb{E}_\tau[R]}{\partial a_i}.
+\end{aligned}</script></blockquote>
+<p>Given that, it is natural to extract $R\cdot \partial_{a_i} \log p_{a_i}(h_i)$ for gradient estimator, which in this case, is</p>
 <script type="math/tex; mode=display">
-\mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y|Y) \right] \xrightarrow{\Delta Y\, \rightarrow\, 0} \mathbb{E}_Y\left[-\log\mathbb{P}(\hat{Y} = Y|W,X) \right] \equiv \mathbb{E}_Y\left[-\log\mathbb{P}(Y|W = w,X) \right].</script><p>Hence,</p>
+\begin{aligned}
+    \mathcal{L}\cdot \frac{\partial \log \mathbb{P}(h_i | a_i)}{\partial a_i} =&\, h_i\mathcal{L}\cdot \left(1 + \exp(-a_i) \right) \frac{\exp(-a_i)}{\left(1 + \exp(-a_i) \right)^2} \\
+                                                                              +&\, (1 - h_i)\mathcal{L}\cdot \left(1 + \exp(a_i) \right) \frac{-\exp(a_i)}{\left(1 + \exp(a_i) \right)^2}  \\
+                                                                              =&\, h_i\mathcal{L}\cdot \left(1 - \sigma(a_i) \right) - (1 - h_i)\mathcal{L} \cdot \sigma(a_i) \\
+                                                                              =&\, h_i\mathcal{L} - \sigma(a_i)\mathcal{L} - h_i\mathcal{L}\cdot \sigma(a_i) + h_i\mathcal{L}\cdot \sigma(a_i) \\
+                                                                              =&\, \left(h_i - \sigma(a_i) \right)\mathcal{L},
+\end{aligned}</script><p>which is exactly the estimator proposed.</p>
+<p>Furthermore, in reinforcement learning, normaly a baseline is assigned for reward so that the gradient is of low variance. Similarly, this baseline is also necessary in the estimator, denoted by $\bar{\mathcal{L}}_i$. Then reformulate the estimator</p>
 <script type="math/tex; mode=display">
-\mathcal{C} = -\left(\mathbb{E}_Y\left[\log\mathbb{P}(Y|W = w,X) \right] - KL(q(w)||p(w)) \right).</script><p>To minimize the cost, it is equivalent to maximize</p>
+\hat{g}_i = \left(h_i - \sigma(a_i) \right)\left(\mathcal{L} - \bar{\mathcal{L}}_i \right).</script><p>To minmize its variance, which is</p>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathbb{E}_Y\left[\log\mathbb{P}(Y|W = w,X) \right] - KL(q(w)||p(w)),</script><p>which is exactly the <strong>evidence lower bound</strong> of Bayesian inference.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In most case, the first term is approximated by Monte Carlo Sampling so that</p>
+\mathbb{V}ar\left[\hat{g}_i \right] = \mathbb{V}ar\left[\left(h_i - \sigma(a_i) \right)\mathcal{L} \right] - \Delta,</script><p>where</p>
 <script type="math/tex; mode=display">
-\mathcal{L} \approx \frac{1}{N}\sum_{i=1}^N \log\mathbb{P}(\hat{Y} = y_i|W = w,X = x_i) - KL(q(w)||p(w))</script></blockquote>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Hinton, G. E., &amp; van Camp, D. Keeping neural networks simple by minimising the description length of weights. 1993. In Proceedings of COLT-93 (pp. 5-13).</p>
-<p>[2] Rissanen, J. (1986). Stochastic complexity and modeling. The annals of statistics, 1080-1100.</p>
+\Delta = \mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\left(\mathcal{L}^2 - \left(\mathcal{L} - \bar{\mathcal{L}}_i\right)^2 \right) \right]</script><p>should be maximized by minimizing $\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\left(\mathcal{L} - \bar{\mathcal{L}}_i\right)^2 \right]$. Then by derivating with regrad to $\bar{\mathcal{L}}_i$,</p>
+<script type="math/tex; mode=display">
+\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\left(\mathcal{L} - \bar{\mathcal{L}}_i\right) \right] = 0,</script><p>thus</p>
+<script type="math/tex; mode=display">
+\bar{\mathcal{L}}_i = \frac{\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2\mathcal{L} \right]}{\mathbb{E}\left[\left(h_i - \sigma(a_i) \right)^2 \right]}.</script><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Bengio, Y., Léonard, N., &amp; Courville, A. (2013). Estimating or propagating gradients through stochastic neurons for conditional computation. arXiv preprint arXiv:1308.3432.</p>
+<p>[2] Williams, R. J. (1992). Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning, 8(3-4), 229-256.</p>
 
       
     </div>
@@ -447,9 +447,9 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
       
         <div class="post-tags">
           
-            <a href="/tags/MDL/" rel="tag"># MDL</a>
+            <a href="/tags/Stochastic-Neurons/" rel="tag"># Stochastic Neurons</a>
           
-            <a href="/tags/Bits-Back-Argument/" rel="tag"># Bits-Back Argument</a>
+            <a href="/tags/Hard-Non-linearity/" rel="tag"># Hard Non-linearity</a>
           
         </div>
       
@@ -462,8 +462,8 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" rel="next" title="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
-                <i class="fa fa-chevron-left"></i> Structured Bayesian Pruning via Log-Normal Multiplicative Noise
+              <a href="/Machine-Learning/Basic-Method/Deep-Neural-Networks-as-Gaussian-Processes/" rel="next" title="Deep Neural Networks as Gaussian Processes">
+                <i class="fa fa-chevron-left"></i> Deep Neural Networks as Gaussian Processes
               </a>
             
           </div>
@@ -471,10 +471,6 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/" rel="prev" title="Use of Noise in Training">
-                Use of Noise in Training <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -616,7 +612,7 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MDL"><span class="nav-number">2.</span> <span class="nav-text">MDL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Coding"><span class="nav-number">2.1.</span> <span class="nav-text">Coding</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bits-Back-Argument"><span class="nav-number">3.</span> <span class="nav-text">Bits-Back Argument</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Weight-Cost"><span class="nav-number">3.1.</span> <span class="nav-text">Weight Cost</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Random-Bits"><span class="nav-number">3.2.</span> <span class="nav-text">Random Bits</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Substraction"><span class="nav-number">3.3.</span> <span class="nav-text">Substraction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#With-Bayesian-Inference"><span class="nav-number">4.</span> <span class="nav-text">With Bayesian Inference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stochastic-Binary-Neurons"><span class="nav-number">2.</span> <span class="nav-text">Stochastic Binary Neurons</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unbiased-Estimator-for-Gradient"><span class="nav-number">3.</span> <span class="nav-text">Unbiased Estimator for Gradient</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Low-Variance-Choice"><span class="nav-number">4.</span> <span class="nav-text">Low Variance Choice</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
