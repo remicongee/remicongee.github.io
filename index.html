@@ -264,6 +264,198 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/Selective-Search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Computer-Vision/Object-Detection/Selective-Search/" itemprop="url">Selective Search</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-15T22:56:36+08:00">
+                2018-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Selective Search for Object Recognition <a href="https://staff.fnwi.uva.nl/th.gevers/pub/GeversIJCV2013.pdf" target="_blank" rel="noopener">1</a>, which propose a unified framework for object recognition/detection. The most important contribution, which will be discussed here, is a diversified sampling strategy for region proposal, namely selective search. It combines the strength of both exhaustive search and segmentation and is still widely used in object detection field.</p>
+<h2 id="Region-Proposal"><a href="#Region-Proposal" class="headerlink" title="Region Proposal"></a>Region Proposal</h2><p>For detecting or recognizing a certain object in an image, it includes not only classification knowledge but also geometry information, i.e. location and scale. A straight solution is thus traversing all possible locations and scales and outputting the ones classified to the object required. These locations and scales are called <em>region proposal</em>, commonly in form of rectangle with a corner, length and width defined. However, given the huge visual search space, this kind of exhaustive search becomes computationally expensive. This is why the previous studies generally adopt coarse grid search, but still blind and costly, which forces to equip weak feature extractors and classifers to make up computation complexity.</p>
+<h2 id="Reviews"><a href="#Reviews" class="headerlink" title="Reviews"></a>Reviews</h2><p>Although exhaustive search is costly, it holds several advantages which should be kept:</p>
+<ul>
+<li>Class-independence, which ensures a unified and general framework.</li>
+<li>Not leaky, which returns all location and scale possibilities.</li>
+<li>…</li>
+</ul>
+<p>Note that the huge search space arises because the locations and scales are sampled without any visual knowledge. Segmentaion is one method to provide a coarse but reliable proposals, which enables the sampling strategy not blind any more. But a class-independent segmentation may lead to a excessively fine proposals, and thus requires a strong algorithm forming good regions.</p>
+<h2 id="Selective-Search"><a href="#Selective-Search" class="headerlink" title="Selective Search"></a>Selective Search</h2><p>Selective search is a region sampling strategy which combines the strength of exhaustive seach and segmentation. It initalize with a segmentation result and form good regions based on regions’ hierarchical relationships, without class knowledge. A fine to coarse “pyramid” can be thus generated via the greedy algorithm, where on each level a set of regions are proposed. The final region proposal contains about 2000 regions, which is much less than that exhaustive search but still covers reliable locations and scales. Details are discussed below.</p>
+<h3 id="Hierarchical-Grouping"><a href="#Hierarchical-Grouping" class="headerlink" title="Hierarchical Grouping"></a>Hierarchical Grouping</h3><p>The objects in visual field as images are normally included in a hierarchical relationships. For instance, on a table there may be a bowl of eggs, and recognition of the table should upstream from the eggs. From this point, the author starts from rather fine segmentation results [2], then use a greedy algorithm to iteratively group pairs of neighbouring regions together based on a similarity ranked, i.e. the most similar pair of neighbouring regions are merged for each iteration. The similarity here is computed by a function proposed by the author, which combines various standards as described below.</p>
+<h3 id="Diversification-for-Similarity"><a href="#Diversification-for-Similarity" class="headerlink" title="Diversification for Similarity"></a>Diversification for Similarity</h3><p>The author propose to compute the final similarity between neghbouring regions $(r_i, r_j)$ by summing up four weighted sub-similarity functions $s_*(.,.)$:</p>
+<ul>
+<li>Colour</li>
+</ul>
+<script type="math/tex; mode=display">
+s_c(r_i, r_j) = \sum_{k=1}^n \min(c_i^k, c_j^k),</script><p>where $c_i^k$ denotes the colour normalized of $r_i$ in $k$-th colour bin.</p>
+<ul>
+<li>Texture</li>
+</ul>
+<script type="math/tex; mode=display">
+s_t(r_i, r_j) = \sum_{k=1}^n \min(t_i^k, t_j^k),</script><p>where $t_i^k$ denotes the texture histogram value of $r_i$ in $k$-th histogram bin.</p>
+<ul>
+<li>Size</li>
+</ul>
+<script type="math/tex; mode=display">
+s_s(r_i, r_j) = 1 - \frac{size(r_i) + size(r_j)}{size(im)},</script><p>which requires the regions left to be in similar sizes and will be updated by $size(r_t)=size(r_i)+size(r_j)$.</p>
+<ul>
+<li>Fitness</li>
+</ul>
+<script type="math/tex; mode=display">
+s_f(r_i, r_j) = 1 - \frac{B_{ij} - size(r_i) - size(r_j)}{size(im)},</script><p>where $B_{ij}$ is the tight bounding box containing $r_i$ and $r_j$, encouraging to merge regions with large parts touched.</p>
+<p>Finally, the similarity is</p>
+<script type="math/tex; mode=display">
+s(r_i, r_j) = \sum_{*\in E} a_* s_*(r_i, r_j),\;\; E = \{c, t, s, f \},</script><p>where $a_*\in\{0,1 \}$ indicates whether to use the corresponding similarity.</p>
+<h2 id="Combining-Locations"><a href="#Combining-Locations" class="headerlink" title="Combining Locations"></a>Combining Locations</h2><p>Once region proposals are given by the selective search, it should be noted that they are not equi-possible to be an object and those not likely tend to be removed for computation efficiency. To this end, the authot assigns for each region $r_i$ a value $v_i=\delta\cdot i$ and rank based on this all the regions, where $\delta$ is a random number to prevent over emphasize on large regions. The regions with the largest $v$ will be retained, and the others are filtered by thresholding.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Uijlings, J. R., Van De Sande, K. E., Gevers, T., &amp; Smeulders, A. W. (2013). Selective search for object recognition. International journal of computer vision, 104(2), 154-171.</p>
+<p>[2] Felzenszwalb, P. F., &amp; Huttenlocher, D. P. (2004). Efficient graph-based image segmentation. International journal of computer vision, 59(2), 167-181.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2237,139 +2429,13 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
 
 		
     
-		
-			
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/uncategorized/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="RemiC">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Remi's Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/uncategorized/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-26T20:20:29+08:00">
-                2018-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-		
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2413,7 +2479,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2424,7 +2490,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -2435,7 +2501,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

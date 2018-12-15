@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Log-Normal," />
+  <meta name="keywords" content="Region Proposal,Hierarchical Grouping," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
-<meta name="keywords" content="Log-Normal">
+<meta name="description" content="OverviewThis text refers to the paper Selective Search for Object Recognition 1, which propose a unified framework for object recognition/detection. The most important contribution, which will be disc">
+<meta name="keywords" content="Region Proposal,Hierarchical Grouping">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
-<meta property="og:url" content="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/index.html">
+<meta property="og:title" content="Selective Search">
+<meta property="og:url" content="http://yoursite.com/Computer-Vision/Object-Detection/Selective-Search/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
+<meta property="og:description" content="OverviewThis text refers to the paper Selective Search for Object Recognition 1, which propose a unified framework for object recognition/detection. The most important contribution, which will be disc">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-27T11:26:58.877Z">
+<meta property="og:updated_time" content="2018-12-15T17:00:16.781Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Structured Bayesian Pruning via Log-Normal Multiplicative Noise">
-<meta name="twitter:description" content="OverviewThis text refers to the paper Structured Bayesian Pruning via Log-Normal Multiplicative Noise published on NIPS 2017. The main novel point is utilizing Log-Normal distribution. Log-Normal Mult">
+<meta name="twitter:title" content="Selective Search">
+<meta name="twitter:description" content="OverviewThis text refers to the paper Selective Search for Object Recognition 1, which propose a unified framework for object recognition/detection. The most important contribution, which will be disc">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/"/>
+  <link rel="canonical" href="http://yoursite.com/Computer-Vision/Object-Detection/Selective-Search/"/>
 
 
 
 
 
-  <title>Structured Bayesian Pruning via Log-Normal Multiplicative Noise | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Selective Search | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/Selective-Search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</h1>
+          <h1 class="post-title" itemprop="name headline">Selective Search</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-05T13:51:22+08:00">
-                2018-07-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-15T22:56:36+08:00">
+                2018-12-15
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
                   </a>
                 </span>
 
@@ -364,86 +364,44 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://arxiv.org/abs/1705.07283" target="_blank" rel="noopener">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</a> published on NIPS 2017. The main novel point is utilizing <em>Log-Normal</em> distribution.</p>
-<h2 id="Log-Normal-Multiplicative-Noise"><a href="#Log-Normal-Multiplicative-Noise" class="headerlink" title="Log-Normal Multiplicative Noise"></a>Log-Normal Multiplicative Noise</h2><p>Say, for a dropout layer, input $x$ and output $y$ are in $R^I$. To introduce noise, each element of $x$ is multiplied a <strong>POSITIVE</strong> noise:</p>
-<script type="math/tex; mode=display">
-y_i = x_i\cdot \theta_i\;\;\;\;\theta\sim p(\theta).</script><p>In order that sparsity is group-wise, $\theta$ is shared in group.</p>
-<p>To do Bayesian inference for $\theta$, the improper log-uniform distribution is adopted as prior $p(\theta)$ in fully-fractorized way</p>
-<script type="math/tex; mode=display">
-p(\theta) = \prod_{i=1}^Ip(\theta_i) \;\;\;\; p(\theta_i) = LogU_\infty(\theta_i)\propto \frac{1}{\theta_i}</script><p>As for the variational posterior, </p>
-<script type="math/tex; mode=display">
-q_\phi(\theta)=\prod_{i=1}^I LogN(\theta_i|\mu_i,\sigma^2_i),</script><p>where</p>
-<script type="math/tex; mode=display">
-\theta_i \sim LogN(\theta_i|\mu_i,\sigma^2_i)\;\;\iff\;\; \log\theta_i \sim \mathcal{N}(\mu_i,\sigma^2_i).</script><p>The log-normal distribution is chosen for these reason:</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Selective Search for Object Recognition <a href="https://staff.fnwi.uva.nl/th.gevers/pub/GeversIJCV2013.pdf" target="_blank" rel="noopener">1</a>, which propose a unified framework for object recognition/detection. The most important contribution, which will be discussed here, is a diversified sampling strategy for region proposal, namely selective search. It combines the strength of both exhaustive search and segmentation and is still widely used in object detection field.</p>
+<h2 id="Region-Proposal"><a href="#Region-Proposal" class="headerlink" title="Region Proposal"></a>Region Proposal</h2><p>For detecting or recognizing a certain object in an image, it includes not only classification knowledge but also geometry information, i.e. location and scale. A straight solution is thus traversing all possible locations and scales and outputting the ones classified to the object required. These locations and scales are called <em>region proposal</em>, commonly in form of rectangle with a corner, length and width defined. However, given the huge visual search space, this kind of exhaustive search becomes computationally expensive. This is why the previous studies generally adopt coarse grid search, but still blind and costly, which forces to equip weak feature extractors and classifers to make up computation complexity.</p>
+<h2 id="Reviews"><a href="#Reviews" class="headerlink" title="Reviews"></a>Reviews</h2><p>Although exhaustive search is costly, it holds several advantages which should be kept:</p>
 <ul>
-<li>The log-uniform distribution is a specific case of the log-normal one. In fact,</li>
+<li>Class-independence, which ensures a unified and general framework.</li>
+<li>Not leaky, which returns all location and scale possibilities.</li>
+<li>…</li>
 </ul>
-<script type="math/tex; mode=display">
-    q_\phi(\log\theta_i) = \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{|\theta_i - \mu_i|^2}{2\sigma^2} \right)
-                         \xrightarrow{\sigma\rightarrow+\infty} \frac{1}{\sigma\sqrt{2\pi}}
-                         \propto \frac{1}{\sqrt{2\pi}}</script><ul>
-<li>In the logarithmic space, the commonly used Gaussian posterior is asymetric and has different supports from log-uniform distribution.</li>
-</ul>
-<blockquote>
-<p>$\texttt{Note}:$ Given that $\theta$ is defined positive at the beginning, there is no reason to discuss symetry while comparing log-uniform and Gaussian.</p>
-</blockquote>
+<p>Note that the huge search space arises because the locations and scales are sampled without any visual knowledge. Segmentaion is one method to provide a coarse but reliable proposals, which enables the sampling strategy not blind any more. But a class-independent segmentation may lead to a excessively fine proposals, and thus requires a strong algorithm forming good regions.</p>
+<h2 id="Selective-Search"><a href="#Selective-Search" class="headerlink" title="Selective Search"></a>Selective Search</h2><p>Selective search is a region sampling strategy which combines the strength of exhaustive seach and segmentation. It initalize with a segmentation result and form good regions based on regions’ hierarchical relationships, without class knowledge. A fine to coarse “pyramid” can be thus generated via the greedy algorithm, where on each level a set of regions are proposed. The final region proposal contains about 2000 regions, which is much less than that exhaustive search but still covers reliable locations and scales. Details are discussed below.</p>
+<h3 id="Hierarchical-Grouping"><a href="#Hierarchical-Grouping" class="headerlink" title="Hierarchical Grouping"></a>Hierarchical Grouping</h3><p>The objects in visual field as images are normally included in a hierarchical relationships. For instance, on a table there may be a bowl of eggs, and recognition of the table should upstream from the eggs. From this point, the author starts from rather fine segmentation results [2], then use a greedy algorithm to iteratively group pairs of neighbouring regions together based on a similarity ranked, i.e. the most similar pair of neighbouring regions are merged for each iteration. The similarity here is computed by a function proposed by the author, which combines various standards as described below.</p>
+<h3 id="Diversification-for-Similarity"><a href="#Diversification-for-Similarity" class="headerlink" title="Diversification for Similarity"></a>Diversification for Similarity</h3><p>The author propose to compute the final similarity between neghbouring regions $(r_i, r_j)$ by summing up four weighted sub-similarity functions $s_*(.,.)$:</p>
 <ul>
-<li><p>Log-normal noise is always non-negative, while Gaussian one is not. During training with the latter, the sign of output non-activated is arbitary, while during testing, it is always non-negative, because the noise equals $1$ and the input activated by most popular non-linearities (e.g. ReLU, Sigmoid, Softplus) is non-negative. This inconsistency can not be justified even though Gaussian dropout works well in some work.</p>
-</li>
-<li><p>$KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta))$ is computable analytically.</p>
-</li>
+<li>Colour</li>
 </ul>
-<blockquote>
-<p>$\texttt{Note}:$ $KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta))=C-\log\sigma$, where $C=+\infty$.</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-      KL(LogN(\theta|\mu,\sigma^2)||LogU_{\infty}(\theta)) =&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{LogU_{\infty}(\theta)}{LogN(\theta)}d\theta \\
-=&\, -\int LogN(\theta|\mu,\sigma^2)\log\frac{1}{C\theta}d\theta - \mathcal{H}(LogN(\theta|\mu,\sigma^2)) \\
-=&\, \log C + \int \frac{1}{\theta\sigma\sqrt{2\pi}}\exp\left(-\frac{(\log\theta-\mu)^2}{2\sigma^2} \right)\log\theta d\theta - \frac{1}{2} - \frac{1}{2}\log(2\pi\sigma^2) - \mu \\
-=&\, C' + \int \exp(-u)\frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(u-\mu)^2}{2\sigma^2} \right)u\exp(u)du - \log\sigma \\
-=&\, C'' - \log\sigma,
-\end{aligned}</script><p>where $C’’=\log C - \frac{1}{2}\left(1+\log(2\pi)\right)-\mu$. <br><br>This term is not infinity if and only if </p>
+s_c(r_i, r_j) = \sum_{k=1}^n \min(c_i^k, c_j^k),</script><p>where $c_i^k$ denotes the colour normalized of $r_i$ in $k$-th colour bin.</p>
+<ul>
+<li>Texture</li>
+</ul>
 <script type="math/tex; mode=display">
-\log\sigma = \mathcal{O}(\log C),</script><p>which means $\sigma\rightarrow+\infty$.</p>
-</blockquote>
-<p>Given the above $\texttt{Note}$, the lower bound is ill-posed. In fact, the lower bound</p>
+s_t(r_i, r_j) = \sum_{k=1}^n \min(t_i^k, t_j^k),</script><p>where $t_i^k$ denotes the texture histogram value of $r_i$ in $k$-th histogram bin.</p>
+<ul>
+<li>Size</li>
+</ul>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathcal{L}^D(\mu,\sigma,w) - KL(q_\phi(\theta)||p(\theta))</script><p>tends to $-\infty$ hence can not be maximized, unless $\sigma\rightarrow+\infty$. However, this case indicates the degeneration of the posterior to the prior, which means the distribution trained is ignorant of all the information from the training set. Apparently, it is totally null. The reason for that is because the log-uniform is improper (non-normalized) and any probabilistic model will be then flawed.</p>
-<h2 id="Truncated-Approximation"><a href="#Truncated-Approximation" class="headerlink" title="Truncated Approximation"></a>Truncated Approximation</h2><p>Consider the precision of <em>floating-point</em>, the smallest positive number is $1.2\times10^{-38}$. Therefore, complete mass of log-uniform is useless. To construct a practicable prior, a truncted approximation is proposed</p>
+s_s(r_i, r_j) = 1 - \frac{size(r_i) + size(r_j)}{size(im)},</script><p>which requires the regions left to be in similar sizes and will be updated by $size(r_t)=size(r_i)+size(r_j)$.</p>
+<ul>
+<li>Fitness</li>
+</ul>
 <script type="math/tex; mode=display">
-LogU_{[a,b]}(\theta)\propto LogU_\infty(\theta)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><script type="math/tex; mode=display">
-LogN_{[a,b]}(\theta|\mu,\sigma^2)\propto LogN(\theta|\mu,\sigma^2)\cdot \mathbb{I}_{[a,b]}(\log\theta)</script><p>The new KL term will be</p>
+s_f(r_i, r_j) = 1 - \frac{B_{ij} - size(r_i) - size(r_j)}{size(im)},</script><p>where $B_{ij}$ is the tight bounding box containing $r_i$ and $r_j$, encouraging to merge regions with large parts touched.</p>
+<p>Finally, the similarity is</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\left(\Phi(\beta - \Phi(\alpha)) \right) - \frac{\alpha\phi(\alpha) - \beta\phi(beta)}{2\left(\Phi(\beta) - \Phi(\alpha) \right)},</script><p>where $\phi(.)$ and $\Phi(.)$ are the density and CDF of standard Gaussian distribution, $\alpha=\frac{a-\mu}{\sigma}$ and $\beta=\frac{b-\mu}{\sigma}$.</p>
-<blockquote>
-<p>$\texttt{Note}:$ As for KL term with $\theta\in \left[e^a,e^b\right]$, in fact</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-      KL(q_\phi(\theta)||p(\theta)) =&\, -\int q_\phi(\theta)\log\frac{p(\theta)}{q_\phi(\theta)}d\theta \\
-                                             =&\, -\int e^uq_\phi(e^u)\log\frac{p(e^u)e^u}{q_\phi(e^u)e^u}du \;\;\;\; \left(u = \log\theta \right) \\
-                                             =&\, -\int q_\phi(u)\log\frac{p(u)}{q_\phi(u)}du \\
-                                             =&\, KL(q_\phi(u)||p(u)),
-\end{aligned}</script><p>where $q_\phi(u)=\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)$ and $p(u)=\mathcal{U}(u|a,b)$.<br>Furthermore,</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    KL(q_\phi(u)||p(u)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log\frac{\mathcal{U}(u|a,b)}{\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)}du \\
-                                  =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\left(-\log(b-a) - \log\left(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b) \right) \right)du \\
-                                  =&\, \int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(b-a)du - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) \\
-                                  =&\, \log(b-a) - \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)).
-\end{aligned}</script><p>Consider the entropy term,</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{H}(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)) =&\, -\int \mathcal{tN}(u|\mu_u,\sigma^2_u,a,b)\log(\mathcal{tN}(u|\mu_u,\sigma^2_u,a,b))du \\
-                                                      =&\, \log(\sqrt{2\pi}\sigma Z) + \frac{\alpha\phi(\alpha) - \beta\phi(\beta)}{2Z}
-\end{aligned}</script><p>where $\alpha=\frac{a-\mu}{\sigma}$, $\beta=\frac{b-\mu}{\sigma}$ and $Z=\Phi(\beta)-\Phi(\alpha)$.</p>
-<p><a href="https://en.wikipedia.org/wiki/Truncated_normal_distribution" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
-</blockquote>
-<h2 id="Thresholding"><a href="#Thresholding" class="headerlink" title="Thresholding"></a>Thresholding</h2><p>Different from Gaussian noise $\mathcal{N}(1,\alpha)$, log-normal noise does not have parameters like dropout rate $\alpha$, which could be used while thresholding for weight pruning. However, another quantity, Signal-to-Noise Ratio (<em>SNR</em>) is also usable:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    SNR =&\, \frac{\mathbb{E}[\theta]}{\sqrt{\mathbb{V}ar[\theta]}} \\
-        =&\, \frac{\left(\Phi(\sigma - \alpha) - \Phi(\sigma-\beta) \right) / \sqrt{\Phi(\beta - \Phi(\alpha))}}{\sqrt{\exp(\sigma^2) \left(\Phi(2\sigma - \alpha) - \Phi(2\sigma - \beta) \right) - \left(\Phi(\sigma - \alpha) - \Phi(\sigma - \beta) \right)^2}}.
-\end{aligned}</script><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Neklyudov, K., Molchanov, D., Ashukha, A., &amp; Vetrov, D. P. (2017). Structured bayesian pruning via log-normal multiplicative noise. In Advances in Neural Information Processing Systems (pp. 6775-6784).</p>
+s(r_i, r_j) = \sum_{*\in E} a_* s_*(r_i, r_j),\;\; E = \{c, t, s, f \},</script><p>where $a_*\in\{0,1 \}$ indicates whether to use the corresponding similarity.</p>
+<h2 id="Combining-Locations"><a href="#Combining-Locations" class="headerlink" title="Combining Locations"></a>Combining Locations</h2><p>Once region proposals are given by the selective search, it should be noted that they are not equi-possible to be an object and those not likely tend to be removed for computation efficiency. To this end, the authot assigns for each region $r_i$ a value $v_i=\delta\cdot i$ and rank based on this all the regions, where $\delta$ is a random number to prevent over emphasize on large regions. The regions with the largest $v$ will be retained, and the others are filtered by thresholding.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Uijlings, J. R., Van De Sande, K. E., Gevers, T., &amp; Smeulders, A. W. (2013). Selective search for object recognition. International journal of computer vision, 104(2), 154-171.</p>
+<p>[2] Felzenszwalb, P. F., &amp; Huttenlocher, D. P. (2004). Efficient graph-based image segmentation. International journal of computer vision, 59(2), 167-181.</p>
 
       
     </div>
@@ -461,7 +419,9 @@ KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\lef
       
         <div class="post-tags">
           
-            <a href="/tags/Log-Normal/" rel="tag"># Log-Normal</a>
+            <a href="/tags/Region-Proposal/" rel="tag"># Region Proposal</a>
+          
+            <a href="/tags/Hierarchical-Grouping/" rel="tag"># Hierarchical Grouping</a>
           
         </div>
       
@@ -474,8 +434,8 @@ KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\lef
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Variational-Dropout/" rel="next" title="Variational Dropout">
-                <i class="fa fa-chevron-left"></i> Variational Dropout
+              <a href="/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/" rel="next" title="On Gradients of Stochastic Neurons">
+                <i class="fa fa-chevron-left"></i> On Gradients of Stochastic Neurons
               </a>
             
           </div>
@@ -483,10 +443,6 @@ KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\lef
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" rel="prev" title="Keeping Neural Networks Simple by MDL">
-                Keeping Neural Networks Simple by MDL <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -628,7 +584,7 @@ KL(q_\phi(\theta)||p(\theta)) = \log\frac{b-a}{\sqrt{2\pi e\sigma^2}} - \log\lef
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Log-Normal-Multiplicative-Noise"><span class="nav-number">2.</span> <span class="nav-text">Log-Normal Multiplicative Noise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Truncated-Approximation"><span class="nav-number">3.</span> <span class="nav-text">Truncated Approximation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Thresholding"><span class="nav-number">4.</span> <span class="nav-text">Thresholding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Region-Proposal"><span class="nav-number">2.</span> <span class="nav-text">Region Proposal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reviews"><span class="nav-number">3.</span> <span class="nav-text">Reviews</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selective-Search"><span class="nav-number">4.</span> <span class="nav-text">Selective Search</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hierarchical-Grouping"><span class="nav-number">4.1.</span> <span class="nav-text">Hierarchical Grouping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Diversification-for-Similarity"><span class="nav-number">4.2.</span> <span class="nav-text">Diversification for Similarity</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Combining-Locations"><span class="nav-number">5.</span> <span class="nav-text">Combining Locations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
