@@ -264,6 +264,216 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/" itemprop="url">Principles and Possible Methods</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-27T13:54:31+08:00">
+                2018-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Compression</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
+                    <span itemprop="name">Bayesian View</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom.</p>
+<h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $S$ and $D$, denoted as $\mathbb{P}(w|S,D)$. Mathematically, the posterior is accessible via </p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathbb{P}(w|S,D) =& \frac{\mathbb{P}(w,S,D)}{\mathbb{P}(S,D)} \\
+                      =& \frac{\mathbb{P}(w,S,D)}{\int\mathbb{P}(w,S,D)dw}.
+\end{aligned}</script><p>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as</p>
+<script type="math/tex; mode=display">
+q_\phi(w) \approx p(w|S,D).</script><blockquote>
+<p>$\texttt{Note}:$ $w$ is considered as a real random variable with a continuous probability density function, denoted as $p$.<br>The Baysian’s Rule will be hence extended to be</p>
+<script type="math/tex; mode=display">
+p(w|S,D) = \frac{\mathbb{P}(S,D|w)\cdot p(w)}{\mathbb{P}(S,D)}.</script><p><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
+</blockquote>
+<p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
+<script type="math/tex; mode=display">
+KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    KL(q_\phi(w)||p(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||p(w)) + \log\mathbb{P}(y|x) \\
+                                     =& -\mathcal{L}(q_\phi(w),p(w|D)) + \log\mathbb{P}(y|x),
+\end{aligned}</script><p>where </p>
+<script type="math/tex; mode=display">
+\mathcal{L}(q_\phi(w),p(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
+<blockquote>
+<p>$\texttt{Note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
+</blockquote>
+<p>Given that $\log\mathbb{P}(y|x)$ is fixed, the original target (minimize KL-divergence) is equivalent to maximizing $\mathcal{L}$, which is referred as evidence lower bound in Bayesian literature.</p>
+<h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>Thanks to promising computation capacity of CPU/GPU, gradient-based methods are widely preferred in deep learning problem. In this case, gradient-based methods is also feasible, while facing three main problems: differentiability, bias and variance.</p>
+<h3 id="Differentiability"><a href="#Differentiability" class="headerlink" title="Differentiability"></a>Differentiability</h3><p>The partial gradient $\frac{\partial\mathcal{L}}{\partial q_\phi}$ is intractable unless $w$ is differentiable with regard to $\phi$. (Here, it is assumed that $\mathcal{L}$ is differentiable with regard to $w$.) The most common way to enssure this property is assigning</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    w =& \mu + \sqrt{\phi}\cdot\varepsilon \\
+    \varepsilon \sim& \mathcal{N}(0,1).
+\end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, dataset is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),p(w|x_m,y_m)) \\
+                                           =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
+\end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
+<script type="math/tex; mode=display">
+\mathbb{V}ar[{\hat{\mathcal{L}}}] = N^2\left(\frac{1}{M}\mathbb{V}ar[\hat{\mathcal{L}}_m] + \frac{M-1}{M}\mathbb{C}ov[\hat{\mathcal{L}}_m, \hat{\mathcal{L}}_n] \right),</script><p>where the second term does not degrade to zero if the covariance is large enough. Therefore, applying local reparameterization trick is preferred here. The main idea is, in each update iteration, resampling $w$ independently according to $q_\phi$, leading to $i.i.d.$ samples.</p>
+<h2 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h2><p>As long as a good approximation $q_\phi(w)$ is reached, it is possible to prune certain parameters or neurons if their posteriors tend to be negligible. There are several interesting ways as discussed below.</p>
+<h3 id="Prior"><a href="#Prior" class="headerlink" title="Prior"></a>Prior</h3><ul>
+<li>LASSO</li>
+<li>log-uniform</li>
+<li>spike-and-slab</li>
+<li>half-cauchy</li>
+</ul>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><ul>
+<li>Gaussian dropout</li>
+<li>As a Bayesian approximation</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
+<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
+<p>[3] Gal, Y., &amp; Ghahramani, Z. (2016, June). Dropout as a Bayesian approximation: Representing model uncertainty in deep learning. In international conference on machine learning (pp. 1050-1059).</p>
+<p>[4] Achterhold, J., Koehler, J. M., Schmeink, A., &amp; Genewein, T. (2018). Variational Network Quantization. In International Conference on Learning Representations.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/uncategorized/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -430,7 +640,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -452,7 +662,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -264,6 +264,181 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/R-CNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Computer-Vision/Object-Detection/R-CNN/" itemprop="url">R-CNN</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-16T01:01:32+08:00">
+                2018-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Rich Feature Hierarchical for Accurate Object Detection and Semantic Segmentation <a href="https://www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Girshick_Rich_Feature_Hierarchies_2014_CVPR_paper.pdf" target="_blank" rel="noopener">[1]</a>, which proposes to detect objects via feature maps extracted by fully convolutional neural network (CNN), based on the <a href="Computer-Vision/Object-Detection/Selective-Search">selective search</a> algorithm for region proposals.</p>
+<h2 id="Feature-Extraction"><a href="#Feature-Extraction" class="headerlink" title="Feature Extraction"></a>Feature Extraction</h2><p>R-CNN extracts feature maps of all region proposals from a CNN ended with a pooling layer. Given that the input size of CNN is fixed and region proposals vary from sizes, the author proposes to warp the proposals to the size of the input by a simple dilation. The region proposals here are given by selective search.</p>
+<h2 id="Detector"><a href="#Detector" class="headerlink" title="Detector"></a>Detector</h2><h3 id="Classifier"><a href="#Classifier" class="headerlink" title="Classifier"></a>Classifier</h3><p>An SVM is set for each class, including background. When the feature vector of certain proposal enters SVMs, it is equally assigned a score, which is further used to rank proposals. Given all score regions, a greedy non-maximum suppression that rejects a region if it has an intersection-over-union (IoU) overlap with a higher scoring selected region larger than a <em>learned</em> threshold.</p>
+<blockquote>
+<p>$\texttt{Question}:$ How to learn this threshold?</p>
+</blockquote>
+<h3 id="Bounding-box-Regressor"><a href="#Bounding-box-Regressor" class="headerlink" title="Bounding-box Regressor"></a>Bounding-box Regressor</h3><p>To predict a more accurate bounding-box, a regression is stacked, trained for mapping proposals’ CNN features to locations and scales. Note $\{\left(P^i,G^i\right)\}_{i=1,…,N}$ the training samples, $P^i=\left(P^i_x,P^i_y,P^i_w,P^i_h \right)$ the proposal, $G^i=\left(G^i_x,G^i_y,G^i_w,G^i_h \right)$ the ground truth. The bounding-box regressed is thus</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \hat{G}_x =&\, P_w d_x(P) + P_x \\
+    \hat{G}_y =&\, P_h d_y(P) + P_y \\
+    \hat{G}_w =&\, P_w \exp(d_w(P)) \\
+    \hat{G}_h =&\, P_h \exp(d_h(P)),
+\end{aligned}</script><p>where $d_*(.)$ is a linear function operating on the CNN feature maps.</p>
+<blockquote>
+<p>$\texttt{Note}:$ For regression from $P_<em>$ to $\hat{G}_</em>$, the scale multiplier $P_w$ or $P_h$ is reasonable if the base units are supposed to be coherent across the equality.</p>
+</blockquote>
+<p>Note $W_<em>$ the weight of $d_</em>(.)$, its optimal solution is</p>
+<script type="math/tex; mode=display">
+\hat{W}_* = \arg_{W_*}\min \sum_{i=1}^N \left(t^i_* - W_*^T P^i \right)^2 + \lambda \|W_* \|^2,</script><p>where $\lambda$ controls the regularization, which is found to be important.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Girshick, R., Donahue, J., Darrell, T., &amp; Malik, J. (2014). Rich feature hierarchies for accurate object detection and semantic segmentation. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 580-587).</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/Selective-Search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -368,7 +543,7 @@
       
         
           
-            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Selective Search for Object Recognition <a href="https://staff.fnwi.uva.nl/th.gevers/pub/GeversIJCV2013.pdf" target="_blank" rel="noopener">1</a>, which propose a unified framework for object recognition/detection. The most important contribution, which will be discussed here, is a diversified sampling strategy for region proposal, namely selective search. It combines the strength of both exhaustive search and segmentation and is still widely used in object detection field.</p>
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Selective Search for Object Recognition <a href="https://staff.fnwi.uva.nl/th.gevers/pub/GeversIJCV2013.pdf" target="_blank" rel="noopener">[1]</a>, which propose a unified framework for object recognition/detection. The most important contribution, which will be discussed here, is a diversified sampling strategy for region proposal, namely selective search. It combines the strength of both exhaustive search and segmentation and is still widely used in object detection field.</p>
 <h2 id="Region-Proposal"><a href="#Region-Proposal" class="headerlink" title="Region Proposal"></a>Region Proposal</h2><p>For detecting or recognizing a certain object in an image, it includes not only classification knowledge but also geometry information, i.e. location and scale. A straight solution is thus traversing all possible locations and scales and outputting the ones classified to the object required. These locations and scales are called <em>region proposal</em>, commonly in form of rectangle with a corner, length and width defined. However, given the huge visual search space, this kind of exhaustive search becomes computationally expensive. This is why the previous studies generally adopt coarse grid search, but still blind and costly, which forces to equip weak feature extractors and classifers to make up computation complexity.</p>
 <h2 id="Reviews"><a href="#Reviews" class="headerlink" title="Reviews"></a>Reviews</h2><p>Although exhaustive search is costly, it holds several advantages which should be kept:</p>
 <ul>
@@ -2219,216 +2394,6 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
 
 		
     
-		
-			
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="RemiC">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Remi's Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/" itemprop="url">Principles and Possible Methods</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-27T13:54:31+08:00">
-                2018-06-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom.</p>
-<h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $S$ and $D$, denoted as $\mathbb{P}(w|S,D)$. Mathematically, the posterior is accessible via </p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathbb{P}(w|S,D) =& \frac{\mathbb{P}(w,S,D)}{\mathbb{P}(S,D)} \\
-                      =& \frac{\mathbb{P}(w,S,D)}{\int\mathbb{P}(w,S,D)dw}.
-\end{aligned}</script><p>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as</p>
-<script type="math/tex; mode=display">
-q_\phi(w) \approx p(w|S,D).</script><blockquote>
-<p>$\texttt{Note}:$ $w$ is considered as a real random variable with a continuous probability density function, denoted as $p$.<br>The Baysian’s Rule will be hence extended to be</p>
-<script type="math/tex; mode=display">
-p(w|S,D) = \frac{\mathbb{P}(S,D|w)\cdot p(w)}{\mathbb{P}(S,D)}.</script><p><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
-</blockquote>
-<p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
-<script type="math/tex; mode=display">
-KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    KL(q_\phi(w)||p(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||p(w)) + \log\mathbb{P}(y|x) \\
-                                     =& -\mathcal{L}(q_\phi(w),p(w|D)) + \log\mathbb{P}(y|x),
-\end{aligned}</script><p>where </p>
-<script type="math/tex; mode=display">
-\mathcal{L}(q_\phi(w),p(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
-<blockquote>
-<p>$\texttt{Note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
-</blockquote>
-<p>Given that $\log\mathbb{P}(y|x)$ is fixed, the original target (minimize KL-divergence) is equivalent to maximizing $\mathcal{L}$, which is referred as evidence lower bound in Bayesian literature.</p>
-<h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>Thanks to promising computation capacity of CPU/GPU, gradient-based methods are widely preferred in deep learning problem. In this case, gradient-based methods is also feasible, while facing three main problems: differentiability, bias and variance.</p>
-<h3 id="Differentiability"><a href="#Differentiability" class="headerlink" title="Differentiability"></a>Differentiability</h3><p>The partial gradient $\frac{\partial\mathcal{L}}{\partial q_\phi}$ is intractable unless $w$ is differentiable with regard to $\phi$. (Here, it is assumed that $\mathcal{L}$ is differentiable with regard to $w$.) The most common way to enssure this property is assigning</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    w =& \mu + \sqrt{\phi}\cdot\varepsilon \\
-    \varepsilon \sim& \mathcal{N}(0,1).
-\end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, dataset is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),p(w|x_m,y_m)) \\
-                                           =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
-\end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
-<script type="math/tex; mode=display">
-\mathbb{V}ar[{\hat{\mathcal{L}}}] = N^2\left(\frac{1}{M}\mathbb{V}ar[\hat{\mathcal{L}}_m] + \frac{M-1}{M}\mathbb{C}ov[\hat{\mathcal{L}}_m, \hat{\mathcal{L}}_n] \right),</script><p>where the second term does not degrade to zero if the covariance is large enough. Therefore, applying local reparameterization trick is preferred here. The main idea is, in each update iteration, resampling $w$ independently according to $q_\phi$, leading to $i.i.d.$ samples.</p>
-<h2 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h2><p>As long as a good approximation $q_\phi(w)$ is reached, it is possible to prune certain parameters or neurons if their posteriors tend to be negligible. There are several interesting ways as discussed below.</p>
-<h3 id="Prior"><a href="#Prior" class="headerlink" title="Prior"></a>Prior</h3><ul>
-<li>LASSO</li>
-<li>log-uniform</li>
-<li>spike-and-slab</li>
-<li>half-cauchy</li>
-</ul>
-<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><ul>
-<li>Gaussian dropout</li>
-<li>As a Bayesian approximation</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
-<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
-<p>[3] Gal, Y., &amp; Ghahramani, Z. (2016, June). Dropout as a Bayesian approximation: Representing model uncertainty in deep learning. In international conference on machine learning (pp. 1050-1059).</p>
-<p>[4] Achterhold, J., Koehler, J. M., Schmeink, A., &amp; Genewein, T. (2018). Variational Network Quantization. In International Conference on Learning Representations.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-		
-    
   </section>
 
   
@@ -2479,7 +2444,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2501,7 +2466,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="R-CNN,Convolutional Neural Network," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="I&apos;m description.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Remi&#39;s Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="OverviewThis text refers to the paper Rich Feature Hierarchical for Accurate Object Detection and Semantic Segmentation [1], which proposes to detect objects via feature maps extracted by fully convol">
+<meta name="keywords" content="R-CNN,Convolutional Neural Network">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R-CNN">
+<meta property="og:url" content="http://yoursite.com/Computer-Vision/Object-Detection/R-CNN/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="I&apos;m description.">
+<meta property="og:description" content="OverviewThis text refers to the paper Rich Feature Hierarchical for Accurate Object Detection and Semantic Segmentation [1], which proposes to detect objects via feature maps extracted by fully convol">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-17T15:40:41.789Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Remi&#39;s Hexo">
-<meta name="twitter:description" content="I&apos;m description.">
+<meta name="twitter:title" content="R-CNN">
+<meta name="twitter:description" content="OverviewThis text refers to the paper Rich Feature Hierarchical for Accurate Object Detection and Semantic Segmentation [1], which proposes to detect objects via feature maps extracted by fully convol">
 
 
 
@@ -129,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/"/>
+  <link rel="canonical" href="http://yoursite.com/Computer-Vision/Object-Detection/R-CNN/"/>
 
 
 
 
 
-  <title>Archive | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>R-CNN | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -154,7 +156,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-archive">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,411 +250,202 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/R-CNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">R-CNN</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-16T01:01:32+08:00">
+                2018-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        Um..! 12 posts in total. Keep on posting.
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
+                  </a>
+                </span>
 
-      
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
+                  </a>
+                </span>
 
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Computer-Vision/Object-Detection/R-CNN/" itemprop="url">
-              
-                <span itemprop="name">R-CNN</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-12-16T01:01:32+08:00"
-              content="2018-12-16" >
-          12-16
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Computer-Vision/Object-Detection/Selective-Search/" itemprop="url">
-              
-                <span itemprop="name">Selective Search</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-12-15T22:56:36+08:00"
-              content="2018-12-15" >
-          12-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Machine-Learning/Basic-Method/On-Gradients-of-Stochastic-Neurons/" itemprop="url">
-              
-                <span itemprop="name">On Gradients of Stochastic Neurons</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-12-06T21:06:26+08:00"
-              content="2018-12-06" >
-          12-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Rich Feature Hierarchical for Accurate Object Detection and Semantic Segmentation <a href="https://www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Girshick_Rich_Feature_Hierarchies_2014_CVPR_paper.pdf" target="_blank" rel="noopener">[1]</a>, which proposes to detect objects via feature maps extracted by fully convolutional neural network (CNN), based on the <a href="Computer-Vision/Object-Detection/Selective-Search">selective search</a> algorithm for region proposals.</p>
+<h2 id="Feature-Extraction"><a href="#Feature-Extraction" class="headerlink" title="Feature Extraction"></a>Feature Extraction</h2><p>R-CNN extracts feature maps of all region proposals from a CNN ended with a pooling layer. Given that the input size of CNN is fixed and region proposals vary from sizes, the author proposes to warp the proposals to the size of the input by a simple dilation. The region proposals here are given by selective search.</p>
+<h2 id="Detector"><a href="#Detector" class="headerlink" title="Detector"></a>Detector</h2><h3 id="Classifier"><a href="#Classifier" class="headerlink" title="Classifier"></a>Classifier</h3><p>An SVM is set for each class, including background. When the feature vector of certain proposal enters SVMs, it is equally assigned a score, which is further used to rank proposals. Given all score regions, a greedy non-maximum suppression that rejects a region if it has an intersection-over-union (IoU) overlap with a higher scoring selected region larger than a <em>learned</em> threshold.</p>
+<blockquote>
+<p>$\texttt{Question}:$ How to learn this threshold?</p>
+</blockquote>
+<h3 id="Bounding-box-Regressor"><a href="#Bounding-box-Regressor" class="headerlink" title="Bounding-box Regressor"></a>Bounding-box Regressor</h3><p>To predict a more accurate bounding-box, a regression is stacked, trained for mapping proposals’ CNN features to locations and scales. Note $\{\left(P^i,G^i\right)\}_{i=1,…,N}$ the training samples, $P^i=\left(P^i_x,P^i_y,P^i_w,P^i_h \right)$ the proposal, $G^i=\left(G^i_x,G^i_y,G^i_w,G^i_h \right)$ the ground truth. The bounding-box regressed is thus</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    \hat{G}_x =&\, P_w d_x(P) + P_x \\
+    \hat{G}_y =&\, P_h d_y(P) + P_y \\
+    \hat{G}_w =&\, P_w \exp(d_w(P)) \\
+    \hat{G}_h =&\, P_h \exp(d_h(P)),
+\end{aligned}</script><p>where $d_*(.)$ is a linear function operating on the CNN feature maps.</p>
+<blockquote>
+<p>$\texttt{Note}:$ For regression from $P_<em>$ to $\hat{G}_</em>$, the scale multiplier $P_w$ or $P_h$ is reasonable if the base units are supposed to be coherent across the equality.</p>
+</blockquote>
+<p>Note $W_<em>$ the weight of $d_</em>(.)$, its optimal solution is</p>
+<script type="math/tex; mode=display">
+\hat{W}_* = \arg_{W_*}\min \sum_{i=1}^N \left(t^i_* - W_*^T P^i \right)^2 + \lambda \|W_* \|^2,</script><p>where $\lambda$ controls the regularization, which is found to be important.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Girshick, R., Donahue, J., Darrell, T., &amp; Malik, J. (2014). Rich feature hierarchies for accurate object detection and semantic segmentation. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 580-587).</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Machine-Learning/Basic-Method/Deep-Neural-Networks-as-Gaussian-Processes/" itemprop="url">
-              
-                <span itemprop="name">Deep Neural Networks as Gaussian Processes</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-24T18:57:22+08:00"
-              content="2018-09-24" >
-          09-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/" itemprop="url">
-              
-                <span itemprop="name">Noise and Tikhonov Regularization</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-09-10T19:15:24+08:00"
-              content="2018-09-10" >
-          09-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/" itemprop="url">
-              
-                <span itemprop="name">Use of Noise in Training</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-08-07T15:50:41+08:00"
-              content="2018-08-07" >
-          08-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" itemprop="url">
-              
-                <span itemprop="name">Keeping Neural Networks Simple by MDL</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-10T18:50:00+08:00"
-              content="2018-07-10" >
-          07-10
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Structured-Bayesian-Pruning-via-Log-Normal-Multiplicative-Noise/" itemprop="url">
-              
-                <span itemprop="name">Structured Bayesian Pruning via Log-Normal Multiplicative Noise</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-07-05T13:51:22+08:00"
-              content="2018-07-05" >
-          07-05
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Variational-Dropout/" itemprop="url">
-              
-                <span itemprop="name">Variational Dropout</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-30T18:50:36+08:00"
-              content="2018-06-30" >
-          06-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/" itemprop="url">
-              
-                <span itemprop="name">Bayesian Compression for Deep Learning</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-06-28T20:46:23+08:00"
-              content="2018-06-28" >
-          06-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/R-CNN/" rel="tag"># R-CNN</a>
+          
+            <a href="/tags/Convolutional-Neural-Network/" rel="tag"># Convolutional Neural Network</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Computer-Vision/Object-Detection/Selective-Search/" rel="next" title="Selective Search">
+                <i class="fa fa-chevron-left"></i> Selective Search
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -660,6 +453,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -680,8 +477,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -751,6 +557,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feature-Extraction"><span class="nav-number">2.</span> <span class="nav-text">Feature Extraction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Detector"><span class="nav-number">3.</span> <span class="nav-text">Detector</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Classifier"><span class="nav-number">3.1.</span> <span class="nav-text">Classifier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bounding-box-Regressor"><span class="nav-number">3.2.</span> <span class="nav-text">Bounding-box Regressor</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -891,6 +713,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
