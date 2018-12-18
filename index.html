@@ -264,6 +264,187 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/Fast-R-CNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Computer-Vision/Object-Detection/Fast-R-CNN/" itemprop="url">Fast R-CNN</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-18T14:04:50+08:00">
+                2018-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Fast R-CNN <a href="https://www.cv-foundation.org/openaccess/content_iccv_2015/html/Girshick_Fast_R-CNN_ICCV_2015_paper.html" target="_blank" rel="noopener">[1]</a>,which improves the <a href="Computer-Vision/Object-Detection/R-CNN">R-CNN</a> in that region proposals of the same image share feature maps.</p>
+<h2 id="Feature-Sharing"><a href="#Feature-Sharing" class="headerlink" title="Feature Sharing"></a>Feature Sharing</h2><p>Still using selective search for region proposals, fast R-CNN does not crops regions and has it enter the CNN model, but instead, allows sharing feature maps afterward. In fact, fully CNN model normally extracts feature maps with location relationships kept. For instance, one pixel of the origin image can be simply mapped to the output feature maps via a simple dilation. Thus, the region proposals occupy the same regions of feature maps as they do in the original image. Given that, compared with R-CNN, this model must save much computation cost for feature extraction part.</p>
+<h2 id="RoI-Pooling"><a href="#RoI-Pooling" class="headerlink" title="RoI Pooling"></a>RoI Pooling</h2><p>One challenge is that shapes of region proposals vary from time to time, and hence the fully-connected (FC) layers can not be adopted directly. To this end, the author proposes region of interest (RoI) pooling layer, embedded between CNN and FC. This pooling layer fixes the spatial extent, e.g. $(H, W)$, and vary the sliding window by dividing the $(h, w)$ RoI window into an $H\times W$ grid of sub-window of approximate size $h/H\times w/W$ and then max-pooling the values in each sub-window into the corresponding output grid cell.</p>
+<blockquote>
+<p>$\texttt{Note}:$ RoI pooling is actually a special case of spatial pyramid pooling used in SPPNet <a href="https://arxiv.org/abs/1406.4729" target="_blank" rel="noopener">[2]</a>.</p>
+</blockquote>
+<h2 id="Multi-task-Training"><a href="#Multi-task-Training" class="headerlink" title="Multi-task Training"></a>Multi-task Training</h2><p>Aside classifer, another barnch of FC is aligned, for bounding box regression, after a feature vector extracted. Instead of using multiple SVMs, here Softmax is utilized for classification:</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_c(u) = -\log p_u,</script><p>cooperating with a regression loss as</p>
+<script type="math/tex; mode=display">
+\mathcal{L}_l(t^u, v) = \sum_{*\in\{x, y, w, h\}} f(t^u_* - v_*),</script><p>where</p>
+<script type="math/tex; mode=display">
+f(x) = \left\{
+\begin{aligned}
+    &\,0.5x^2,\;\;\text{if}\;|x| \lt 1 \\
+    &\,|x| - 0.5,\;\;\text{otherwise}
+\end{aligned}
+\right.</script><p>$t^u$ is the ground truth of bouding box for class $u$.</p>
+<blockquote>
+<p>$\texttt{Note}:$ The metric $f(.)$ is a smooth version of $l_1$ norm, which is easy to compute gradient and meanwhile not sensitive to the outliers as $l_2$ norm is.</p>
+</blockquote>
+<p>Therefore, the result loss function is a linear combination of these sub two above:</p>
+<script type="math/tex; mode=display">
+\mathcal{L}(u, t^u, v) = \mathcal{L}_c(u) + \lambda[u\ge1]\mathcal{L}_l(t^u, v),</script><p>where $\lambda$ controls the balance.</p>
+<h2 id="Fast-Detection"><a href="#Fast-Detection" class="headerlink" title="Fast Detection"></a>Fast Detection</h2><p>At test-time, an image is passed to the model, along with its region proposals $(\sim2000)$. The output is a class posterior probability distribution $p$ and a set of predicted boundind-box. For each proposal, a confidence is assigned to each class $k$ as $\mathbb{P}(k)$. A greedy non-maximum suppression is then adopted as R-CNN.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Girshick, R. (2015). Fast r-cnn. In Proceedings of the IEEE international conference on computer vision (pp. 1440-1448).</p>
+<p>[2] He, K., Zhang, X., Ren, S., &amp; Sun, J. (2014, September). Spatial pyramid pooling in deep convolutional networks for visual recognition. In European conference on computer vision (pp. 346-361). Springer, Cham.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/R-CNN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2145,255 +2326,6 @@ p(z) \propto \frac{1}{|z|}.</script></blockquote>
 
 		
     
-		
-			
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="RemiC">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Remi's Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/" itemprop="url">Bayesian Compression for Deep Learning</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T20:46:23+08:00">
-                2018-06-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the papar <a href="https://arxiv.org/abs/1705.08665" target="_blank" rel="noopener"><strong>Bayesian Compression for Deep Learning</strong></a> published on NIPS 2017. The main two novel points are</p>
-<ul>
-<li>hierarchical priors</li>
-<li>encode weights via optimal fixed point precision</li>
-</ul>
-<h2 id="Hierarchical-Priors"><a href="#Hierarchical-Priors" class="headerlink" title="Hierarchical Priors"></a>Hierarchical Priors</h2><p>As mentioned in <a href="Deep-Compression/Bayesian-View/Principles-and-Possible-Methods">Principles and Possible Methods</a>, the evidence lower bound is commonly like</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(\phi) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>However, suppose weights $w$ is parameterized by $z$ as</p>
-<script type="math/tex; mode=display">
-z \sim p(z) \;\;\;\; w \sim \mathcal{N}(0,z^2),</script><p>then the lower bound can be re-constructed by approximate joint posterior $q_\phi(w,z)$.</p>
-<blockquote>
-<p>$\texttt{Note}:$ By applying mean-field theory, $q_\phi(w,z)=q_\phi(w)\cdot q_\phi(z)$, which is not included in this text.</p>
-</blockquote>
-<p>In this case, $z$ also becomes a paramater to infer. Then reform the evidence lower bound as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{L}(\phi) =& \mathbb{E}_{q_\phi(z,w)}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(z,w)||p(z,w)) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] + \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) \\
-                      =& \mathbb{E}_{q_\phi(z)q_\phi(w|z)}[\log\mathbb{P}(y|x,w)] - \mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
-\end{aligned}</script><p>In fact, the integration term in the second step could be further deducted as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \int q_\phi(z,w)\log\frac{p(z,w)}{q_\phi(z,w)}d(z,w) =& \int q_\phi(w|z)q_\phi(z)\log\frac{p(w|z)p(z)}{q_\phi(w|z)q_\phi(z)}d(z,w) \\
-          =& \int q_\phi(w|z) q_\phi(z)\left(\log\frac{p(w|z)}{q_\phi(w|z)} + \log\frac{p(z)}{q_\phi(z)}\right)dwdz \\
-          =& \int q_\phi(z)\int q_\phi(w|z)\log\frac{p(w|z)}{q_\phi(w|z)}dwdz \\
-           &+ \int q_\phi(w|z)\int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dzdw \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - \mathbb{E}_{q_\phi(w|z)}[KL(q_\phi(z)||p(z))] \\
-          =& -\mathbb{E}_{q_\phi(z)}[KL(q_\phi(w|z)||p(w|z))] - KL(q_\phi(z)||p(z)).
-\end{aligned}</script><p>It includes two KL-divergence terms. The former one concerns posterior of $w$ knowing $z$, while the latter one concerns prior of $z$. Furthermore, the former one is actually the prior of $w$ in the common case. In conclusion, after infering the prior of $z$, it seems possible to infer the “prior” of $w$, which is why this method is named after “<em>hierarchical</em>“.</p>
-<p>In order to introduce sparsity to the model, several kinds of priors (of $z$) could be preferred.</p>
-<h3 id="Log-uniform-Prior"><a href="#Log-uniform-Prior" class="headerlink" title="Log-uniform Prior"></a>Log-uniform Prior</h3><p>Improper log-uniform prior is in form as $p(z)\propto |z|^{-1}$. This prior is utilized in order that the KL-divergence from the posterior to the prior does not depend on the parameters to be optimized.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In the posterior to be approximated, $w|z\sim \mathcal{N}(0,z^2)$. Hence, $p(w,z)\propto \frac{1}{|z|}\mathcal{N}(0,z^2)$.</p>
-</blockquote>
-<p>In the approximate posterior, $(z,w)$ follows a mixed Gaussian distribution as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    z \sim &\, \mathcal{N}(\mu_z,\mu_z^2\alpha) \\
-    w|z \sim &\, \mathcal{N}(z\mu,z^2\sigma^2),
-\end{aligned}</script><p>where it is implicitly supposed $w=z\varepsilon$ with $\varepsilon\sim\mathcal{N}(\mu,\sigma^2)$ and $z\sim\mu_z\mathcal{N}(1,\alpha)$ with $\alpha$ interpreted as <em>dropout rate</em>. Eventually, the posterior is</p>
-<script type="math/tex; mode=display">
-q_\phi(z,w) = \mathcal{N}(\mu_z,\mu_z^2\alpha)\cdot \mathcal{N}(z\mu,z^2\sigma^2).</script><blockquote>
-<p>$\texttt{Note}:$ The variance of $w$ indicates if it could be pruned. In fact,</p>
-<script type="math/tex; mode=display">
-   \begin{aligned}
-          \mathbb{V}ar_{q_\phi}[w] =& \mathbb{V}ar_{q_\phi}[z\varepsilon] \\    
-                                   =& \left(\mathbb{V}ar_{q_\phi}[z] + \mathbb{E}_{q_\phi}^2[z] \right)\left(\mathbb{V}ar[\varepsilon] + \mathbb{E}^2[\varepsilon] \right) - \mathbb{E}_{q_\phi}^2[z]\mathbb{E}^2[\varepsilon] \\
-                                   =& \left(\mu_z^2\alpha + \mu_z^2 \right)\left(\sigma^2 + \mu^2 \right) - \mu_z^2\mu^2 \\
-                                   =& \mu_z^2\left(\sigma^2 + \mu^2 \right)\alpha + \mu_z^2\sigma^2 \\
-                                     \propto&\,\alpha,
-   \end{aligned}</script><p>which means when $\sigma^2$ is fixed, the larger the variance is, the more unnecessary $w$ is.<br>$\texttt{Question}:$ What if the variance is large due to $\sigma^2$ ?</p>
-</blockquote>
-<p>Therefore, it is legal to further simplify $\mathcal{L}$:</p>
-<ul>
-<li>$KL(q_\phi(w|z)||p(w|z))$ is independent of $z$. In fact,</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    KL(q_\phi(w|z)||p(w|z)) =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\log\frac{\frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w |^2}{2z^2} \right)}{\frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)}dw \\
-                                     =& -\int \frac{1}{|z\sigma|\sqrt{2\pi}}\exp\left(-\frac{|w-z\mu |^2}{2z^2\sigma^2} \right)\cdot \left(\frac{|w-z\mu |^2}{2z^2\sigma^2}-\frac{|w |^2}{2z^2} + \log\sigma \right)dw \\
-                                     =& -\frac{1}{2z^2\sigma^2}\left(\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - 2z\mu\mathbb{E}[\mathcal{N}(z\mu,z^2\sigma^2)] + z^2\mu^2 \right) \\
-                                      &+ \frac{1}{2z^2}\mathbb{V}ar[\mathcal{N}(z\mu,z^2\sigma^2)] - \log\sigma \\
-                                     =& \frac{1}{2}\left(\log\frac{1}{\sigma^2} - \frac{z^2\sigma^2-2z^2\mu^2+z^2\mu^2}{z^2\sigma^2} + \frac{z^2\sigma^2}{z^2} \right) \\
-                                     =& \frac{1}{2}\left(\log\frac{1}{\sigma^2} - 1 + \frac{\mu^2}{\sigma^2} + \sigma^2  \right)
-\end{aligned}</script><blockquote>
-<p>$\texttt{Note}:$ This independence is still valid even though $w|z$ follows <em>a prior</em> a non-centered law.</p>
-</blockquote>
-<ul>
-<li>$-KL(q_\phi(z)||p(z))=k_1\sigma(k_2+k_3\log\alpha)-0.5m(-\log\alpha)-k_1$. In fact,</li>
-</ul>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    -KL(q_\phi(z)||p(z)) =& \int q_\phi(z)\log\frac{p(z)}{q_\phi(z)}dz \\
-                                  =& \int \frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)\log\frac{\frac{C}{|z|}+K}{\frac{1}{\mu_z\sqrt{2\pi\alpha}}\exp\left(-\frac{|z-\mu_z|^2}{2\mu_z^2\alpha} \right)}dz \\
-                                  \approx& k_1\sigma(k_2+k_3\log\alpha) - 0.5m(-\log\alpha) + C', 
-\end{aligned}</script><p>where $\sigma(x)=(1+\exp(-x))^{-1}$ and $m(x)=\log(1+\exp(x))$. Additionally, it is assumed that when $\alpha$ tends to inifinity, which means the corresponding $w$ should be dropouted, $KL(q_\phi(z)||p(z))$ should be close to zero because the log-uniform prior also indicates the preference of null $w$. Given that, a feasible choice for $C’$ is $-k_1$, which makes the KL-divergence tend to be zero when $\alpha$ tends to infinity.</p>
-<blockquote>
-<p>$\texttt{Note}:$ Since $p(z)\propto \frac{1}{|z|}$, it is possible to recover the distribution of $w$:</p>
-<script type="math/tex; mode=display">
-p(w) \propto \int \frac{1}{|z|}\cdot \frac{1}{|z|\sqrt{2\pi}}\exp\left(-\frac{|w|^2}{2z^2} \right)dz = \frac{1}{|w|}.</script><p>It follows, therefore, the log-uniform law as well, which means a small $w$ is preferred.</p>
-</blockquote>
-<p>Another interesting point is how to assign a dropout rate to a group of weights (neurons or <em>CNN</em> kernels). Say, for exemple, an MLP of two hidden layers $A$ and $B$. One choice is to let a group of neurons share one $z$ so that the posterior and the approximate one can be written as</p>
-<script type="math/tex; mode=display">
-    p(z,w) \propto\, \prod_i^A\frac{1}{|z_i|}\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|0,z_i^2)</script><script type="math/tex; mode=display">
-    q_\phi(z,w) = \prod_i^A\mathcal{N}(z_i|\mu_{z_i},\mu_{z_i}^2\alpha_i)\prod_{i,j}^{A,B}\mathcal{N}(w_{ij}|z_i\mu_{ij},z_i^2\sigma_{ij}^2)</script><p>The whole training process can be summarized as</p>
-<blockquote>
-<p><strong>Input</strong>: $X$<br><strong>Output</strong>: $W$<br><strong>Init</strong>: $\phi = \{\mu,\mu_z,\alpha,\sigma^2\}$<br><strong>For</strong> epoch:<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>For</strong> $x$ <strong>in</strong> $X$:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $z=\mu_z \mathcal{N}(1,\alpha)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sample $y= xz\mathcal{N}(\mu,\sigma^2)$<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update $\phi$ by gradient of $\mathcal{L}$<br>Dropout the group with $\alpha$ larger than certain threshold</p>
-</blockquote>
-<h3 id="Half-Cauchy-Prior"><a href="#Half-Cauchy-Prior" class="headerlink" title="Half-Cauchy Prior"></a>Half-Cauchy Prior</h3><p>Proper half-Cauchy Prior is is form as $\mathcal{C}^+(0,s)=2(s\pi(1+(z/s)^2))^{-1}$, which induces a horseshoe prior. The hierarchy is expressed as</p>
-<script type="math/tex; mode=display">
-s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde{w}_{ij}\sim\mathcal{N}(0,1),\;\; w_{ij}=\tilde{w}_{ij}\tilde{z}_is.</script><p>The rest is similar to the section above. Details can be referred in the paper.</p>
-<h2 id="Weights-Encoding"><a href="#Weights-Encoding" class="headerlink" title="Weights Encoding"></a>Weights Encoding</h2><p>// TODO</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
-<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
-<p>[3] Molchanov, D., Ashukha, A., &amp; Vetrov, D. (2017). Variational dropout sparsifies deep neural networks. arXiv preprint arXiv:1701.05369.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-		
-    
   </section>
 
   
@@ -2444,7 +2376,7 @@ s\sim \mathcal{C}^+(0,\tau_0),\;\; \tilde{z}_i\sim\mathcal{C}^+(0,1),\;\; \tilde
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

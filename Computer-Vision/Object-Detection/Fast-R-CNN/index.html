@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Noise Injection,Back-propagation," />
+  <meta name="keywords" content="R-CNN,Convolutional Neural Network," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
-<meta name="keywords" content="Noise Injection,Back-propagation">
+<meta name="description" content="OverviewThis text refers to the paper Fast R-CNN [1],which improves the R-CNN in that region proposals of the same image share feature maps. Feature SharingStill using selective search for region prop">
+<meta name="keywords" content="R-CNN,Convolutional Neural Network">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Use of Noise in Training">
-<meta property="og:url" content="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/index.html">
+<meta property="og:title" content="Fast R-CNN">
+<meta property="og:url" content="http://yoursite.com/Computer-Vision/Object-Detection/Fast-R-CNN/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
+<meta property="og:description" content="OverviewThis text refers to the paper Fast R-CNN [1],which improves the R-CNN in that region proposals of the same image share feature maps. Feature SharingStill using selective search for region prop">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-10T16:15:09.083Z">
+<meta property="og:updated_time" content="2018-12-18T08:53:28.542Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Use of Noise in Training">
-<meta name="twitter:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
+<meta name="twitter:title" content="Fast R-CNN">
+<meta name="twitter:description" content="OverviewThis text refers to the paper Fast R-CNN [1],which improves the R-CNN in that region proposals of the same image share feature maps. Feature SharingStill using selective search for region prop">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/"/>
+  <link rel="canonical" href="http://yoursite.com/Computer-Vision/Object-Detection/Fast-R-CNN/"/>
 
 
 
 
 
-  <title>Use of Noise in Training | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Fast R-CNN | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/Fast-R-CNN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Use of Noise in Training</h1>
+          <h1 class="post-title" itemprop="name headline">Fast R-CNN</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T15:50:41+08:00">
-                2018-08-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-18T14:04:50+08:00">
+                2018-12-18
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
-                    <span itemprop="name">Training Trick</span>
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
                   </a>
                 </span>
 
@@ -364,41 +364,33 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://ieeexplore.ieee.org/document/155944/" target="_blank" rel="noopener">Noise injection into inputs in back-propagation learning</a>, mainly discussing about the use of noise in training networks.</p>
-<h2 id="Noise-Sensitivity"><a href="#Noise-Sensitivity" class="headerlink" title="Noise Sensitivity"></a>Noise Sensitivity</h2><p>In literature of machine learning, generalization capacity is among the most important metrics. In short words, this metric refers to similar predictions for test samples that are not seen before but similar to certain ones are. Let $s_i$ be an input sample, $\tilde{s_i}$ a sample similar to the formal</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper Fast R-CNN <a href="https://www.cv-foundation.org/openaccess/content_iccv_2015/html/Girshick_Fast_R-CNN_ICCV_2015_paper.html" target="_blank" rel="noopener">[1]</a>,which improves the <a href="Computer-Vision/Object-Detection/R-CNN">R-CNN</a> in that region proposals of the same image share feature maps.</p>
+<h2 id="Feature-Sharing"><a href="#Feature-Sharing" class="headerlink" title="Feature Sharing"></a>Feature Sharing</h2><p>Still using selective search for region proposals, fast R-CNN does not crops regions and has it enter the CNN model, but instead, allows sharing feature maps afterward. In fact, fully CNN model normally extracts feature maps with location relationships kept. For instance, one pixel of the origin image can be simply mapped to the output feature maps via a simple dilation. Thus, the region proposals occupy the same regions of feature maps as they do in the original image. Given that, compared with R-CNN, this model must save much computation cost for feature extraction part.</p>
+<h2 id="RoI-Pooling"><a href="#RoI-Pooling" class="headerlink" title="RoI Pooling"></a>RoI Pooling</h2><p>One challenge is that shapes of region proposals vary from time to time, and hence the fully-connected (FC) layers can not be adopted directly. To this end, the author proposes region of interest (RoI) pooling layer, embedded between CNN and FC. This pooling layer fixes the spatial extent, e.g. $(H, W)$, and vary the sliding window by dividing the $(h, w)$ RoI window into an $H\times W$ grid of sub-window of approximate size $h/H\times w/W$ and then max-pooling the values in each sub-window into the corresponding output grid cell.</p>
+<blockquote>
+<p>$\texttt{Note}:$ RoI pooling is actually a special case of spatial pyramid pooling used in SPPNet <a href="https://arxiv.org/abs/1406.4729" target="_blank" rel="noopener">[2]</a>.</p>
+</blockquote>
+<h2 id="Multi-task-Training"><a href="#Multi-task-Training" class="headerlink" title="Multi-task Training"></a>Multi-task Training</h2><p>Aside classifer, another barnch of FC is aligned, for bounding box regression, after a feature vector extracted. Instead of using multiple SVMs, here Softmax is utilized for classification:</p>
 <script type="math/tex; mode=display">
-\tilde{s_i} = s_i + d,</script><p>where $d$ is a small distance. The corresponding distance of outputs are hence</p>
+\mathcal{L}_c(u) = -\log p_u,</script><p>cooperating with a regression loss as</p>
 <script type="math/tex; mode=display">
-\delta y_i = f(\tilde{s_i}) - f(s_i) \approx \frac{\partial f}{\partial s}(s_i)d.</script><p>Assume that $d$ is a random variable independent of $s$ with the expectation and variance as</p>
+\mathcal{L}_l(t^u, v) = \sum_{*\in\{x, y, w, h\}} f(t^u_* - v_*),</script><p>where</p>
 <script type="math/tex; mode=display">
-\mathbb{E}[d] = O,\;\; \mathbb{C}ov[d] = \sigma^2I_{N_I},</script><p>where $I_{N_I}\in M_{N_I,N_I}$ is the identity matrix and $N_I$ the dimension of input samples.</p>
-<p>Define the sensitivity $R$ to the distance $d$ as the mean ratio of the variances of $|\delta y_i|$ and $|d|$:</p>
-<script type="math/tex; mode=display">
+f(x) = \left\{
 \begin{aligned}
-    R(w) =&\, \sum_i \frac{\mathbb{V}ar[|\delta y_i|]}{\mathbb{V}ar[|d|]} \\
-         =&\, \sum_i \frac{\mathbb{E}[|\delta y_i|^2]}{\mathbb{E}[|d|^2]} \\
-         =&\, \sum_i \frac{\mathbb{E}[\delta y_i^T \delta y_i]}{\mathbb{E}[d^Td]}.
-\end{aligned}</script><p>Approximate this equation with the ones above,</p>
+    &\,0.5x^2,\;\;\text{if}\;|x| \lt 1 \\
+    &\,|x| - 0.5,\;\;\text{otherwise}
+\end{aligned}
+\right.</script><p>$t^u$ is the ground truth of bouding box for class $u$.</p>
+<blockquote>
+<p>$\texttt{Note}:$ The metric $f(.)$ is a smooth version of $l_1$ norm, which is easy to compute gradient and meanwhile not sensitive to the outliers as $l_2$ norm is.</p>
+</blockquote>
+<p>Therefore, the result loss function is a linear combination of these sub two above:</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-    R(w) \approx&\, \sum_i \frac{\mathbb{E}\left[d^T\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s}d\right]}{\mathbb{E}[d^Td]} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}d\cdot d^T\frac{\partial f(s_i)}{\partial s}^T \}\right]}{\mathbb{E}\left[\text{trace}\{dd^T \} \right]} \\
-         =&\, \sum_i \frac{\sigma^2\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}\cdot \frac{\partial f(s_i)}{\partial s}^T \}\right]}{\sigma^2N_I} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s} \right]}{N_I} \\
-         =&\, \sum_i \frac{\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2}{N_I}.
-\end{aligned}</script><p>To make the model less sensitive to the disturbance of input pattern, $R(w)$ is preferred to be smaller, i.e. minimize the objective</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(w) = \sum_i \left\|y_i - f(s_i) \right\|^2 + \frac{\tau}{N_I}\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2,</script><p>where $\tau\in\mathbb{R}^*_+$ controls the balance.</p>
-<p>This optimization problem is not difficult, but calculating $\frac{\partial R}{\partial w}$ could be avoided via an interesting alternative. By introducing a noise</p>
-<script type="math/tex; mode=display">
-n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N_I},</script><p>the objective can be approximated as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{L}(w) =&\, \sum_i \left\|y_i - f(s_i) \right\|^2 + \mathbb{E}\left[\left\|\frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
-                   =&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i)  + \frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
-                   \approx&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i + n) \right\|^2 \right].
-\end{aligned}</script><p>The variance $\frac{\tau}{N_I} I_{N_I}$ can be viewed as a parameter controlling the regularization. A large variance fits the model to be robust to the noise, leading to a good generalization capacity.</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] K. Matsuoka. 1992. Noise injection into inputs in back-propagation learning. IEEE Transactions on Systems, Man, and Cybernetics 22, 3 (1992), 436–440.</p>
+\mathcal{L}(u, t^u, v) = \mathcal{L}_c(u) + \lambda[u\ge1]\mathcal{L}_l(t^u, v),</script><p>where $\lambda$ controls the balance.</p>
+<h2 id="Fast-Detection"><a href="#Fast-Detection" class="headerlink" title="Fast Detection"></a>Fast Detection</h2><p>At test-time, an image is passed to the model, along with its region proposals $(\sim2000)$. The output is a class posterior probability distribution $p$ and a set of predicted boundind-box. For each proposal, a confidence is assigned to each class $k$ as $\mathbb{P}(k)$. A greedy non-maximum suppression is then adopted as R-CNN.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Girshick, R. (2015). Fast r-cnn. In Proceedings of the IEEE international conference on computer vision (pp. 1440-1448).</p>
+<p>[2] He, K., Zhang, X., Ren, S., &amp; Sun, J. (2014, September). Spatial pyramid pooling in deep convolutional networks for visual recognition. In European conference on computer vision (pp. 346-361). Springer, Cham.</p>
 
       
     </div>
@@ -416,9 +408,9 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
       
         <div class="post-tags">
           
-            <a href="/tags/Noise-Injection/" rel="tag"># Noise Injection</a>
+            <a href="/tags/R-CNN/" rel="tag"># R-CNN</a>
           
-            <a href="/tags/Back-propagation/" rel="tag"># Back-propagation</a>
+            <a href="/tags/Convolutional-Neural-Network/" rel="tag"># Convolutional Neural Network</a>
           
         </div>
       
@@ -431,8 +423,8 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" rel="next" title="Keeping Neural Networks Simple by MDL">
-                <i class="fa fa-chevron-left"></i> Keeping Neural Networks Simple by MDL
+              <a href="/Computer-Vision/Object-Detection/R-CNN/" rel="next" title="R-CNN">
+                <i class="fa fa-chevron-left"></i> R-CNN
               </a>
             
           </div>
@@ -440,10 +432,6 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/" rel="prev" title="Noise and Tikhonov Regularization">
-                Noise and Tikhonov Regularization <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -585,7 +573,7 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Noise-Sensitivity"><span class="nav-number">2.</span> <span class="nav-text">Noise Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feature-Sharing"><span class="nav-number">2.</span> <span class="nav-text">Feature Sharing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RoI-Pooling"><span class="nav-number">3.</span> <span class="nav-text">RoI Pooling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-task-Training"><span class="nav-number">4.</span> <span class="nav-text">Multi-task Training</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Fast-Detection"><span class="nav-number">5.</span> <span class="nav-text">Fast Detection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
@@ -739,7 +727,24 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -792,43 +797,6 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
   
 
 
