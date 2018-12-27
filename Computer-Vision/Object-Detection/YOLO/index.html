@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Noise Injection,Back-propagation," />
+  <meta name="keywords" content="Convolutional Neural Network,YOLO," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
-<meta name="keywords" content="Noise Injection,Back-propagation">
+<meta name="description" content="OverviewThis text refers to the paper You Only Look Once: Unified, Real-Time Object Detection [1], which proposes to detect objects by solving a designed regression problem. The YOLO contains only a s">
+<meta name="keywords" content="Convolutional Neural Network,YOLO">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Use of Noise in Training">
-<meta property="og:url" content="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/index.html">
+<meta property="og:title" content="YOLO">
+<meta property="og:url" content="http://yoursite.com/Computer-Vision/Object-Detection/YOLO/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
+<meta property="og:description" content="OverviewThis text refers to the paper You Only Look Once: Unified, Real-Time Object Detection [1], which proposes to detect objects by solving a designed regression problem. The YOLO contains only a s">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-08-10T16:15:09.083Z">
+<meta property="og:updated_time" content="2018-12-27T06:45:31.855Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Use of Noise in Training">
-<meta name="twitter:description" content="OverviewThis text refers to the paper Noise injection into inputs in back-propagation learning, mainly discussing about the use of noise in training networks. Noise SensitivityIn literature of machine">
+<meta name="twitter:title" content="YOLO">
+<meta name="twitter:description" content="OverviewThis text refers to the paper You Only Look Once: Unified, Real-Time Object Detection [1], which proposes to detect objects by solving a designed regression problem. The YOLO contains only a s">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/"/>
+  <link rel="canonical" href="http://yoursite.com/Computer-Vision/Object-Detection/YOLO/"/>
 
 
 
 
 
-  <title>Use of Noise in Training | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>YOLO | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/YOLO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Use of Noise in Training</h1>
+          <h1 class="post-title" itemprop="name headline">YOLO</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T15:50:41+08:00">
-                2018-08-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-25T17:30:42+08:00">
+                2018-12-25
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
+                  <a href="/categories/Computer-Vision/" itemprop="url" rel="index">
+                    <span itemprop="name">Computer Vision</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
-                    <span itemprop="name">Training Trick</span>
+                  <a href="/categories/Computer-Vision/Object-Detection/" itemprop="url" rel="index">
+                    <span itemprop="name">Object Detection</span>
                   </a>
                 </span>
 
@@ -364,41 +364,19 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://ieeexplore.ieee.org/document/155944/" target="_blank" rel="noopener">Noise injection into inputs in back-propagation learning</a>, mainly discussing about the use of noise in training networks.</p>
-<h2 id="Noise-Sensitivity"><a href="#Noise-Sensitivity" class="headerlink" title="Noise Sensitivity"></a>Noise Sensitivity</h2><p>In literature of machine learning, generalization capacity is among the most important metrics. In short words, this metric refers to similar predictions for test samples that are not seen before but similar to certain ones are. Let $s_i$ be an input sample, $\tilde{s_i}$ a sample similar to the formal</p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <strong>You Only Look Once: Unified, Real-Time Object Detection</strong> <a href="https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Redmon_You_Only_Look_CVPR_2016_paper.pdf" target="_blank" rel="noopener">[1]</a>, which proposes to detect objects by solving a designed regression problem. The YOLO contains only a single network as in the unified framework, instead of multi-part components, such as RPN.</p>
+<h2 id="Grid"><a href="#Grid" class="headerlink" title="Grid"></a>Grid</h2><p>To avoid region proposal based methods, the bounding-box coordinates should be directly learned from features. For CNN features that keep location information, each point or vector across channels represents certain property of a region mapped to the original image. This property varies from the objective function designed. For instance, in Faster R-CNN <a href="Computer-Vision/Object-Detection/Faster-R-CNN">[2]</a>, features are assigned to be whether to contain objects, corresponding class if positive. Similarly, YOLO does bounding-box coordinates, corresponding class and confidence. Thus if the final features form a $S\times S$ map, each point or vector across channels maps to a grid of the original image, which is divided into $S\times S$ grids. In this case, each grid is supposed to predict the property expected. Particularly, the author doubles this prediction and select the most “confident” one as result. Then say $C$ classes, $(x,y,w,h)$ the coordinates, the channel number of the final features is $2\times5+C$.</p>
+<blockquote>
+<p>$\texttt{Notes}:$ The last $C$ channels consist the conditioned distribution of classification, $\mathbb{P}(\texttt{class}|\texttt{object})$, i.e. the probability of $\texttt{class}$ knowing the existance of $\texttt{object}$.</p>
+</blockquote>
+<h2 id="Confidence"><a href="#Confidence" class="headerlink" title="Confidence"></a>Confidence</h2><p>The confidence indicates how confident the grid admits the existance of an object, designed as $\mathbb{P}(\texttt{object})\cdot \texttt{IOU}^\texttt{T}_\texttt{P}$, where $\mathbb{P}(\texttt{object})$ is the probability of existance of $\texttt{object}$ and $\texttt{IOU}^\texttt{T}_\texttt{P}$ is the intersection over union between ground truth and bounding-box prediction computed as</p>
 <script type="math/tex; mode=display">
-\tilde{s_i} = s_i + d,</script><p>where $d$ is a small distance. The corresponding distance of outputs are hence</p>
+\texttt{IOU}^\texttt{T}_\texttt{P} = \frac{\texttt{Area of overlap}}{\texttt{Area of union}}.</script><p>The confidence becomes null when there is no object. At training time, it should be equal to $\texttt{IOU}^\texttt{T}_\texttt{P}$. At test time, the author multiplies the conditional class probabilities and the individual box conﬁdence predictions:</p>
 <script type="math/tex; mode=display">
-\delta y_i = f(\tilde{s_i}) - f(s_i) \approx \frac{\partial f}{\partial s}(s_i)d.</script><p>Assume that $d$ is a random variable independent of $s$ with the expectation and variance as</p>
-<script type="math/tex; mode=display">
-\mathbb{E}[d] = O,\;\; \mathbb{C}ov[d] = \sigma^2I_{N_I},</script><p>where $I_{N_I}\in M_{N_I,N_I}$ is the identity matrix and $N_I$ the dimension of input samples.</p>
-<p>Define the sensitivity $R$ to the distance $d$ as the mean ratio of the variances of $|\delta y_i|$ and $|d|$:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    R(w) =&\, \sum_i \frac{\mathbb{V}ar[|\delta y_i|]}{\mathbb{V}ar[|d|]} \\
-         =&\, \sum_i \frac{\mathbb{E}[|\delta y_i|^2]}{\mathbb{E}[|d|^2]} \\
-         =&\, \sum_i \frac{\mathbb{E}[\delta y_i^T \delta y_i]}{\mathbb{E}[d^Td]}.
-\end{aligned}</script><p>Approximate this equation with the ones above,</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    R(w) \approx&\, \sum_i \frac{\mathbb{E}\left[d^T\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s}d\right]}{\mathbb{E}[d^Td]} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}d\cdot d^T\frac{\partial f(s_i)}{\partial s}^T \}\right]}{\mathbb{E}\left[\text{trace}\{dd^T \} \right]} \\
-         =&\, \sum_i \frac{\sigma^2\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}\cdot \frac{\partial f(s_i)}{\partial s}^T \}\right]}{\sigma^2N_I} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s} \right]}{N_I} \\
-         =&\, \sum_i \frac{\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2}{N_I}.
-\end{aligned}</script><p>To make the model less sensitive to the disturbance of input pattern, $R(w)$ is preferred to be smaller, i.e. minimize the objective</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(w) = \sum_i \left\|y_i - f(s_i) \right\|^2 + \frac{\tau}{N_I}\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2,</script><p>where $\tau\in\mathbb{R}^*_+$ controls the balance.</p>
-<p>This optimization problem is not difficult, but calculating $\frac{\partial R}{\partial w}$ could be avoided via an interesting alternative. By introducing a noise</p>
-<script type="math/tex; mode=display">
-n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N_I},</script><p>the objective can be approximated as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{L}(w) =&\, \sum_i \left\|y_i - f(s_i) \right\|^2 + \mathbb{E}\left[\left\|\frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
-                   =&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i)  + \frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
-                   \approx&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i + n) \right\|^2 \right].
-\end{aligned}</script><p>The variance $\frac{\tau}{N_I} I_{N_I}$ can be viewed as a parameter controlling the regularization. A large variance fits the model to be robust to the noise, leading to a good generalization capacity.</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] K. Matsuoka. 1992. Noise injection into inputs in back-propagation learning. IEEE Transactions on Systems, Man, and Cybernetics 22, 3 (1992), 436–440.</p>
+\mathbb{P}(\texttt{class}|\texttt{object})\cdot\mathbb{P}(\texttt{object})\cdot \texttt{IOU}^\texttt{T}_\texttt{P} = \mathbb{P}(\texttt{class})\cdot\texttt{IOU}^\texttt{T}_\texttt{P}.</script><h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><p>To this point, there remains a problem when training: how to match prediction and ground truth, because each grid does not predict which object is concerned. Given that, the author proposes to make the grid containing the center of an object responsible for its prediction. But it is still confusing since each grid predicts multiple (two) bounding-boxes. The author then matches the one of the highest $\texttt{IOU}$ with the ground truth.</p>
+<p>However, this kind of design supposes <em>a priori</em> that each grid contains at most the center of one object, which may lead to a poor recall ratio for small and close objects.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Redmon, J., Divvala, S., Girshick, R., &amp; Farhadi, A. (2016). You only look once: Unified, real-time object detection. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 779-788).</p>
+<p>[2] Ren, S., He, K., Girshick, R., &amp; Sun, J. (2015). Faster r-cnn: Towards real-time object detection with region proposal networks. In Advances in neural information processing systems (pp. 91-99).</p>
 
       
     </div>
@@ -416,9 +394,9 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
       
         <div class="post-tags">
           
-            <a href="/tags/Noise-Injection/" rel="tag"># Noise Injection</a>
+            <a href="/tags/Convolutional-Neural-Network/" rel="tag"># Convolutional Neural Network</a>
           
-            <a href="/tags/Back-propagation/" rel="tag"># Back-propagation</a>
+            <a href="/tags/YOLO/" rel="tag"># YOLO</a>
           
         </div>
       
@@ -431,8 +409,8 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" rel="next" title="Keeping Neural Networks Simple by MDL">
-                <i class="fa fa-chevron-left"></i> Keeping Neural Networks Simple by MDL
+              <a href="/Computer-Vision/Object-Detection/Faster-R-CNN/" rel="next" title="Faster R-CNN">
+                <i class="fa fa-chevron-left"></i> Faster R-CNN
               </a>
             
           </div>
@@ -440,10 +418,6 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Machine-Learning/Training-Trick/Noise-and-Tikhonov-Regularization/" rel="prev" title="Noise and Tikhonov Regularization">
-                Noise and Tikhonov Regularization <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -585,7 +559,7 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Noise-Sensitivity"><span class="nav-number">2.</span> <span class="nav-text">Noise Sensitivity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grid"><span class="nav-number">2.</span> <span class="nav-text">Grid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Confidence"><span class="nav-number">3.</span> <span class="nav-text">Confidence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training"><span class="nav-number">4.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
@@ -739,7 +713,24 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 
@@ -792,43 +783,6 @@ n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end -->
   
 
 
