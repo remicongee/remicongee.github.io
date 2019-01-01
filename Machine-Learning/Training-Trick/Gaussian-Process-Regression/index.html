@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Bayesian Inference," />
+  <meta name="keywords" content="Gaussian Process,Ridge Regression," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
-<meta name="keywords" content="Bayesian Inference">
+<meta name="description" content="OverviewThis text refers to the Gaussian process regression (GPR), a method predicting the posterior distribution of functions. View on ProbabilitySay for a regression task, note $D=\{x_i,y_i\}$ the t">
+<meta name="keywords" content="Gaussian Process,Ridge Regression">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Principles and Possible Methods">
-<meta property="og:url" content="http://yoursite.com/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/index.html">
+<meta property="og:title" content="Gaussian Process Regression">
+<meta property="og:url" content="http://yoursite.com/Machine-Learning/Training-Trick/Gaussian-Process-Regression/index.html">
 <meta property="og:site_name" content="Remi&#39;s Hexo">
-<meta property="og:description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
+<meta property="og:description" content="OverviewThis text refers to the Gaussian process regression (GPR), a method predicting the posterior distribution of functions. View on ProbabilitySay for a regression task, note $D=\{x_i,y_i\}$ the t">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-04T08:22:03.997Z">
+<meta property="og:updated_time" content="2019-01-01T09:39:24.113Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Principles and Possible Methods">
-<meta name="twitter:description" content="OverviewThis text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom. TargetGiven a deep neural network structure $S$ and a datase">
+<meta name="twitter:title" content="Gaussian Process Regression">
+<meta name="twitter:description" content="OverviewThis text refers to the Gaussian process regression (GPR), a method predicting the posterior distribution of functions. View on ProbabilitySay for a regression task, note $D=\{x_i,y_i\}$ the t">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/"/>
+  <link rel="canonical" href="http://yoursite.com/Machine-Learning/Training-Trick/Gaussian-Process-Regression/"/>
 
 
 
 
 
-  <title>Principles and Possible Methods | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>Gaussian Process Regression | Remi's Hexo</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Principles-and-Possible-Methods/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Gaussian-Process-Regression/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RemiC">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Principles and Possible Methods</h1>
+          <h1 class="post-title" itemprop="name headline">Gaussian Process Regression</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-27T13:54:31+08:00">
-                2018-06-27
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-31T22:41:13+08:00">
+                2018-12-31
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
                   </a>
                 </span>
 
@@ -327,8 +327,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
+                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
+                    <span itemprop="name">Training Trick</span>
                   </a>
                 </span>
 
@@ -364,62 +364,73 @@
       
 
       
-        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text is mainly about principles of certain Baysian-based deep compression methods, references of whom are given at the bottom.</p>
-<h2 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h2><p>Given a deep neural network structure $S$ and a dataset $D$ specific for certain tasks, the parameters $w$ of the network is determined by network structure and dataset. The general training target is seeking for parameters fitting well the very task, or more precisely, the posterior probability of $w$ knowing $S$ and $D$, denoted as $\mathbb{P}(w|S,D)$. Mathematically, the posterior is accessible via </p>
+        <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the Gaussian process regression (GPR), a method predicting the posterior distribution of functions.</p>
+<h2 id="View-on-Probability"><a href="#View-on-Probability" class="headerlink" title="View on Probability"></a>View on Probability</h2><p>Say for a regression task, note $D=\{x_i,y_i\}$ the training set of size $N$, $f(.)$ the function to fit, $x^*$ a test point. Knowing the training set $D$, a distribution of $f(.)$ on $x^*$ is supposed to be solved or approached, which can be written as</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-    \mathbb{P}(w|S,D) =& \frac{\mathbb{P}(w,S,D)}{\mathbb{P}(S,D)} \\
-                      =& \frac{\mathbb{P}(w,S,D)}{\int\mathbb{P}(w,S,D)dw}.
-\end{aligned}</script><p>However, the closed form of the integration term is intractable in practice. Hence, the target problem is commonly trasferred to the one seeking for an approximative solution parameterized as</p>
+p(y^* | x^*, D) = \frac{p\left((x^*,y^*), D \right)}{p(x^*, D)},</script><p>where $y^<em>=f(x^</em>)$. Note that $\left(x_1,…,x_N,x^*\right)$ is not random variable, hence the density can be further simplified as</p>
 <script type="math/tex; mode=display">
-q_\phi(w) \approx p(w|S,D).</script><blockquote>
-<p>$\texttt{Note}:$ $w$ is considered as a real random variable with a continuous probability density function, denoted as $p$.<br>The Baysian’s Rule will be hence extended to be</p>
+p(y^* | x^*, D) = \frac{p(y^*, y_1,..., y_N)}{p(y_1,...,y_N)}.</script><p>The density $p(y^*, y_1,…, y_N)$ indicates a <em>prior</em> joint distribution, as well as $p(y_1,…,y_N)$. Given that, to predict $y^*$, it is necessary to first determinate these distributions.</p>
+<h2 id="Gaussian-Process"><a href="#Gaussian-Process" class="headerlink" title="Gaussian Process"></a>Gaussian Process</h2><p>Following the idea of the previous section, the <em>prior</em> joint distributions are supposed to be normal in GPR, hence form Gaussian process (GP):</p>
 <script type="math/tex; mode=display">
-p(w|S,D) = \frac{\mathbb{P}(S,D|w)\cdot p(w)}{\mathbb{P}(S,D)}.</script><p><a href="https://en.wikipedia.org/wiki/Bayes%27_theorem" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
-</blockquote>
-<p>Adopted as a metric, KL-divergence is often viewed as the objective to minimize</p>
+y_1,..., y_N \sim \mathcal{GP}\left(\overrightarrow{0}, \Sigma\right),</script><p>where $\Sigma_{ij}=k(y_i,y_j)$ is covariance matrix. When concerning $y^*$, a new covariance matrix can be defined as</p>
 <script type="math/tex; mode=display">
-KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</script><p>Suppose $\{x,y\}\in D$ specific for a classification task. Then regardless of $S$, the target KL-divergence can be further deducted:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    KL(q_\phi(w)||p(w|S,D)) =& -\int q_\phi(w)\log\mathbb{P}(y|x,w)dw + KL(q_\phi(w)||p(w)) + \log\mathbb{P}(y|x) \\
-                                     =& -\mathcal{L}(q_\phi(w),p(w|D)) + \log\mathbb{P}(y|x),
-\end{aligned}</script><p>where </p>
-<script type="math/tex; mode=display">
-\mathcal{L}(q_\phi(w),p(w|D)) = \mathbb{E}_{q_\phi}[\log\mathbb{P}(y|x,w)] - KL(q_\phi(w)||p(w)).</script><p>The first term, denoted as $\mathcal{L}^D(w)$, indicates how well $w$ fits the task. The second term, denoted as $R(w)$, indicates how well $w$ coordinates with its prior distribution, which is commonly viewed as regularization.</p>
+\left(
+\begin{matrix}
+    \Sigma & k_* \\
+    k_*^T & k_{**}
+\end{matrix}
+\right),</script><p>where $k_*$ is the covariance of the test point and training set and $k_{**}$ the variance.</p>
 <blockquote>
-<p>$\texttt{Note}:$ $L^1$ penalty refers to Laplacian distribution as the prior of $w$, whereas $L^2$ refers to Gaussian ditribution.</p>
+<p>$\texttt{Note}:$ The distribution is proposed <em>a priori</em>, and since no more knowlegde is acquired other than the points, it is reasonable to suppose that the expectation is null.</p>
 </blockquote>
-<p>Given that $\log\mathbb{P}(y|x)$ is fixed, the original target (minimize KL-divergence) is equivalent to maximizing $\mathcal{L}$, which is referred as evidence lower bound in Bayesian literature.</p>
-<h2 id="Gradient-based-Methods"><a href="#Gradient-based-Methods" class="headerlink" title="Gradient-based Methods"></a>Gradient-based Methods</h2><p>Thanks to promising computation capacity of CPU/GPU, gradient-based methods are widely preferred in deep learning problem. In this case, gradient-based methods is also feasible, while facing three main problems: differentiability, bias and variance.</p>
-<h3 id="Differentiability"><a href="#Differentiability" class="headerlink" title="Differentiability"></a>Differentiability</h3><p>The partial gradient $\frac{\partial\mathcal{L}}{\partial q_\phi}$ is intractable unless $w$ is differentiable with regard to $\phi$. (Here, it is assumed that $\mathcal{L}$ is differentiable with regard to $w$.) The most common way to enssure this property is assigning</p>
+<p>The problem left is how to compute the covariance $k(.,.)$, where it should be noted that $\Sigma$ must be positive definite. One choice is Mercer kernel, which is declared in <a href="https://en.wikipedia.org/wiki/Mercer%27s_theorem" target="_blank" rel="noopener">Mercer Theorem</a> and referred as kernel function in SVM. For instance, by adopting the squared exponential kernel, the covariance can be computed as</p>
+<script type="math/tex; mode=display">
+k(y_i, y_j) = \exp\left(-\lambda \|x_i - x_j \|^2 \right),</script><p>which indicates a kind of similarity between $y_i$ and $y_j$ (or $x_i$ and $x_j$).</p>
+<h2 id="Regression"><a href="#Regression" class="headerlink" title="Regression"></a>Regression</h2><p>Now determinate the <em>posterior</em> distribution of $y^*$ via the GP defined above:</p>
+<script type="math/tex; mode=display">
+y^* | x^*, D \sim \mathcal{N}(\mu^*, \sigma^*),</script><p>where</p>
+<script type="math/tex; mode=display">
+\mu^* = k_*^T\Sigma^{-1}\overrightarrow{y},\;\;\sigma^* = -k_*^T\Sigma^{-1}k_* + k_{**},</script><p>with $\overrightarrow{y}=\left(y_1,…,y_N\right)^T$.</p>
+<p>In this case, one may directly output $y^*=\mu^*$ as the prediction for regression task. For further study on the function $f(.)$, the distribution over this function is also available by sampling enough points and plotting the curve (if possible). Normally, variance is large when the point to predict is far from training set.</p>
+<blockquote>
+<p>$\texttt{Note}:$</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
-    w =& \mu + \sqrt{\phi}\cdot\varepsilon \\
-    \varepsilon \sim& \mathcal{N}(0,1).
-\end{aligned}</script><h3 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h3><p>In general deep learning case, dataset is divided into relatively small batches during training process. It is also feasible if $\mathcal{L}$ has an unbiased estimation. One solution could be</p>
+  p(y^* | x^*, D) =&\, \frac{p(y^*, y_1,..., y_N)}{p(y_1,...,y_N)} \\
+                  \propto&\, \frac{\exp\left(-\frac{1}{2}\overrightarrow{y'}^T{\Sigma'}^{-1}\overrightarrow{y'}^T \right)}{\exp\left(-\frac{1}{2}\overrightarrow{y}^T\Sigma^{-1}\overrightarrow{y} \right)} \\
+                  \propto&\, \exp\left(-\frac{1}{2}\left(B{y^*}^2 + 2 A^T\overrightarrow{y}y^* \right) \right),
+\end{aligned}</script><p>where</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{L} \approx \hat{\mathcal{L}} =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}(q_\phi(w),p(w|x_m,y_m)) \\
-                                           =& \frac{N}{M}\sum_{m=1}^M \mathcal{L}_m.
-\end{aligned}</script><h3 id="Variance"><a href="#Variance" class="headerlink" title="Variance"></a>Variance</h3><p>The optimization could not converge if the variance of $\hat{\mathcal{L}}$ is too large, which can be reformulated as</p>
+{\Sigma'}^{-1} = \left(
+\begin{matrix}
+    C & A \\
+    A^T & B
+\end{matrix}
+\right),</script><p>and</p>
 <script type="math/tex; mode=display">
-\mathbb{V}ar[{\hat{\mathcal{L}}}] = N^2\left(\frac{1}{M}\mathbb{V}ar[\hat{\mathcal{L}}_m] + \frac{M-1}{M}\mathbb{C}ov[\hat{\mathcal{L}}_m, \hat{\mathcal{L}}_n] \right),</script><p>where the second term does not degrade to zero if the covariance is large enough. Therefore, applying local reparameterization trick is preferred here. The main idea is, in each update iteration, resampling $w$ independently according to $q_\phi$, leading to $i.i.d.$ samples.</p>
-<h2 id="Compression"><a href="#Compression" class="headerlink" title="Compression"></a>Compression</h2><p>As long as a good approximation $q_\phi(w)$ is reached, it is possible to prune certain parameters or neurons if their posteriors tend to be negligible. There are several interesting ways as discussed below.</p>
-<h3 id="Prior"><a href="#Prior" class="headerlink" title="Prior"></a>Prior</h3><ul>
-<li>LASSO</li>
-<li>log-uniform</li>
-<li>spike-and-slab</li>
-<li>half-cauchy</li>
-</ul>
-<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><ul>
-<li>Gaussian dropout</li>
-<li>As a Bayesian approximation</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Kingma, D. P., Salimans, T., &amp; Welling, M. (2015). Variational dropout and the local reparameterization trick. In Advances in Neural Information Processing Systems (pp. 2575-2583).</p>
-<p>[2] Louizos, C., Ullrich, K., &amp; Welling, M. (2017). Bayesian compression for deep learning. In Advances in Neural Information Processing Systems (pp. 3290-3300).</p>
-<p>[3] Gal, Y., &amp; Ghahramani, Z. (2016, June). Dropout as a Bayesian approximation: Representing model uncertainty in deep learning. In international conference on machine learning (pp. 1050-1059).</p>
-<p>[4] Achterhold, J., Koehler, J. M., Schmeink, A., &amp; Genewein, T. (2018). Variational Network Quantization. In International Conference on Learning Representations.</p>
+A = \frac{-\Sigma^{-1}k_*}{k_{**} - k_*^T\Sigma^{-1}k_*},\;\; B = \frac{1}{k_{**} - k_*^T\Sigma^{-1}k_*}.</script><p>Thus, the posterior distribution is Gaussian as</p>
+<script type="math/tex; mode=display">
+y^* | x^*, D \sim \mathcal{N}(\mu^*, \sigma^*),</script><p>where the expectation and variance are known:</p>
+<script type="math/tex; mode=display">
+\mu^* = -B^{-1}A^T\overrightarrow{y},\;\; \sigma^* = B^{-1}.</script></blockquote>
+<h2 id="Ridge-Regression"><a href="#Ridge-Regression" class="headerlink" title="Ridge Regression"></a>Ridge Regression</h2><p>The ridge regression is actually the simplest case of Gaussian process. Before discussing this relationship, consider first a noisy model $f(.)+\epsilon$, with $\epsilon\sim\mathcal{N}(0,\sigma_\epsilon^2)$. Supposing the noise is independent among points, the posterior for test points can be updated as</p>
+<script type="math/tex; mode=display">
+y^* | x^*, D, \sigma_\epsilon^2 \sim \mathcal{N}(\mu^*, \sigma^*),</script><script type="math/tex; mode=display">
+\mu^* = k_*^T\Sigma_n^{-1}\overrightarrow{y},\;\;\sigma^* = -k_*^T\Sigma_n^{-1}k_* + k_{**},</script><p>where</p>
+<script type="math/tex; mode=display">
+\Sigma_n = \Sigma + \sigma_\epsilon^2 I_N.</script><p>This noise modeling is a kind of regularization, which is well used in ridge regression:</p>
+<script type="math/tex; mode=display">
+\hat{\theta} = \arg\min_W \sum_{i=1}^N\|y_i - x_i\theta \|^2 + \beta\|\theta \|^2,\;\;\beta\gt 0,</script><p>where the function to fit is supposed to be linear as $f(x)=x\theta$. Given this convex problem, a closed-form solution can be computed as</p>
+<script type="math/tex; mode=display">
+\hat{\theta} = X^T\left(XX^T + \beta I_N \right)\overrightarrow{y},\;\; X = \left(x_1;...;x_N \right).</script><p>Thus the prediction becomes</p>
+<script type="math/tex; mode=display">
+y^* = x^* \hat{\theta} = x^*X^T\left(XX^T + \beta I_N \right)\overrightarrow{y}.</script><p>Since the dot product is also a kind of kernel, by noting</p>
+<script type="math/tex; mode=display">
+k_*^T = x^* X^T,\;\;\Sigma = XX^T,</script><p>the prediction is reformed as a noisy GPR:</p>
+<script type="math/tex; mode=display">
+y^* = k_*^T\left(\Sigma + \sigma_\epsilon^2 I_N \right)\overrightarrow{y},\;\;\beta = \sigma_\epsilon^2.</script><blockquote>
+<p>$\texttt{Note}:$ The dot product indicates a similarity when the vectors are normalized, otherwise, it explodes for largely normed ones. Given that, to adopt ridge regression, it would be better to preprocess the data by normalization.</p>
+</blockquote>
 
       
     </div>
@@ -437,7 +448,9 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
       
         <div class="post-tags">
           
-            <a href="/tags/Bayesian-Inference/" rel="tag"># Bayesian Inference</a>
+            <a href="/tags/Gaussian-Process/" rel="tag"># Gaussian Process</a>
+          
+            <a href="/tags/Ridge-Regression/" rel="tag"># Ridge Regression</a>
           
         </div>
       
@@ -450,8 +463,8 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/uncategorized/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/Machine-Learning/Training-Trick/Bayesian-Optimization/" rel="next" title="Bayesian Optimization">
+                <i class="fa fa-chevron-left"></i> Bayesian Optimization
               </a>
             
           </div>
@@ -459,10 +472,6 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/Deep-Compression/Bayesian-View/Bayesian-Compression-for-Deep-Learning/" rel="prev" title="Bayesian Compression for Deep Learning">
-                Bayesian Compression for Deep Learning <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -604,7 +613,7 @@ KL(q_\phi(w)||p(w|S,D)) = -\int q_\phi(w)\log\frac{p(w|S,D)}{q_\phi(w)}dw.</scri
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Target"><span class="nav-number">2.</span> <span class="nav-text">Target</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradient-based-Methods"><span class="nav-number">3.</span> <span class="nav-text">Gradient-based Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Differentiability"><span class="nav-number">3.1.</span> <span class="nav-text">Differentiability</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bias"><span class="nav-number">3.2.</span> <span class="nav-text">Bias</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variance"><span class="nav-number">3.3.</span> <span class="nav-text">Variance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compression"><span class="nav-number">4.</span> <span class="nav-text">Compression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Prior"><span class="nav-number">4.1.</span> <span class="nav-text">Prior</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout"><span class="nav-number">4.2.</span> <span class="nav-text">Dropout</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overview"><span class="nav-number">1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#View-on-Probability"><span class="nav-number">2.</span> <span class="nav-text">View on Probability</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gaussian-Process"><span class="nav-number">3.</span> <span class="nav-text">Gaussian Process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Regression"><span class="nav-number">4.</span> <span class="nav-text">Regression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ridge-Regression"><span class="nav-number">5.</span> <span class="nav-text">Ridge Regression</span></a></li></ol></div>
             
 
           </div>

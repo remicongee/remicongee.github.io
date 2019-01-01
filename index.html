@@ -264,6 +264,424 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Gaussian-Process-Regression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Machine-Learning/Training-Trick/Gaussian-Process-Regression/" itemprop="url">Gaussian Process Regression</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-31T22:41:13+08:00">
+                2018-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
+                    <span itemprop="name">Training Trick</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the Gaussian process regression (GPR), a method predicting the posterior distribution of functions.</p>
+<h2 id="View-on-Probability"><a href="#View-on-Probability" class="headerlink" title="View on Probability"></a>View on Probability</h2><p>Say for a regression task, note $D=\{x_i,y_i\}$ the training set of size $N$, $f(.)$ the function to fit, $x^*$ a test point. Knowing the training set $D$, a distribution of $f(.)$ on $x^*$ is supposed to be solved or approached, which can be written as</p>
+<script type="math/tex; mode=display">
+p(y^* | x^*, D) = \frac{p\left((x^*,y^*), D \right)}{p(x^*, D)},</script><p>where $y^<em>=f(x^</em>)$. Note that $\left(x_1,…,x_N,x^*\right)$ is not random variable, hence the density can be further simplified as</p>
+<script type="math/tex; mode=display">
+p(y^* | x^*, D) = \frac{p(y^*, y_1,..., y_N)}{p(y_1,...,y_N)}.</script><p>The density $p(y^*, y_1,…, y_N)$ indicates a <em>prior</em> joint distribution, as well as $p(y_1,…,y_N)$. Given that, to predict $y^*$, it is necessary to first determinate these distributions.</p>
+<h2 id="Gaussian-Process"><a href="#Gaussian-Process" class="headerlink" title="Gaussian Process"></a>Gaussian Process</h2><p>Following the idea of the previous section, the <em>prior</em> joint distributions are supposed to be normal in GPR, hence form Gaussian process (GP):</p>
+<script type="math/tex; mode=display">
+y_1,..., y_N \sim \mathcal{GP}\left(\overrightarrow{0}, \Sigma\right),</script><p>where $\Sigma_{ij}=k(y_i,y_j)$ is covariance matrix. When concerning $y^*$, a new covariance matrix can be defined as</p>
+<script type="math/tex; mode=display">
+\left(
+\begin{matrix}
+    \Sigma & k_* \\
+    k_*^T & k_{**}
+\end{matrix}
+\right),</script><p>where $k_*$ is the covariance of the test point and training set and $k_{**}$ the variance.</p>
+<blockquote>
+<p>$\texttt{Note}:$ The distribution is proposed <em>a priori</em>, and since no more knowlegde is acquired other than the points, it is reasonable to suppose that the expectation is null.</p>
+</blockquote>
+<p>The problem left is how to compute the covariance $k(.,.)$, where it should be noted that $\Sigma$ must be positive definite. One choice is Mercer kernel, which is declared in <a href="https://en.wikipedia.org/wiki/Mercer%27s_theorem" target="_blank" rel="noopener">Mercer Theorem</a> and referred as kernel function in SVM. For instance, by adopting the squared exponential kernel, the covariance can be computed as</p>
+<script type="math/tex; mode=display">
+k(y_i, y_j) = \exp\left(-\lambda \|x_i - x_j \|^2 \right),</script><p>which indicates a kind of similarity between $y_i$ and $y_j$ (or $x_i$ and $x_j$).</p>
+<h2 id="Regression"><a href="#Regression" class="headerlink" title="Regression"></a>Regression</h2><p>Now determinate the <em>posterior</em> distribution of $y^*$ via the GP defined above:</p>
+<script type="math/tex; mode=display">
+y^* | x^*, D \sim \mathcal{N}(\mu^*, \sigma^*),</script><p>where</p>
+<script type="math/tex; mode=display">
+\mu^* = k_*^T\Sigma^{-1}\overrightarrow{y},\;\;\sigma^* = -k_*^T\Sigma^{-1}k_* + k_{**},</script><p>with $\overrightarrow{y}=\left(y_1,…,y_N\right)^T$.</p>
+<p>In this case, one may directly output $y^*=\mu^*$ as the prediction for regression task. For further study on the function $f(.)$, the distribution over this function is also available by sampling enough points and plotting the curve (if possible). Normally, variance is large when the point to predict is far from training set.</p>
+<blockquote>
+<p>$\texttt{Note}:$</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+  p(y^* | x^*, D) =&\, \frac{p(y^*, y_1,..., y_N)}{p(y_1,...,y_N)} \\
+                  \propto&\, \frac{\exp\left(-\frac{1}{2}\overrightarrow{y'}^T{\Sigma'}^{-1}\overrightarrow{y'}^T \right)}{\exp\left(-\frac{1}{2}\overrightarrow{y}^T\Sigma^{-1}\overrightarrow{y} \right)} \\
+                  \propto&\, \exp\left(-\frac{1}{2}\left(B{y^*}^2 + 2 A^T\overrightarrow{y}y^* \right) \right),
+\end{aligned}</script><p>where</p>
+<script type="math/tex; mode=display">
+{\Sigma'}^{-1} = \left(
+\begin{matrix}
+    C & A \\
+    A^T & B
+\end{matrix}
+\right),</script><p>and</p>
+<script type="math/tex; mode=display">
+A = \frac{-\Sigma^{-1}k_*}{k_{**} - k_*^T\Sigma^{-1}k_*},\;\; B = \frac{1}{k_{**} - k_*^T\Sigma^{-1}k_*}.</script><p>Thus, the posterior distribution is Gaussian as</p>
+<script type="math/tex; mode=display">
+y^* | x^*, D \sim \mathcal{N}(\mu^*, \sigma^*),</script><p>where the expectation and variance are known:</p>
+<script type="math/tex; mode=display">
+\mu^* = -B^{-1}A^T\overrightarrow{y},\;\; \sigma^* = B^{-1}.</script></blockquote>
+<h2 id="Ridge-Regression"><a href="#Ridge-Regression" class="headerlink" title="Ridge Regression"></a>Ridge Regression</h2><p>The ridge regression is actually the simplest case of Gaussian process. Before discussing this relationship, consider first a noisy model $f(.)+\epsilon$, with $\epsilon\sim\mathcal{N}(0,\sigma_\epsilon^2)$. Supposing the noise is independent among points, the posterior for test points can be updated as</p>
+<script type="math/tex; mode=display">
+y^* | x^*, D, \sigma_\epsilon^2 \sim \mathcal{N}(\mu^*, \sigma^*),</script><script type="math/tex; mode=display">
+\mu^* = k_*^T\Sigma_n^{-1}\overrightarrow{y},\;\;\sigma^* = -k_*^T\Sigma_n^{-1}k_* + k_{**},</script><p>where</p>
+<script type="math/tex; mode=display">
+\Sigma_n = \Sigma + \sigma_\epsilon^2 I_N.</script><p>This noise modeling is a kind of regularization, which is well used in ridge regression:</p>
+<script type="math/tex; mode=display">
+\hat{\theta} = \arg\min_W \sum_{i=1}^N\|y_i - x_i\theta \|^2 + \beta\|\theta \|^2,\;\;\beta\gt 0,</script><p>where the function to fit is supposed to be linear as $f(x)=x\theta$. Given this convex problem, a closed-form solution can be computed as</p>
+<script type="math/tex; mode=display">
+\hat{\theta} = X^T\left(XX^T + \beta I_N \right)\overrightarrow{y},\;\; X = \left(x_1;...;x_N \right).</script><p>Thus the prediction becomes</p>
+<script type="math/tex; mode=display">
+y^* = x^* \hat{\theta} = x^*X^T\left(XX^T + \beta I_N \right)\overrightarrow{y}.</script><p>Since the dot product is also a kind of kernel, by noting</p>
+<script type="math/tex; mode=display">
+k_*^T = x^* X^T,\;\;\Sigma = XX^T,</script><p>the prediction is reformed as a noisy GPR:</p>
+<script type="math/tex; mode=display">
+y^* = k_*^T\left(\Sigma + \sigma_\epsilon^2 I_N \right)\overrightarrow{y},\;\;\beta = \sigma_\epsilon^2.</script><blockquote>
+<p>$\texttt{Note}:$ The dot product indicates a similarity when the vectors are normalized, otherwise, it explodes for largely normed ones. Given that, to adopt ridge regression, it would be better to preprocess the data by normalization.</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Bayesian-Optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RemiC">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Remi's Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/Machine-Learning/Training-Trick/Bayesian-Optimization/" itemprop="url">Bayesian Optimization</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-12-31T22:21:15+08:00">
+                2018-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
+                    <span itemprop="name">Training Trick</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the <a href="https://en.wikipedia.org/wiki/Bayesian_optimization" target="_blank" rel="noopener">Bayesian Optimization</a>, a method using Gaussian process to find the optimum.</p>
+<h2 id="Bayesian-Optimization"><a href="#Bayesian-Optimization" class="headerlink" title="Bayesian Optimization"></a>Bayesian Optimization</h2><p>As seen in <a href="Machine-Learning/Training-Trick/Gaussian-Process-Rregression">Gaussian Process Regression (GPR)</a>, any function can be fitted via GPR, which is also useful in optimization field. Consider an objective function $f(.)$ to optimize (maximize/minimize) with its form unknown, it is feasible to fit the function first then search for the solution, but this process is quite costly since the regression part requires a lot of sampling points. To this end, two strategies are possible, which corresponds different kinds of <em>acquisition function</em>,</p>
+<ul>
+<li>Explore: Sample the most discriminative points so that the objective can be represented as soon as possible.</li>
+<li>Exploit: Sample towards the optimum so that a local minimum/maximum can be fast approched.</li>
+<li>Mix: Find a compromise between explore and exploit.</li>
+</ul>
+<blockquote>
+<p>$\texttt{Note}:$ Both strategies depend on the posterior knowledge knowing the previous sampling results.</p>
+</blockquote>
+<h3 id="POI"><a href="#POI" class="headerlink" title="POI"></a>POI</h3><p>Probability of improvement (POI) is an exploring acquistion function, which in form as</p>
+<script type="math/tex; mode=display">
+PI(x) = p(f(x) \ge f(x^+)) = \Phi\left(\frac{\mu(x) - f(x^+)}{\sigma(x)} \right),</script><p>where $x^+$ is a local optimum, $\Phi(.)$ is normal cumulative distribution function (CDF), or maximum probability of improvement (MPI). The next sampling point is the one maximizing $PI(x)$. To avoid a local convergence, a tunable parameter $\varepsilon$ is often included:</p>
+<script type="math/tex; mode=display">
+PI(x) = p(f(x) \ge f(x^+) + \varepsilon) = \Phi\left(\frac{\mu(x) - f(x^+) - \varepsilon}{\sigma(x)} \right).</script><h3 id="EI"><a href="#EI" class="headerlink" title="EI"></a>EI</h3><p>Expected improvement (EI) does not only consider the probability of increasing/decreasing the objective, but also the magnitude. One choice for the improvement function is</p>
+<script type="math/tex; mode=display">
+I(x) = \max\{0, f(x) - f(x^+) \},</script><p>with the next sampling point defined as</p>
+<script type="math/tex; mode=display">
+\hat{x} = \arg\max_x \mathbb{E}\left[I(x) | D_t \right],</script><p>where $D_t$ is the points sampled until the current moment. Now compute EI,</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+    EI(x) =&\, \mathbb{E}\left[I(x) | D_t \right] \\ 
+          =&\, \int_0^{+\infty} I p(I) dI \\
+          =&\, \int_0^{+\infty} I \frac{1}{\sqrt{2\pi}\sigma(x)} \exp\left(-\frac{\left(\mu(x) - f(x^+) - I \right)^2}{2\sigma^2(x)} \right)dI \\
+          =&\, \sigma(x)\left(\frac{\mu(x) - f(x^+)}{\sigma(x)}\Phi\left(\frac{\mu(x) - f(x^+)}{\sigma(x)} \right) + \phi\left(\frac{\mu(x) - f(x^+)}{\sigma(x)} \right) \right),
+\end{aligned}</script><p>where $\phi(.)$ is normal probability density function (PDF). Or more rigorously,</p>
+<script type="math/tex; mode=display">
+EI(x) = \left\{
+\begin{aligned}
+    &\, \left(\mu(x) - f(x^+) \right)\Phi(Z) + \sigma(x)\phi(Z),\;\; \sigma(x)\lt 0 \\
+    &\, 0,\;\; \sigma(x) = 0
+\end{aligned}
+\right.</script><script type="math/tex; mode=display">
+Z = \frac{\mu(x) - f(x^+)}{\sigma(x)}.</script><p>A trade-off for exploring can be included as well as in POI:</p>
+<script type="math/tex; mode=display">
+EI(x) = \left\{
+\begin{aligned}
+    &\, \left(\mu(x) - f(x^+) - \varepsilon \right)\Phi(Z) + \sigma(x)\phi(Z),\;\; \sigma(x)\lt 0 \\
+    &\, 0,\;\; \sigma(x) = 0
+\end{aligned}
+\right.</script><script type="math/tex; mode=display">
+Z = \frac{\mu(x) - f(x^+) - \varepsilon}{\sigma(x)}.</script><h3 id="LCB"><a href="#LCB" class="headerlink" title="LCB"></a>LCB</h3><p>// TODO</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Brochu, E., Cora, V. M., &amp; De Freitas, N. (2010). A tutorial on Bayesian optimization of expensive cost functions, with application to active user modeling and hierarchical reinforcement learning. arXiv preprint arXiv:1012.2599.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+		
+    
+		
+			
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/Computer-Vision/Object-Detection/YOLO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1802,415 +2220,6 @@ f^*_k(\mathbf{x}) = \langle t_k | \mathbf{x} \rangle + \mathcal{O}(\eta^2).</scr
 
 		
     
-		
-			
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="RemiC">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Remi's Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Machine-Learning/Training-Trick/Use-of-Noise-in-Training/" itemprop="url">Use of Noise in Training</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-07T15:50:41+08:00">
-                2018-08-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/Training-Trick/" itemprop="url" rel="index">
-                    <span itemprop="name">Training Trick</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://ieeexplore.ieee.org/document/155944/" target="_blank" rel="noopener">Noise injection into inputs in back-propagation learning</a>, mainly discussing about the use of noise in training networks.</p>
-<h2 id="Noise-Sensitivity"><a href="#Noise-Sensitivity" class="headerlink" title="Noise Sensitivity"></a>Noise Sensitivity</h2><p>In literature of machine learning, generalization capacity is among the most important metrics. In short words, this metric refers to similar predictions for test samples that are not seen before but similar to certain ones are. Let $s_i$ be an input sample, $\tilde{s_i}$ a sample similar to the formal</p>
-<script type="math/tex; mode=display">
-\tilde{s_i} = s_i + d,</script><p>where $d$ is a small distance. The corresponding distance of outputs are hence</p>
-<script type="math/tex; mode=display">
-\delta y_i = f(\tilde{s_i}) - f(s_i) \approx \frac{\partial f}{\partial s}(s_i)d.</script><p>Assume that $d$ is a random variable independent of $s$ with the expectation and variance as</p>
-<script type="math/tex; mode=display">
-\mathbb{E}[d] = O,\;\; \mathbb{C}ov[d] = \sigma^2I_{N_I},</script><p>where $I_{N_I}\in M_{N_I,N_I}$ is the identity matrix and $N_I$ the dimension of input samples.</p>
-<p>Define the sensitivity $R$ to the distance $d$ as the mean ratio of the variances of $|\delta y_i|$ and $|d|$:</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    R(w) =&\, \sum_i \frac{\mathbb{V}ar[|\delta y_i|]}{\mathbb{V}ar[|d|]} \\
-         =&\, \sum_i \frac{\mathbb{E}[|\delta y_i|^2]}{\mathbb{E}[|d|^2]} \\
-         =&\, \sum_i \frac{\mathbb{E}[\delta y_i^T \delta y_i]}{\mathbb{E}[d^Td]}.
-\end{aligned}</script><p>Approximate this equation with the ones above,</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    R(w) \approx&\, \sum_i \frac{\mathbb{E}\left[d^T\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s}d\right]}{\mathbb{E}[d^Td]} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}d\cdot d^T\frac{\partial f(s_i)}{\partial s}^T \}\right]}{\mathbb{E}\left[\text{trace}\{dd^T \} \right]} \\
-         =&\, \sum_i \frac{\sigma^2\mathbb{E}\left[\text{trace}\{\frac{\partial f(s_i)}{\partial s}\cdot \frac{\partial f(s_i)}{\partial s}^T \}\right]}{\sigma^2N_I} \\
-         =&\, \sum_i \frac{\mathbb{E}\left[\frac{\partial f(s_i)}{\partial s}^T\cdot \frac{\partial f(s_i)}{\partial s} \right]}{N_I} \\
-         =&\, \sum_i \frac{\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2}{N_I}.
-\end{aligned}</script><p>To make the model less sensitive to the disturbance of input pattern, $R(w)$ is preferred to be smaller, i.e. minimize the objective</p>
-<script type="math/tex; mode=display">
-\mathcal{L}(w) = \sum_i \left\|y_i - f(s_i) \right\|^2 + \frac{\tau}{N_I}\left\|\frac{\partial f}{\partial s}(s_i) \right\|^2,</script><p>where $\tau\in\mathbb{R}^*_+$ controls the balance.</p>
-<p>This optimization problem is not difficult, but calculating $\frac{\partial R}{\partial w}$ could be avoided via an interesting alternative. By introducing a noise</p>
-<script type="math/tex; mode=display">
-n\in R^{N_I},\;\; \mathbb{E}[n] = O,\;\; \mathbb{C}ov[n] = \frac{\tau}{N_I} I_{N_I},</script><p>the objective can be approximated as</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{L}(w) =&\, \sum_i \left\|y_i - f(s_i) \right\|^2 + \mathbb{E}\left[\left\|\frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
-                   =&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i)  + \frac{\partial f}{\partial s}(s_i)n \right\|^2 \right] \\
-                   \approx&\, \sum_i \mathbb{E}\left[\left\|y_i - f(s_i + n) \right\|^2 \right].
-\end{aligned}</script><p>The variance $\frac{\tau}{N_I} I_{N_I}$ can be viewed as a parameter controlling the regularization. A large variance fits the model to be robust to the noise, leading to a good generalization capacity.</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] K. Matsuoka. 1992. Noise injection into inputs in back-propagation learning. IEEE Transactions on Systems, Man, and Cybernetics 22, 3 (1992), 436–440.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-		
-    
-		
-			
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="RemiC">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Remi's Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Deep-Compression/Bayesian-View/Keeping-Neural-Networks-Simple-by-MDL/" itemprop="url">Keeping Neural Networks Simple by MDL</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-10T18:50:00+08:00">
-                2018-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/" itemprop="url" rel="index">
-                    <span itemprop="name">Deep Compression</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Compression/Bayesian-View/" itemprop="url" rel="index">
-                    <span itemprop="name">Bayesian View</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the paper <a href="https://dl.acm.org/citation.cfm?doid=168304.168306" target="_blank" rel="noopener">Keeping Neural Networks Simple by Minimizing the Description Length of the Weights</a> published on COLT 1993, which mainly proposes a view of MDL over simplifying neural networks.</p>
-<h2 id="MDL"><a href="#MDL" class="headerlink" title="MDL"></a>MDL</h2><p>When fitting data models to some data, a more complex model often performs better on training data but may be overfitting. So it is in need of methods to decide when extra complexity of the model is not worth the improvement in the data-fit. Minimum Description Length (<em>MDL</em>) Principle is proposed in [2], asserting that the best model is the one that minimizes the combined cost of decribing the model and the misfit between the model and the data. For example, in a supervised classification task, the model cost is the number of bits describing the model, and the data misfit cost is the number of bits describing the descrepency between model output and the ground truth.</p>
-<blockquote>
-<p>$\texttt{Note}:$ The principle could be viewed in a simple communication model as</p>
-<script type="math/tex; mode=display">
-input\;\; X = x</script><script type="math/tex; mode=display">
-sender (W = w, Y = y)\;\;\;\; \xrightarrow{\Delta y,\, w}\;\;\;\; receiver</script></blockquote>
-<h3 id="Coding"><a href="#Coding" class="headerlink" title="Coding"></a>Coding</h3><p>In order to compute communication cost, the first question is how to define the number of bits in need. For simplification, data misfit cost is discussed as an example for illustration.</p>
-<p>Clearly, if the data misfits are real numbers, an inifinite amount of information is needed to convey them. Hence, a simple quantization is included so that the real numbers within a width of $t$ will be degraded to one number.</p>
-<p>After quantization, the misfits $\Delta y$ are further coded into bits with length $-\log\mathbb{P}(\Delta Y=\Delta y)$. For example, let the misfit follow a Gaussian centralized:</p>
-<script type="math/tex; mode=display">
-\Delta Y \sim \mathcal{N}(0,\sigma^2)\;\; \iff\;\; \hat{Y}|Y \sim \mathcal{N}(y,\sigma^2).</script><p>Therefore,</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathbb{P}(\Delta Y = \Delta y|Y = y) =&\, \mathbb{P}(\hat{Y} = \hat{y}, \hat{y} = y + \Delta y|Y = y) \\
-                                          =&\, \int_{\hat{Y}\in\mathcal{B}(\hat{y},t)} \frac{1}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(\hat{Y} - y)^2}{2\sigma^2} \right)d\hat{Y} \\
-                       \approx&\, \frac{t}{\sigma\sqrt{2\pi}}\exp\left(-\frac{(\hat{y} - y)^2}{2\sigma^2} \right),
-\end{aligned}</script><p>where the approximation is valid if $t\ll\sigma$. Then the misfit cost (on average), i.e. the number of descrepency bits, becomes</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{C}^D =&\, \mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y = \Delta y|Y = y) \right] \\
-                  \approx&\, -\frac{1}{N}\sum_{i=1}^N \left(\log t -\frac{(\hat{y_i} - y_i)^2}{2\sigma^2} \right) + \log\sigma,
-\end{aligned}</script><p>where the approximation is induced by Monte Carlo Sampling.</p>
-<h2 id="Bits-Back-Argument"><a href="#Bits-Back-Argument" class="headerlink" title="Bits-Back Argument"></a>Bits-Back Argument</h2><p>The sender trains the model with data so that it learns the posterior distribution of weights, $q$. However, for sending precise weights to the receiver, the sender may need some random bits (e.g. random seeds) to collapse $q$ to a number. But note that, since the receiver receives the misfits, weights and shares the input with the sender, it is able to train the model itself, which means the receiver can know $q$ as well. In other words, the knowledge of $q$ does mainly come from $w$ once it has received misfits. Furthermore, the information given by $w$ may be rebundant, leading to unnecessary cost. Hence, for computing the necessary cost, it suffers to substract the cost of sending $w$ by the unnecessary cost.</p>
-<h3 id="Weight-Cost"><a href="#Weight-Cost" class="headerlink" title="Weight Cost"></a>Weight Cost</h3><p>Different from data, when model is fixed, weights are often preferred to be certain settings. This refers to, in fact, the prior of weight, $p(w)$. In this case, the sender and the receiver will share this knowledge. Given that, the sender can send $w$ by coding according to this prior (seen the section above). Hence, the cost of sending weights will be</p>
-<script type="math/tex; mode=display">
-\mathcal{C}^W = -\log\left(tp(w) \right) = -\log t - \log p(w).</script><h3 id="Random-Bits"><a href="#Random-Bits" class="headerlink" title="Random Bits"></a>Random Bits</h3><p>Actually, to sample $w$ from $q$, the sender needs some random bits (e.g. random seeds). On the other hand, the receiver can know these bits by computing inversely, i.e. from $w$ and $q$ to the random bits.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In computer literature, there is no, as so far, real but <strong>pseudo</strong> random numbers. In most case, the “random” numbers is generated by certain iterative algorithm and based on a real random number, which is often given by hand, namely random seed.</p>
-<p><a href="https://en.wikipedia.org/wiki/Random_seed" target="_blank" rel="noopener">&gt;GO TO WIKI&lt;</a></p>
-</blockquote>
-<p>However, these random bits are not necessary, because 1) they are not features of the model; 2) they can be generated on the receiver side as well. Therfore, we can conclude that the unncessary information is exactly the random bits. Given that these bits can be restored from $q$ and $w$, the cost of sending them will be the number of bits coded according to $q$:</p>
-<script type="math/tex; mode=display">
-\mathcal{C}^R = -\log\left(tq(w) \right) = -\log t - \log q(w).</script><h3 id="Substraction"><a href="#Substraction" class="headerlink" title="Substraction"></a>Substraction</h3><p>Therefore, by computing the expected value, the necessary cost to describe the model is</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{C}^M =&\, \mathbb{E}_q\left[\mathcal{C}^W - \mathcal{C}^R \right] \\
-                =&\, \int q(w) \left(\log q(w) - \log p(w) \right)dw \\
-                =&\, -\int q(w) \log\frac{p(w)}{q(w)}dw \\
-                =&\, KL(q(w)||p(w))
-\end{aligned}</script><p>This process can be compared as a special transaction between the sender and the receiver:</p>
-<script type="math/tex; mode=display">
-input\;\; X = x,\;\; prior\;\; p(w)</script><script type="math/tex; mode=display">
-sender (W \sim q, Y = y)\;\;\;\; \xrightarrow[w\,=\,g(r,\,q)]{\Delta y}\;\;\;\; receiver</script><script type="math/tex; mode=display">
-sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f(w,x) + \Delta y)</script><p>where $g(.)$ is some random number generation algorithm, $r$ random bits. </p>
-<blockquote>
-<p>$\texttt{Note}:$ The receiver sends random bits $r$ back to the sender, because they are not necessary for description of the model. Hence, this argument is named by “<em>bits back</em>“.</p>
-</blockquote>
-<h2 id="With-Bayesian-Inference"><a href="#With-Bayesian-Inference" class="headerlink" title="With Bayesian Inference"></a>With Bayesian Inference</h2><p>Combine the cost of data misfits and model description, the total cost is</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-    \mathcal{C} =&\, \mathcal{C}^D + \mathcal{C}^M \\
-                =&\, \mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y|Y) \right] + KL(q(w)||p(w)).
-\end{aligned}</script><p>To minimize the misfit term, it suffers that $\Delta Y = \hat{y} - y$ happens as frequently as possible, no matter how large it is. However, since it is always expected that $\Delta Y\rightarrow 0$, the first term can be further transformed:</p>
-<script type="math/tex; mode=display">
-\mathbb{E}_Y\left[-\log\mathbb{P}(\Delta Y|Y) \right] \xrightarrow{\Delta Y\, \rightarrow\, 0} \mathbb{E}_Y\left[-\log\mathbb{P}(\hat{Y} = Y|W,X) \right] \equiv \mathbb{E}_Y\left[-\log\mathbb{P}(Y|W = w,X) \right].</script><p>Hence,</p>
-<script type="math/tex; mode=display">
-\mathcal{C} = -\left(\mathbb{E}_Y\left[\log\mathbb{P}(Y|W = w,X) \right] - KL(q(w)||p(w)) \right).</script><p>To minimize the cost, it is equivalent to maximize</p>
-<script type="math/tex; mode=display">
-\mathcal{L} = \mathbb{E}_Y\left[\log\mathbb{P}(Y|W = w,X) \right] - KL(q(w)||p(w)),</script><p>which is exactly the <strong>evidence lower bound</strong> of Bayesian inference.</p>
-<blockquote>
-<p>$\texttt{Note}:$ In most case, the first term is approximated by Monte Carlo Sampling so that</p>
-<script type="math/tex; mode=display">
-\mathcal{L} \approx \frac{1}{N}\sum_{i=1}^N \log\mathbb{P}(\hat{Y} = y_i|W = w,X = x_i) - KL(q(w)||p(w))</script></blockquote>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] Hinton, G. E., &amp; van Camp, D. Keeping neural networks simple by minimising the description length of weights. 1993. In Proceedings of COLT-93 (pp. 5-13).</p>
-<p>[2] Rissanen, J. (1986). Stochastic complexity and modeling. The annals of statistics, 1080-1100.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-		
-    
   </section>
 
   
@@ -2261,7 +2270,7 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2283,7 +2292,7 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -2330,7 +2339,7 @@ sender (W \sim q, Y = y)\;\;\;\; \xleftarrow{r}\;\;\;\; receiver(W \sim q, Y = f
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
