@@ -371,7 +371,7 @@
             <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>This text refers to the Gaussian process regression (GPR), a method predicting the posterior distribution of functions.</p>
 <h2 id="View-on-Probability"><a href="#View-on-Probability" class="headerlink" title="View on Probability"></a>View on Probability</h2><p>Say for a regression task, note $D=\{x_i,y_i\}$ the training set of size $N$, $f(.)$ the function to fit, $x^*$ a test point. Knowing the training set $D$, a distribution of $f(.)$ on $x^*$ is supposed to be solved or approached, which can be written as</p>
 <script type="math/tex; mode=display">
-p(y^* | x^*, D) = \frac{p\left((x^*,y^*), D \right)}{p(x^*, D)},</script><p>where $y^*=f(x^<em>)$. Note that $\left(x_1,…,x_N,x^\</em>\right)$ is not random variable, hence the density can be further simplified as</p>
+p(y^* | x^*, D) = \frac{p\left((x^*,y^*), D \right)}{p(x^*, D)},</script><p>where $y^*=f(x^*)$. Note that $\left(x_1,…,x_N,x^*\right)$ is not random variable, hence the density can be further simplified as</p>
 <script type="math/tex; mode=display">
 p(y^* | x^*, D) = \frac{p(y^*, y_1,..., y_N)}{p(y_1,...,y_N)}.</script><p>The density $p(y^*, y_1,…, y_N)$ indicates a <em>prior</em> joint distribution, as well as $p(y_1,…,y_N)$. Given that, to predict $y^*$, it is necessary to first determinate these distributions.</p>
 <h2 id="Gaussian-Process"><a href="#Gaussian-Process" class="headerlink" title="Gaussian Process"></a>Gaussian Process</h2><p>Following the idea of the previous section, the <em>prior</em> joint distributions are supposed to be normal in GPR, hence form Gaussian process (GP):</p>
